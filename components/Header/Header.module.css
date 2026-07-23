@@ -1,0 +1,914 @@
+/* =========================================================
+   HEADER PRINCIPAL
+========================================================= */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  width: 100%;
+  height: clamp(200px, 11.5vw, 215px);
+
+  overflow: visible;
+  isolation: isolate;
+
+  border-top: 2px solid #d9ae3f;
+  border-bottom: 2px solid #d9ae3f;
+
+  box-shadow:
+    0 8px 26px rgba(38, 0, 3, 0.24),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.16);
+}
+
+/* =========================================================
+   RECORTE DO FUNDO
+========================================================= */
+
+.backgroundFrame {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+
+  overflow: hidden;
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   IMAGEM DE FUNDO
+========================================================= */
+
+.background {
+  position: absolute;
+
+  /*
+    A imagem ultrapassa um pouco as laterais
+    para esconder as bordas douradas verticais.
+  */
+  top: 0;
+  right: -24px;
+  bottom: 0;
+  left: -24px;
+
+  background-color: #8c0713;
+  background-image: url("/images/header-guardioes2.png");
+  background-repeat: no-repeat;
+
+  /*
+    Mantém a largura completa da imagem.
+  */
+  background-size: 100% auto;
+
+  /*
+    Primeiro valor: posição horizontal.
+    Segundo valor: posição vertical.
+  */
+  background-position: center 45%;
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   CAMADA DE LEITURA
+========================================================= */
+
+.headerOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(92, 0, 8, 0.02) 0%,
+      transparent 22%,
+      transparent 78%,
+      rgba(92, 0, 8, 0.02) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.015) 0%,
+      transparent 40%,
+      transparent 70%,
+      rgba(0, 0, 0, 0.025) 100%
+    );
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   CONTEÚDO DESKTOP
+========================================================= */
+
+.desktopContent {
+  position: relative;
+  z-index: 5;
+
+  width: min(1540px, calc(100% - 80px));
+  height: 100%;
+
+  margin: 0 auto;
+}
+
+.desktopNavigation {
+  display: grid;
+
+  /*
+    Coluna central menor, acompanhando
+    a redução da logo.
+  */
+  grid-template-columns:
+    minmax(0, 1fr)
+    clamp(205px, 14vw, 250px)
+    minmax(0, 1fr);
+
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+}
+
+/* =========================================================
+   GRUPOS DE LINKS
+========================================================= */
+
+.navigationGroup {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+
+  width: 100%;
+
+  /*
+    Os links ficam na linha central da bandeira,
+    dentro da faixa branca.
+  */
+  transform: translateY(0);
+}
+
+.navigationGroup:first-child {
+  padding-right: clamp(22px, 2.5vw, 48px);
+}
+
+.navigationGroup:last-child {
+  padding-left: clamp(22px, 2.5vw, 48px);
+}
+
+/* =========================================================
+   LINKS DESKTOP
+========================================================= */
+
+.navigationGroup a {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 0;
+  min-height: 44px;
+
+  padding: 8px 6px;
+
+  color: #850914;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(0.82rem, 0.95vw, 1.02rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.035em;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+
+  /*
+    Sombra discreta para leitura sobre o tecido branco.
+  */
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.98),
+    0 0 5px rgba(255, 255, 255, 0.72);
+
+  transition:
+    color 200ms ease,
+    transform 200ms ease;
+}
+
+/* =========================================================
+   LINHA DOURADA DOS LINKS
+========================================================= */
+
+.navigationGroup a::after {
+  content: "";
+
+  position: absolute;
+  right: 24%;
+  bottom: 1px;
+  left: 24%;
+
+  height: 1px;
+
+  opacity: 0.75;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(178, 118, 15, 0.64),
+    #d5a52c,
+    rgba(178, 118, 15, 0.64),
+    transparent
+  );
+
+  transform: scaleX(0.82);
+
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+
+.navigationGroup a:hover {
+  color: #b4780e;
+  transform: translateY(-2px);
+}
+
+.navigationGroup a:hover::after {
+  opacity: 1;
+  transform: scaleX(1.1);
+}
+
+/* =========================================================
+   AJUSTES INDIVIDUAIS DOS LINKS
+========================================================= */
+
+/*
+  As faixas brancas são inclinadas e ficam mais estreitas
+  próximas da logo. Por isso os links internos precisam
+  de pequenos ajustes verticais.
+*/
+
+.navigationGroup:first-child a:nth-child(1) {
+  transform: translateY(0);
+}
+
+.navigationGroup:first-child a:nth-child(2) {
+  transform: translateY(-1px);
+}
+
+.navigationGroup:first-child a:nth-child(3) {
+  transform: translateY(-2px);
+}
+
+.navigationGroup:last-child a:nth-child(1) {
+  transform: translateY(-2px);
+}
+
+.navigationGroup:last-child a:nth-child(2) {
+  transform: translateY(-1px);
+}
+
+.navigationGroup:last-child a:nth-child(3) {
+  transform: translateY(0);
+}
+
+.navigationGroup:first-child a:nth-child(1):hover,
+.navigationGroup:first-child a:nth-child(2):hover,
+.navigationGroup:first-child a:nth-child(3):hover,
+.navigationGroup:last-child a:nth-child(1):hover,
+.navigationGroup:last-child a:nth-child(2):hover,
+.navigationGroup:last-child a:nth-child(3):hover {
+  color: #b4780e;
+}
+
+/* =========================================================
+   COLUNA CENTRAL DA LOGO
+========================================================= */
+
+.logoColumn {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+}
+
+/* =========================================================
+   LOGO CENTRAL
+========================================================= */
+
+.logoArea {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /*
+    Logo menor e proporcional ao novo header.
+  */
+  width: clamp(170px, 12vw, 205px);
+  height: clamp(170px, 12vw, 205px);
+
+  text-decoration: none;
+
+  /*
+    Centro exato do header e do encontro das faixas.
+  */
+  transform: translate(-50%, -50%);
+}
+
+.logo {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  filter:
+    drop-shadow(0 6px 9px rgba(44, 0, 3, 0.34))
+    drop-shadow(0 0 3px rgba(217, 174, 63, 0.32));
+
+  transform: scale(1);
+
+  transition:
+    transform 260ms ease,
+    filter 260ms ease;
+}
+
+.logoArea:hover .logo {
+  transform: scale(1.025);
+
+  filter:
+    drop-shadow(0 8px 12px rgba(44, 0, 3, 0.4))
+    drop-shadow(0 0 5px rgba(217, 174, 63, 0.46));
+}
+
+/* =========================================================
+   ELEMENTOS MOBILE OCULTOS NO DESKTOP
+========================================================= */
+
+.mobileHeader,
+.menuButton,
+.mobileMenu,
+.backdrop {
+  display: none;
+}
+
+/* =========================================================
+   DESKTOP GRANDE
+========================================================= */
+
+@media (min-width: 1700px) {
+  .desktopContent {
+    width: min(1580px, calc(100% - 120px));
+  }
+
+  .navigationGroup:first-child {
+    padding-right: 48px;
+  }
+
+  .navigationGroup:last-child {
+    padding-left: 48px;
+  }
+}
+
+/* =========================================================
+   NOTEBOOKS
+========================================================= */
+
+@media (max-width: 1450px) {
+  .header {
+    height: 215px;
+  }
+
+  .desktopContent {
+    width: calc(100% - 56px);
+  }
+
+  .desktopNavigation {
+    grid-template-columns:
+      minmax(0, 1fr)
+      215px
+      minmax(0, 1fr);
+  }
+
+  .logoArea {
+    width: 192px;
+    height: 192px;
+  }
+
+  .navigationGroup:first-child {
+    padding-right: 22px;
+  }
+
+  .navigationGroup:last-child {
+    padding-left: 22px;
+  }
+
+  .navigationGroup a {
+    min-height: 42px;
+    font-size: 0.7rem;
+  }
+}
+
+/* =========================================================
+   NOTEBOOKS MENORES
+========================================================= */
+
+@media (max-width: 1250px) {
+  .header {
+    height: 185px;
+  }
+
+  .background {
+    right: -20px;
+    left: -20px;
+
+    transform: scale(1.022);
+  }
+
+  .desktopContent {
+    width: calc(100% - 30px);
+  }
+
+  .desktopNavigation {
+    grid-template-columns:
+      minmax(0, 1fr)
+      180px
+      minmax(0, 1fr);
+  }
+
+  .logoArea {
+    width: 165px;
+    height: 165px;
+  }
+
+  .navigationGroup:first-child {
+    padding-right: 10px;
+  }
+
+  .navigationGroup:last-child {
+    padding-left: 10px;
+  }
+
+  .navigationGroup a {
+    min-height: 40px;
+
+    padding-inline: 3px;
+
+    font-size: 0.64rem;
+  }
+}
+
+/* =========================================================
+   TABLET E CELULAR
+========================================================= */
+
+@media (max-width: 900px) {
+  .header {
+    height: 96px;
+
+    border-width: 1px;
+
+    box-shadow:
+      0 8px 24px rgba(38, 0, 3, 0.25),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.12);
+  }
+
+  .background {
+    top: -2px;
+    right: -20px;
+    bottom: -2px;
+    left: -20px;
+
+    background-position: center center;
+    background-size: cover;
+
+    transform: scale(1.04);
+  }
+
+  .headerOverlay {
+    background: linear-gradient(
+      90deg,
+      rgba(95, 0, 8, 0.07),
+      rgba(255, 255, 255, 0.02),
+      rgba(95, 0, 8, 0.07)
+    );
+  }
+
+  .desktopContent {
+    display: none;
+  }
+
+  .mobileHeader {
+    position: relative;
+    z-index: 10;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 0 72px;
+  }
+
+  .mobileLogoArea {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100px;
+    height: 100px;
+
+    text-decoration: none;
+
+    transform: translate(-50%, -50%);
+  }
+
+  .mobileLogo {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    filter: drop-shadow(0 5px 7px rgba(42, 0, 3, 0.35));
+  }
+
+  .menuButton {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    z-index: 1003;
+
+    display: grid;
+    place-items: center;
+
+    width: 46px;
+    height: 46px;
+
+    padding: 0;
+
+    border: 1px solid rgba(235, 201, 101, 0.95);
+    border-radius: 50%;
+
+    background: linear-gradient(
+      145deg,
+      rgba(139, 7, 19, 0.98),
+      rgba(69, 0, 6, 0.98)
+    );
+
+    color: #ffffff;
+
+    cursor: pointer;
+
+    transform: translateY(-50%);
+
+    box-shadow:
+      0 8px 24px rgba(38, 0, 3, 0.42),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+    transition:
+      transform 180ms ease,
+      background 180ms ease;
+  }
+
+  .menuButton:hover {
+    background: linear-gradient(
+      145deg,
+      rgba(165, 12, 25, 0.98),
+      rgba(82, 0, 8, 0.98)
+    );
+  }
+
+  .menuButton:active {
+    transform: translateY(-50%) scale(0.94);
+  }
+
+  /* =======================================================
+     FUNDO DO MENU ABERTO
+  ======================================================= */
+
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 0;
+    border: 0;
+
+    visibility: hidden;
+    opacity: 0;
+
+    background: rgba(20, 0, 2, 0.68);
+
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+    cursor: pointer;
+
+    transition:
+      opacity 260ms ease,
+      visibility 260ms ease;
+  }
+
+  .backdropVisible {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  /* =======================================================
+     MENU LATERAL
+  ======================================================= */
+
+  .mobileMenu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1002;
+
+    display: flex;
+    flex-direction: column;
+
+    width: min(88vw, 400px);
+
+    padding: 26px 24px;
+
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    background:
+      radial-gradient(
+        circle at 100% 0,
+        rgba(225, 178, 54, 0.2),
+        transparent 34%
+      ),
+      linear-gradient(
+        155deg,
+        #900914 0%,
+        #500007 58%,
+        #240002 100%
+      );
+
+    color: #ffffff;
+
+    box-shadow: -28px 0 70px rgba(24, 0, 2, 0.55);
+
+    transform: translateX(105%);
+
+    transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .mobileMenuOpen {
+    transform: translateX(0);
+  }
+
+  .mobileMenuHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    padding-bottom: 20px;
+
+    border-bottom: 1px solid rgba(235, 200, 93, 0.35);
+  }
+
+  .mobileMenuBrand {
+    display: flex;
+    align-items: center;
+
+    min-width: 0;
+
+    gap: 12px;
+  }
+
+  .mobileMenuLogo {
+    flex: 0 0 auto;
+
+    width: 58px;
+    height: 58px;
+
+    object-fit: contain;
+
+    filter: drop-shadow(0 4px 6px rgba(24, 0, 2, 0.35));
+  }
+
+  .mobileMenuBrand > div {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+
+    gap: 5px;
+  }
+
+  .mobileMenuHeader span {
+    color: rgba(255, 255, 255, 0.6);
+
+    font-size: 0.64rem;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .mobileMenuHeader strong {
+    max-width: 200px;
+
+    color: #ecc75e;
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 0.98rem;
+    line-height: 1.2;
+  }
+
+  .mobileMenuHeader > button {
+    display: grid;
+    place-items: center;
+
+    flex: 0 0 auto;
+
+    width: 42px;
+    height: 42px;
+
+    padding: 0;
+
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+
+    cursor: pointer;
+
+    transition:
+      background 180ms ease,
+      transform 180ms ease;
+  }
+
+  .mobileMenuHeader > button:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
+
+  .mobileMenuHeader > button:active {
+    transform: scale(0.94);
+  }
+
+  /* =======================================================
+     LINKS MOBILE
+  ======================================================= */
+
+  .mobileLinks {
+    display: flex;
+    flex-direction: column;
+
+    padding-top: 20px;
+  }
+
+  .mobileLinks a {
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+
+    padding: 18px 3px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    transition:
+      color 180ms ease,
+      padding-left 180ms ease,
+      background 180ms ease;
+  }
+
+  .mobileLinks a:hover {
+    padding-left: 9px;
+
+    color: #ecc75e;
+  }
+
+  .mobileLinks a span {
+    color: #d9ae3f;
+
+    font-size: 0.65rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+  }
+
+  .mobileLinks a strong {
+    font-size: 0.96rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .mobileFooter {
+    margin-top: auto;
+    padding-top: 24px;
+
+    color: rgba(255, 255, 255, 0.55);
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 0.8rem;
+  }
+}
+
+/* =========================================================
+   CELULARES PEQUENOS
+========================================================= */
+
+@media (max-width: 480px) {
+  .header {
+    height: 86px;
+  }
+
+  .background {
+    right: -18px;
+    left: -18px;
+
+    transform: scale(1.05);
+  }
+
+  .mobileHeader {
+    padding-inline: 62px;
+  }
+
+  .mobileLogoArea {
+    width: 90px;
+    height: 90px;
+  }
+
+  .menuButton {
+    right: 12px;
+
+    width: 43px;
+    height: 43px;
+  }
+
+  .mobileMenu {
+    width: 92vw;
+
+    padding: 22px 20px;
+  }
+
+  .mobileMenuLogo {
+    width: 52px;
+    height: 52px;
+  }
+
+  .mobileMenuHeader strong {
+    max-width: 170px;
+    font-size: 0.9rem;
+  }
+
+  .mobileLinks a {
+    padding-block: 17px;
+  }
+}
+
+/* =========================================================
+   ACESSIBILIDADE
+========================================================= */
+
+.navigationGroup a:focus-visible,
+.logoArea:focus-visible,
+.mobileLogoArea:focus-visible,
+.menuButton:focus-visible,
+.mobileMenuHeader button:focus-visible,
+.mobileLinks a:focus-visible {
+  outline: 3px solid #f1cf66;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navigationGroup a,
+  .navigationGroup a::after,
+  .logo,
+  .menuButton,
+  .backdrop,
+  .mobileMenu,
+  .mobileLinks a,
+  .mobileMenuHeader button {
+    transition: none;
+  }
+}

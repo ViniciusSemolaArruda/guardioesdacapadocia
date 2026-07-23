@@ -1,0 +1,1299 @@
+/* =========================================================
+   SEÇÃO DA GALERIA
+========================================================= */
+
+.section {
+  position: relative;
+  isolation: isolate;
+
+  width: 100%;
+  min-height: 680px;
+
+  overflow: hidden;
+
+  padding:
+    clamp(42px, 4.5vw, 68px)
+    0
+    clamp(42px, 4.5vw, 68px);
+
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+
+  background: #f4f5f7;
+
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   FUNDO CINZA-CLARO
+========================================================= */
+
+.background {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+
+  overflow: hidden;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 15% 18%,
+      rgba(255, 255, 255, 0.95),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 85% 25%,
+      rgba(255, 255, 255, 0.72),
+      transparent 34%
+    ),
+    linear-gradient(
+      135deg,
+      #f8f9fa 0%,
+      #f4f5f7 48%,
+      #eef0f3 100%
+    );
+}
+
+.background::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  opacity: 0.65;
+
+  background-image:
+    linear-gradient(
+      rgba(17, 24, 39, 0.022) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(17, 24, 39, 0.022) 1px,
+      transparent 1px
+    );
+
+  background-size: 50px 50px;
+
+  mask-image:
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.5),
+      transparent 94%
+    );
+
+  -webkit-mask-image:
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.5),
+      transparent 94%
+    );
+}
+
+.background::after {
+  content: "";
+
+  position: absolute;
+  top: -530px;
+  left: 50%;
+
+  width: 820px;
+  height: 820px;
+
+  transform: translateX(-50%);
+
+  border: 1px solid
+    rgba(17, 24, 39, 0.035);
+
+  border-radius: 50%;
+
+  box-shadow:
+    0 0 0 105px
+      rgba(17, 24, 39, 0.01),
+    0 0 0 210px
+      rgba(17, 24, 39, 0.007),
+    0 0 0 315px
+      rgba(17, 24, 39, 0.004);
+}
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container {
+  position: relative;
+  z-index: 2;
+
+  width: min(
+    1380px,
+    calc(100% - 80px)
+  );
+
+  margin: 0 auto;
+}
+
+/* =========================================================
+   CABEÇALHO
+========================================================= */
+
+.header {
+  width: min(760px, 100%);
+
+  margin:
+    0
+    auto
+    clamp(16px, 2vw, 28px);
+
+  text-align: center;
+}
+
+.sectionIcon {
+  width: 50px;
+  height: 50px;
+
+  margin: 0 auto 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid
+    rgba(156, 112, 19, 0.22);
+
+  border-radius: 50%;
+
+  background:
+    rgba(255, 255, 255, 0.92);
+
+  box-shadow:
+    0 10px 25px
+      rgba(15, 23, 42, 0.075),
+    inset 0 0 0 1px
+      rgba(255, 255, 255, 0.85);
+
+  color: #9d7317;
+}
+
+.sectionIcon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  color: #886519;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: clamp(
+    10px,
+    0.8vw,
+    13px
+  );
+
+  font-weight: 800;
+  letter-spacing: 0.17em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.eyebrow span {
+  width: 38px;
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #b88a25
+    );
+}
+
+.eyebrow span:last-child {
+  background:
+    linear-gradient(
+      90deg,
+      #b88a25,
+      transparent
+    );
+}
+
+/* =========================================================
+   ÁREA DO CARROSSEL
+========================================================= */
+
+.galleryArea {
+  position: relative;
+
+  width: 100%;
+  height: clamp(
+    430px,
+    39vw,
+    540px
+  );
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  perspective: 1600px;
+
+  outline: none;
+
+  /*
+    Permite rolagem vertical normal da página,
+    mas mantém o gesto horizontal para a galeria.
+  */
+  touch-action: pan-y;
+
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.carousel {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+}
+
+.carouselTrack {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  /*
+    O tamanho das imagens foi mantido.
+  */
+  width: min(570px, 48vw);
+  height: min(430px, 36vw);
+
+  transform:
+    translate(-50%, -50%);
+
+  transform-style: preserve-3d;
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card {
+  --position: 0;
+  --absolute-position: 0;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  transform:
+    translate(-50%, -50%)
+    translateX(
+      calc(
+        var(--position) * 270px
+      )
+    )
+    translateZ(
+      calc(
+        var(--absolute-position) *
+          -220px
+      )
+    )
+    rotateY(
+      calc(
+        var(--position) * -12deg
+      )
+    )
+    rotateZ(
+      calc(
+        var(--position) * 2.5deg
+      )
+    )
+    scale(
+      calc(
+        1 -
+          var(--absolute-position) *
+          0.11
+      )
+    );
+
+  transform-origin: center;
+  transform-style: preserve-3d;
+
+  opacity:
+    calc(
+      1 -
+        var(--absolute-position) *
+        0.23
+    );
+
+  filter:
+    brightness(
+      calc(
+        1 -
+          var(--absolute-position) *
+          0.18
+      )
+    );
+
+  cursor: pointer;
+
+  transition:
+    transform 650ms
+      cubic-bezier(
+        0.22,
+        1,
+        0.36,
+        1
+      ),
+    opacity 650ms ease,
+    filter 650ms ease;
+
+  will-change:
+    transform,
+    opacity;
+}
+
+.card[data-position="3"],
+.card[data-position="-3"],
+.card[data-position="4"],
+.card[data-position="-4"],
+.card[data-position="5"],
+.card[data-position="-5"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.activeCard {
+  z-index: 10;
+
+  filter: brightness(1);
+
+  cursor: zoom-in;
+}
+
+.imageWrapper {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  border: 2px solid
+    rgba(186, 137, 33, 0.72);
+
+  border-radius: 18px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 26px 65px
+      rgba(15, 23, 42, 0.2),
+    0 5px 18px
+      rgba(15, 23, 42, 0.1),
+    0 0 0 1px
+      rgba(255, 255, 255, 0.9);
+
+  box-sizing: border-box;
+}
+
+.image {
+  object-fit: cover;
+  object-position: center;
+
+  pointer-events: none;
+
+  transition:
+    transform 700ms ease;
+}
+
+.activeCard:hover .image {
+  transform: scale(1.035);
+}
+
+.imageShade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.01)
+        38%,
+      rgba(0, 0, 0, 0.7)
+        100%
+    );
+
+  pointer-events: none;
+}
+
+.cardNumber {
+  position: absolute;
+  bottom: 21px;
+  left: 23px;
+  z-index: 2;
+
+  color: #ffffff;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+
+  text-shadow:
+    0 2px 9px
+      rgba(0, 0, 0, 0.8);
+}
+
+.expandButton {
+  position: absolute;
+  right: 18px;
+  bottom: 17px;
+  z-index: 3;
+
+  width: 44px;
+  height: 44px;
+
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid
+    rgba(229, 185, 64, 0.7);
+
+  border-radius: 50%;
+
+  background:
+    rgba(20, 20, 22, 0.74);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter:
+    blur(10px);
+
+  color: #ffffff;
+
+  cursor: pointer;
+
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease;
+}
+
+.expandButton:hover {
+  transform: scale(1.08);
+
+  border-color: #efc44e;
+
+  background: #8d0712;
+}
+
+.expandButton svg {
+  width: 19px;
+  height: 19px;
+}
+
+/* =========================================================
+   SETAS
+========================================================= */
+
+.arrowButton {
+  position: absolute;
+  top: 50%;
+  z-index: 30;
+
+  width: 54px;
+  height: 54px;
+
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transform: translateY(-50%);
+
+  border: 1px solid #dfe1e5;
+  border-radius: 50%;
+
+  background:
+    rgba(255, 255, 255, 0.96);
+
+  box-shadow:
+    0 12px 30px
+      rgba(15, 23, 42, 0.13);
+
+  color: #850914;
+
+  cursor: pointer;
+
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
+}
+
+.arrowButton:hover {
+  transform:
+    translateY(-50%)
+    scale(1.07);
+
+  border-color: #d3a52e;
+
+  background: #850914;
+
+  color: #ffffff;
+}
+
+.arrowButton svg {
+  width: 25px;
+  height: 25px;
+}
+
+.arrowLeft {
+  left: clamp(0px, 2vw, 28px);
+}
+
+.arrowRight {
+  right: clamp(0px, 2vw, 28px);
+}
+
+/* =========================================================
+   PAGINAÇÃO
+========================================================= */
+
+.galleryFooter {
+  margin-top: 8px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 11px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+}
+
+.paginationButton {
+  width: 9px;
+  height: 9px;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 999px;
+
+  background: #c9cbd0;
+
+  cursor: pointer;
+
+  transition:
+    width 250ms ease,
+    background 250ms ease,
+    transform 250ms ease;
+}
+
+.paginationButton:hover {
+  transform: scale(1.22);
+
+  background: #b58a28;
+}
+
+.activePaginationButton {
+  width: 34px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #8f0713,
+      #c39831
+    );
+}
+
+.counter {
+  margin: 0;
+
+  display: flex;
+  align-items: baseline;
+
+  gap: 7px;
+
+  color: #92969d;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+}
+
+.counter strong {
+  color: #303238;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.counter span {
+  color: #a87c1e;
+}
+
+.counter small {
+  color: #777b82;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* =========================================================
+   LIGHTBOX
+========================================================= */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px 90px;
+
+  background:
+    rgba(8, 9, 11, 0.96);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter:
+    blur(16px);
+
+  animation:
+    lightboxFade 220ms ease both;
+}
+
+.lightboxContent {
+  position: relative;
+
+  width: min(1180px, 85vw);
+  height: min(780px, 82vh);
+
+  overflow: hidden;
+
+  border: 1px solid
+    rgba(225, 180, 63, 0.8);
+
+  border-radius: 18px;
+
+  background: #0e0f11;
+
+  box-shadow:
+    0 40px 110px
+      rgba(0, 0, 0, 0.72);
+}
+
+.lightboxImage {
+  object-fit: contain;
+}
+
+.lightboxCaption {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+
+  padding:
+    65px
+    26px
+    22px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  background:
+    linear-gradient(
+      transparent,
+      rgba(0, 0, 0, 0.86)
+    );
+
+  color: #ffffff;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+}
+
+.lightboxCaption span {
+  color: #e7bb42;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.lightboxCaption strong {
+  font-size: 14px;
+}
+
+.closeButton,
+.lightboxArrow {
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid
+    rgba(225, 180, 63, 0.62);
+
+  border-radius: 50%;
+
+  background:
+    rgba(255, 255, 255, 0.08);
+
+  color: #ffffff;
+
+  cursor: pointer;
+
+  transition:
+    transform 180ms ease,
+    background 180ms ease;
+}
+
+.closeButton {
+  position: fixed;
+  top: 25px;
+  right: 28px;
+  z-index: 10;
+
+  width: 50px;
+  height: 50px;
+}
+
+.closeButton:hover {
+  transform: rotate(90deg);
+
+  background: #8f0712;
+}
+
+.closeButton svg {
+  width: 23px;
+  height: 23px;
+}
+
+.lightboxArrow {
+  position: fixed;
+  top: 50%;
+  z-index: 10;
+
+  width: 58px;
+  height: 58px;
+
+  transform: translateY(-50%);
+}
+
+.lightboxArrow:hover {
+  transform:
+    translateY(-50%)
+    scale(1.08);
+
+  background: #8f0712;
+}
+
+.lightboxArrowLeft {
+  left: 22px;
+}
+
+.lightboxArrowRight {
+  right: 22px;
+}
+
+.lightboxArrow svg {
+  width: 28px;
+  height: 28px;
+}
+
+@keyframes lightboxFade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   TABLETS
+========================================================= */
+
+@media (max-width: 1000px) {
+  .section {
+    min-height: 640px;
+
+    padding:
+      42px
+      0
+      48px;
+  }
+
+  .container {
+    width: calc(100% - 40px);
+  }
+
+  .header {
+    margin-bottom: 18px;
+  }
+
+  .galleryArea {
+    height: 470px;
+  }
+
+  /*
+    Mantém o mesmo tamanho das imagens
+    usado anteriormente para tablet.
+  */
+  .carouselTrack {
+    width: min(520px, 58vw);
+    height: min(390px, 44vw);
+  }
+
+  .card {
+    transform:
+      translate(-50%, -50%)
+      translateX(
+        calc(
+          var(--position) * 220px
+        )
+      )
+      translateZ(
+        calc(
+          var(--absolute-position) *
+            -190px
+        )
+      )
+      rotateY(
+        calc(
+          var(--position) * -11deg
+        )
+      )
+      rotateZ(
+        calc(
+          var(--position) * 2deg
+        )
+      )
+      scale(
+        calc(
+          1 -
+            var(--absolute-position) *
+            0.12
+        )
+      );
+  }
+
+  .arrowButton {
+    width: 50px;
+    height: 50px;
+  }
+
+  .galleryFooter {
+    margin-top: 5px;
+  }
+
+  .lightbox {
+    padding: 70px;
+  }
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+  .section {
+    min-height: auto;
+
+    padding:
+      34px
+      0
+      38px;
+  }
+
+  .arrowButton {
+    display: none;
+  }
+  
+  .container {
+    width: calc(100% - 20px);
+  }
+
+  .header {
+    margin-bottom: 10px;
+  }
+
+  .sectionIcon {
+    width: 44px;
+    height: 44px;
+
+    margin-bottom: 10px;
+  }
+
+  .sectionIcon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .eyebrow {
+    gap: 9px;
+
+    font-size: 9px;
+  }
+
+  .eyebrow span {
+    width: 27px;
+  }
+
+  .galleryArea {
+    height: 355px;
+
+    /*
+      Importante para permitir que o usuário
+      deslize horizontalmente com o dedo.
+    */
+    touch-action: pan-y;
+
+    cursor: grab;
+  }
+
+  .galleryArea:active {
+    cursor: grabbing;
+  }
+
+  /*
+    O tamanho mobile das imagens foi mantido.
+  */
+  .carouselTrack {
+    width: min(82vw, 350px);
+    height: min(62vw, 275px);
+  }
+
+  .card {
+    transform:
+      translate(-50%, -50%)
+      translateX(
+        calc(
+          var(--position) * 120px
+        )
+      )
+      translateZ(
+        calc(
+          var(--absolute-position) *
+            -135px
+        )
+      )
+      rotateY(
+        calc(
+          var(--position) * -10deg
+        )
+      )
+      rotateZ(
+        calc(
+          var(--position) * 1.5deg
+        )
+      )
+      scale(
+        calc(
+          1 -
+            var(--absolute-position) *
+            0.13
+        )
+      );
+  }
+
+  .imageWrapper {
+    border-width: 2px;
+    border-radius: 14px;
+
+    box-shadow:
+      0 20px 45px
+        rgba(15, 23, 42, 0.19),
+      0 4px 12px
+        rgba(15, 23, 42, 0.09);
+  }
+
+  .cardNumber {
+    bottom: 14px;
+    left: 16px;
+
+    font-size: 17px;
+  }
+
+  .expandButton {
+    right: 12px;
+    bottom: 11px;
+
+    width: 38px;
+    height: 38px;
+  }
+
+  .expandButton svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /*
+    As setas continuam disponíveis,
+    mas o usuário também pode deslizar.
+  */
+  .arrowButton {
+    top: auto;
+    bottom: 0;
+
+    width: 42px;
+    height: 42px;
+
+    transform: none;
+  }
+
+  .arrowButton:hover {
+    transform: scale(1.05);
+  }
+
+  .arrowLeft {
+    left: calc(50% - 58px);
+  }
+
+  .arrowRight {
+    right: calc(50% - 58px);
+  }
+
+  .arrowButton svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .galleryFooter {
+    margin-top: 7px;
+
+    gap: 10px;
+  }
+
+  .pagination {
+    max-width: 100%;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+  }
+
+  .paginationButton {
+    width: 7px;
+    height: 7px;
+  }
+
+  .activePaginationButton {
+    width: 25px;
+  }
+
+  .counter strong {
+    font-size: 21px;
+  }
+
+  .counter small {
+    font-size: 11px;
+  }
+
+  .lightbox {
+    padding:
+      80px
+      12px
+      75px;
+  }
+
+  .lightboxContent {
+    width: 100%;
+    height: min(68vh, 570px);
+
+    border-radius: 13px;
+  }
+
+  .closeButton {
+    top: 18px;
+    right: 17px;
+
+    width: 44px;
+    height: 44px;
+  }
+
+  .lightboxArrow {
+    top: auto;
+    bottom: 17px;
+
+    width: 46px;
+    height: 46px;
+
+    transform: none;
+  }
+
+  .lightboxArrow:hover {
+    transform: scale(1.07);
+  }
+
+  .lightboxArrowLeft {
+    left: calc(50% - 58px);
+  }
+
+  .lightboxArrowRight {
+    right: calc(50% - 58px);
+  }
+
+  .lightboxCaption {
+    padding:
+      55px
+      16px
+      15px;
+  }
+
+  .lightboxCaption span {
+    font-size: 9px;
+  }
+
+  .lightboxCaption strong {
+    font-size: 12px;
+  }
+}
+
+/* =========================================================
+   CELULARES ESTREITOS
+========================================================= */
+
+@media (max-width: 380px) {
+  .section {
+    padding:
+      30px
+      0
+      34px;
+  }
+
+  .container {
+    width: calc(100% - 16px);
+  }
+
+  .galleryArea {
+    height: 325px;
+  }
+
+  /*
+    Mantém o tamanho anteriormente usado
+    para telas muito estreitas.
+  */
+  .carouselTrack {
+    width: min(82vw, 305px);
+    height: min(63vw, 238px);
+  }
+
+  .card {
+    transform:
+      translate(-50%, -50%)
+      translateX(
+        calc(
+          var(--position) * 104px
+        )
+      )
+      translateZ(
+        calc(
+          var(--absolute-position) *
+            -125px
+        )
+      )
+      rotateY(
+        calc(
+          var(--position) * -9deg
+        )
+      )
+      rotateZ(
+        calc(
+          var(--position) * 1deg
+        )
+      )
+      scale(
+        calc(
+          1 -
+            var(--absolute-position) *
+            0.14
+        )
+      );
+  }
+
+  .galleryFooter {
+    margin-top: 5px;
+  }
+}
+
+/* =========================================================
+   ACESSIBILIDADE
+========================================================= */
+
+.arrowButton:focus-visible,
+.paginationButton:focus-visible,
+.expandButton:focus-visible,
+.closeButton:focus-visible,
+.lightboxArrow:focus-visible {
+  outline: 3px solid #b88a25;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .image,
+  .arrowButton,
+  .paginationButton,
+  .expandButton,
+  .closeButton,
+  .lightboxArrow {
+    transition: none;
+  }
+
+  .lightbox {
+    animation: none;
+  }
+}

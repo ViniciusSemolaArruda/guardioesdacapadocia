@@ -1,0 +1,808 @@
+/* =========================================================
+   SEÇÃO PRINCIPAL
+========================================================= */
+
+.aboutSection {
+  position: relative;
+  isolation: isolate;
+
+  width: 100%;
+  min-height: 720px;
+
+  overflow: hidden;
+
+  border-top: 2px solid #d7a62f;
+  border-bottom: 2px solid #d7a62f;
+
+  background: #f6efe4;
+}
+
+/* =========================================================
+   FUNDO
+========================================================= */
+
+.background {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(248, 243, 234, 0.22),
+      rgba(248, 243, 234, 0.06)
+    ),
+    url("/images/quemsomos.png");
+
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container {
+  width: min(1440px, calc(100% - 64px));
+  min-height: 720px;
+
+  margin: 0 auto;
+
+  padding:
+    clamp(66px, 7vw, 104px)
+    0
+    clamp(64px, 7vw, 96px);
+
+  display: grid;
+  grid-template-columns:
+    minmax(0, 0.82fr)
+    minmax(560px, 1.18fr);
+
+  align-items: center;
+
+  gap: clamp(44px, 5vw, 90px);
+}
+
+/* =========================================================
+   CONTEÚDO
+========================================================= */
+
+.content {
+  position: relative;
+  z-index: 4;
+
+  width: 100%;
+  max-width: 560px;
+}
+
+/* =========================================================
+   PEQUENO TÍTULO
+========================================================= */
+
+.sectionLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: fit-content;
+
+  margin: 0 0 18px 68px;
+
+  gap: 9px;
+
+  color: #8e1119;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.045em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.sectionLabel svg {
+  color: #c89119;
+
+  fill: rgba(200, 145, 25, 0.14);
+}
+
+.labelLine {
+  width: 33px;
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #9a1820
+    );
+}
+
+.labelLine:last-child {
+  background:
+    linear-gradient(
+      90deg,
+      #9a1820,
+      transparent
+    );
+}
+
+/* =========================================================
+   TÍTULO
+========================================================= */
+
+.title {
+  margin: 0 0 28px;
+
+  display: flex;
+  flex-direction: column;
+
+  font-weight: 400;
+  text-align: left;
+}
+
+.titleMain {
+  color: #99111c;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: clamp(44px, 4.4vw, 73px);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+
+  text-shadow:
+    0 2px 1px rgba(255, 255, 255, 0.82);
+}
+
+.titleAccent {
+  margin-top: 2px;
+  margin-left: 48px;
+
+  color: #b87b0b;
+
+  font-family:
+    "Brush Script MT",
+    "Segoe Script",
+    "Lucida Handwriting",
+    cursive;
+
+  font-size: clamp(39px, 4vw, 68px);
+  font-weight: 400;
+  line-height: 0.95;
+
+  transform: rotate(-2deg);
+
+  text-shadow:
+    0 2px 1px rgba(255, 255, 255, 0.78);
+}
+
+/* =========================================================
+   TEXTO
+========================================================= */
+
+.textContent {
+  max-width: 530px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+
+  color: #3f3028;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: clamp(15px, 1.05vw, 18px);
+  font-weight: 500;
+  line-height: 1.62;
+}
+
+.textContent p {
+  margin: 0;
+}
+
+/* =========================================================
+   BOTÃO
+========================================================= */
+
+.historyButton {
+  width: fit-content;
+  min-height: 56px;
+
+  margin-top: 30px;
+
+  padding: 12px 22px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 22px;
+
+  border: 1px solid #d3a129;
+  border-radius: 7px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #aa101b 0%,
+      #890812 100%
+    );
+
+  box-shadow:
+    0 10px 20px rgba(82, 0, 5, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+
+  color: #ffffff;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.035em;
+  text-decoration: none;
+  text-transform: uppercase;
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.historyButton:hover {
+  transform: translateY(-3px);
+
+  background:
+    linear-gradient(
+      180deg,
+      #c21522,
+      #960912
+    );
+
+  box-shadow:
+    0 14px 28px rgba(82, 0, 5, 0.28),
+    0 0 22px rgba(211, 161, 41, 0.18);
+}
+
+.historyButton svg {
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   GALERIA
+========================================================= */
+
+.gallery {
+  position: relative;
+
+  width: 100%;
+  min-height: 600px;
+
+  align-self: center;
+}
+
+/* =========================================================
+   ESTRUTURA DAS FOTOS
+========================================================= */
+
+.photoWrapper {
+  position: absolute;
+
+  transition:
+    transform 260ms ease,
+    filter 260ms ease;
+
+  will-change: transform;
+}
+
+.photoFrame {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  border: 8px solid #f7f1e7;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 14px 30px rgba(53, 28, 11, 0.28),
+    0 0 0 1px rgba(139, 91, 22, 0.22);
+
+  cursor: default;
+}
+
+.photoFrame::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  border: 1px solid rgba(93, 52, 17, 0.16);
+
+  box-shadow:
+    inset 0 0 16px rgba(24, 11, 2, 0.16);
+
+  pointer-events: none;
+}
+
+.photo {
+  object-fit: cover;
+  object-position: center;
+
+  transition:
+    transform 500ms
+    cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.photoWrapper:hover {
+  z-index: 10;
+
+  filter:
+    drop-shadow(
+      0 18px 22px
+      rgba(48, 20, 4, 0.22)
+    );
+}
+
+.photoWrapper:hover .photo {
+  transform: scale(1.035);
+}
+
+/* =========================================================
+   FOTO 1 — PRINCIPAL
+========================================================= */
+
+.photoOne {
+  top: 0;
+  left: 8%;
+
+  z-index: 1;
+
+  width: 68%;
+  aspect-ratio: 1.48;
+
+  transform: rotate(-4deg);
+}
+
+.photoOne:hover {
+  transform:
+    rotate(-2deg)
+    translateY(-7px);
+}
+
+/* =========================================================
+   FOTO 2 — DIREITA
+========================================================= */
+
+.photoTwo {
+  top: 35%;
+  right: 0;
+
+  z-index: 4;
+
+  width: 54%;
+  aspect-ratio: 1.48;
+
+  transform: rotate(4deg);
+}
+
+.photoTwo:hover {
+  transform:
+    rotate(2deg)
+    translateY(-7px);
+}
+
+/* =========================================================
+   FOTO 3 — INFERIOR
+========================================================= */
+
+.photoThree {
+  bottom: 4%;
+  left: 13%;
+
+  z-index: 3;
+
+  width: 52%;
+  aspect-ratio: 1.48;
+
+  transform: rotate(-5deg);
+}
+
+.photoThree:hover {
+  transform:
+    rotate(-3deg)
+    translateY(-7px);
+}
+
+/* =========================================================
+   FOLHAS DOURADAS
+========================================================= */
+
+.decorativeLeaves {
+  position: absolute;
+  bottom: 1%;
+  left: 0;
+
+  z-index: 6;
+
+  width: 165px;
+  height: 135px;
+
+  transform: rotate(-14deg);
+
+  pointer-events: none;
+}
+
+.branch {
+  position: absolute;
+  bottom: 22px;
+  left: 12px;
+
+  width: 125px;
+  height: 6px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #704307,
+      #e0ac32,
+      #8f570b
+    );
+
+  transform: rotate(-36deg);
+
+  box-shadow:
+    0 4px 8px rgba(88, 51, 5, 0.24);
+}
+
+.leafOne,
+.leafTwo,
+.leafThree,
+.leafFour,
+.leafFive,
+.leafSix {
+  position: absolute;
+
+  width: 25px;
+  height: 48px;
+
+  border-radius:
+    100% 0
+    100% 0;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f8d776 0%,
+      #c89017 55%,
+      #8b5608 100%
+    );
+
+  box-shadow:
+    inset 3px 1px 4px
+      rgba(255, 248, 182, 0.5),
+    0 5px 8px rgba(78, 44, 4, 0.18);
+}
+
+.leafOne {
+  left: 19px;
+  bottom: 25px;
+
+  transform: rotate(-61deg);
+}
+
+.leafTwo {
+  left: 48px;
+  bottom: 46px;
+
+  transform: rotate(-32deg);
+}
+
+.leafThree {
+  left: 76px;
+  bottom: 70px;
+
+  transform: rotate(-14deg);
+}
+
+.leafFour {
+  left: 50px;
+  bottom: 16px;
+
+  transform:
+    rotate(104deg)
+    scaleX(-1);
+}
+
+.leafFive {
+  left: 82px;
+  bottom: 33px;
+
+  transform:
+    rotate(123deg)
+    scaleX(-1);
+}
+
+.leafSix {
+  left: 109px;
+  bottom: 58px;
+
+  transform:
+    rotate(142deg)
+    scaleX(-1);
+}
+
+/* =========================================================
+   FOCO
+========================================================= */
+
+.historyButton:focus-visible {
+  outline: 3px solid #d8aa3c;
+  outline-offset: 4px;
+}
+
+/* =========================================================
+   NOTEBOOKS
+========================================================= */
+
+@media (max-width: 1200px) {
+  .container {
+    width: calc(100% - 48px);
+
+    grid-template-columns:
+      minmax(0, 0.9fr)
+      minmax(480px, 1.1fr);
+
+    gap: 36px;
+  }
+
+  .gallery {
+    min-height: 540px;
+  }
+
+  .photoOne {
+    left: 4%;
+
+    width: 70%;
+  }
+
+  .photoTwo {
+    width: 55%;
+  }
+
+  .photoThree {
+    left: 8%;
+
+    width: 54%;
+  }
+}
+
+/* =========================================================
+   TABLETS
+========================================================= */
+
+@media (max-width: 900px) {
+  .aboutSection {
+    min-height: auto;
+  }
+
+  .background {
+    background-position: center;
+  }
+
+  .container {
+    width: calc(100% - 40px);
+    min-height: auto;
+
+    padding:
+      72px
+      0
+      82px;
+
+    grid-template-columns: 1fr;
+
+    gap: 58px;
+  }
+
+  .content {
+    max-width: 680px;
+
+    justify-self: center;
+  }
+
+  .sectionLabel {
+    margin-left: 0;
+  }
+
+  .titleAccent {
+    margin-left: 35px;
+  }
+
+  .gallery {
+    width: min(100%, 720px);
+    min-height: 620px;
+
+    justify-self: center;
+  }
+}
+
+/* =========================================================
+   CELULARES
+========================================================= */
+
+@media (max-width: 650px) {
+  .container {
+    width: calc(100% - 28px);
+
+    padding:
+      56px
+      0
+      70px;
+
+    gap: 42px;
+  }
+
+  .sectionLabel {
+    margin-bottom: 15px;
+
+    gap: 7px;
+
+    font-size: 11px;
+  }
+
+  .labelLine {
+    width: 24px;
+  }
+
+  .title {
+    margin-bottom: 22px;
+  }
+
+  .titleMain {
+    font-size:
+      clamp(
+        36px,
+        12vw,
+        52px
+      );
+  }
+
+  .titleAccent {
+    margin-left: 18px;
+
+    font-size:
+      clamp(
+        34px,
+        11vw,
+        49px
+      );
+  }
+
+  .textContent {
+    gap: 15px;
+
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .historyButton {
+    min-height: 52px;
+
+    margin-top: 24px;
+
+    padding: 10px 17px;
+
+    gap: 15px;
+
+    font-size: 11px;
+  }
+
+  .gallery {
+    min-height: 490px;
+  }
+
+  .photoFrame {
+    border-width: 5px;
+  }
+
+  .photoOne {
+    top: 0;
+    left: 1%;
+
+    width: 78%;
+  }
+
+  .photoTwo {
+    top: 34%;
+    right: 0;
+
+    width: 63%;
+  }
+
+  .photoThree {
+    bottom: 0;
+    left: 5%;
+
+    width: 62%;
+  }
+
+  .decorativeLeaves {
+    bottom: -9px;
+    left: -12px;
+
+    transform:
+      rotate(-14deg)
+      scale(0.78);
+  }
+}
+
+/* =========================================================
+   CELULARES PEQUENOS
+========================================================= */
+
+@media (max-width: 420px) {
+  .container {
+    width: calc(100% - 22px);
+  }
+
+  .sectionLabel {
+    font-size: 10px;
+  }
+
+  .gallery {
+    min-height: 430px;
+  }
+
+  .photoOne {
+    width: 82%;
+  }
+
+  .photoTwo {
+    top: 36%;
+
+    width: 66%;
+  }
+
+  .photoThree {
+    width: 65%;
+  }
+
+  .decorativeLeaves {
+    display: none;
+  }
+}
+
+/* =========================================================
+   ACESSIBILIDADE
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .historyButton,
+  .photoWrapper,
+  .photo {
+    transition: none;
+  }
+}

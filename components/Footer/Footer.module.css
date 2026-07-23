@@ -1,0 +1,872 @@
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer {
+  --gold: #e3b63e;
+  --gold-light: #f2cf68;
+  --cream: #f7ead0;
+
+  --footer-bg: #190001;
+  --footer-bg-dark: #120001;
+  --footer-bg-light: #240002;
+
+  position: relative;
+  isolation: isolate;
+
+  width: 100%;
+
+  overflow: hidden;
+
+  border-top: 3px solid var(--gold);
+
+  background: var(--footer-bg);
+  color: var(--cream);
+}
+
+/* =========================================================
+   FUNDO
+========================================================= */
+
+.background {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+
+  background:
+    radial-gradient(
+      circle at 18% 42%,
+      rgba(57, 0, 4, 0.26) 0%,
+      transparent 43%
+    ),
+    radial-gradient(
+      circle at 76% 43%,
+      rgba(48, 0, 4, 0.2) 0%,
+      transparent 45%
+    ),
+    linear-gradient(
+      90deg,
+      #120001 0%,
+      #1a0001 24%,
+      #210002 50%,
+      #190001 76%,
+      #100001 100%
+    );
+}
+
+.background::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  opacity: 0.18;
+
+  background-image:
+    radial-gradient(
+      circle,
+      rgba(255, 223, 151, 0.05) 0.6px,
+      transparent 0.9px
+    ),
+    radial-gradient(
+      circle,
+      rgba(0, 0, 0, 0.2) 0.7px,
+      transparent 1px
+    );
+
+  background-position:
+    0 0,
+    3px 4px;
+
+  background-size:
+    5px 5px,
+    8px 8px;
+
+  mix-blend-mode: soft-light;
+
+  pointer-events: none;
+}
+
+.background::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(7, 0, 1, 0.5) 0%,
+      transparent 17%,
+      transparent 83%,
+      rgba(7, 0, 1, 0.55) 100%
+    ),
+    repeating-linear-gradient(
+      132deg,
+      transparent 0,
+      transparent 5px,
+      rgba(255, 255, 255, 0.008) 6px,
+      transparent 9px
+    );
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   CONTEÚDO PRINCIPAL
+========================================================= */
+
+.mainContent {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+}
+
+.container {
+  width: min(1500px, calc(100% - 90px));
+
+  margin: 0 auto;
+  padding: 38px 0 34px;
+
+  display: grid;
+  grid-template-columns:
+    minmax(255px, 0.95fr)
+    minmax(180px, 0.62fr)
+    minmax(200px, 0.7fr)
+    minmax(340px, 1.15fr);
+
+  align-items: center;
+
+  column-gap: clamp(36px, 4vw, 70px);
+}
+
+/* =========================================================
+   MARCA
+========================================================= */
+
+.brandColumn {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.logoLink {
+  display: block;
+
+  margin-bottom: 9px;
+
+  text-decoration: none;
+}
+
+.logo {
+  width: clamp(102px, 7vw, 125px);
+  height: clamp(102px, 7vw, 125px);
+
+  display: block;
+
+  object-fit: contain;
+
+  filter:
+    drop-shadow(
+      0 6px 10px rgba(0, 0, 0, 0.45)
+    );
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 6px;
+}
+
+.brandText h2 {
+  margin: 0;
+
+  color: var(--gold-light);
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: clamp(18px, 1.3vw, 23px);
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+
+  text-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.5);
+}
+
+.brandText p {
+  margin: 0;
+
+  color: var(--cream);
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: clamp(12px, 0.85vw, 14px);
+  font-weight: 500;
+  line-height: 1.4;
+
+  text-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.48);
+}
+
+/* =========================================================
+   COLUNAS
+========================================================= */
+
+.footerColumn {
+  position: relative;
+
+  min-width: 0;
+  min-height: 215px;
+
+  padding: 8px 0 6px 52px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.columnDivider::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+
+  width: 1px;
+
+  background:
+    linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(227, 182, 62, 0.75) 12%,
+      rgba(227, 182, 62, 0.75) 88%,
+      transparent 100%
+    );
+
+  box-shadow:
+    0 0 8px rgba(227, 182, 62, 0.08);
+}
+
+.footerColumn h3 {
+  margin: 0 0 20px;
+
+  color: var(--gold);
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  text-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.58);
+}
+
+/* =========================================================
+   LINKS RÁPIDOS
+========================================================= */
+
+.quickLinks,
+.socialLinks {
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.quickLinks {
+  display: flex;
+  flex-direction: column;
+
+  gap: 11px;
+}
+
+.quickLinks a {
+  width: fit-content;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  color: var(--cream);
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+
+  text-decoration: none;
+
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.quickLinks a svg {
+  width: 15px;
+  height: 15px;
+
+  flex: 0 0 15px;
+
+  color: var(--gold);
+  stroke: currentColor;
+  stroke-width: 3;
+}
+
+.quickLinks a:hover {
+  color: var(--gold-light);
+
+  transform: translateX(4px);
+}
+
+/* =========================================================
+   REDES SOCIAIS
+========================================================= */
+
+.socialLinks {
+  display: flex;
+  flex-direction: column;
+
+  gap: 16px;
+}
+
+.socialLinks a {
+  width: fit-content;
+
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  color: var(--cream);
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+
+  text-decoration: none;
+
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.socialLinks a:hover {
+  color: var(--gold-light);
+
+  transform: translateX(4px);
+}
+
+.socialIcon {
+  width: 27px;
+  height: 27px;
+
+  flex: 0 0 27px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--gold);
+}
+
+.socialIcon svg {
+  width: 24px;
+  height: 24px;
+
+  color: inherit;
+  stroke: currentColor;
+  stroke-width: 2.2;
+
+  filter:
+    drop-shadow(
+      0 3px 5px rgba(0, 0, 0, 0.4)
+    );
+}
+
+/* =========================================================
+   CONTATO
+========================================================= */
+
+.contactColumn {
+  padding-right: 0;
+}
+
+.contactList {
+  margin: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 16px;
+
+  font-style: normal;
+}
+
+.contactList a {
+  width: fit-content;
+  max-width: 100%;
+
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  align-items: start;
+
+  gap: 14px;
+
+  color: var(--cream);
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+
+  text-decoration: none;
+
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.contactList a:hover {
+  color: var(--gold-light);
+
+  transform: translateX(4px);
+}
+
+.contactIcon {
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  color: var(--gold);
+}
+
+.contactIcon svg {
+  width: 24px;
+  height: 24px;
+
+  color: inherit;
+  stroke: currentColor;
+  stroke-width: 2.15;
+
+  filter:
+    drop-shadow(
+      0 3px 5px rgba(0, 0, 0, 0.42)
+    );
+}
+
+.email {
+  min-width: 0;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* =========================================================
+   BARRA INFERIOR
+========================================================= */
+
+.bottomBar {
+  position: relative;
+  z-index: 3;
+
+  width: 100%;
+
+  border-top: 1px solid rgba(227, 182, 62, 0.28);
+
+  background:
+    linear-gradient(
+      90deg,
+      #100001 0%,
+      #180001 35%,
+      #1e0002 50%,
+      #170001 70%,
+      #0e0001 100%
+    );
+}
+
+.bottomBarContent {
+  width: min(1500px, calc(100% - 48px));
+
+  min-height: 46px;
+
+  margin: 0 auto;
+  padding: 7px 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.bottomBarContent p {
+  margin: 0;
+
+  color: var(--gold);
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+
+  text-shadow:
+    0 2px 5px rgba(0, 0, 0, 0.55);
+}
+
+/* =========================================================
+   NOTEBOOKS
+========================================================= */
+
+@media (max-width: 1250px) {
+  .container {
+    width: calc(100% - 64px);
+
+    grid-template-columns:
+      minmax(220px, 0.9fr)
+      minmax(150px, 0.55fr)
+      minmax(165px, 0.62fr)
+      minmax(280px, 1fr);
+
+    column-gap: 28px;
+  }
+
+  .footerColumn {
+    padding-left: 34px;
+  }
+
+  .footerColumn h3 {
+    font-size: 13px;
+  }
+
+  .quickLinks a,
+  .socialLinks a,
+  .contactList a {
+    font-size: 13px;
+  }
+
+  .contactList a {
+    grid-template-columns: 29px minmax(0, 1fr);
+
+    gap: 11px;
+  }
+
+  .contactIcon {
+    width: 29px;
+    height: 29px;
+  }
+
+  .contactIcon svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* =========================================================
+   TABLETS
+========================================================= */
+
+@media (max-width: 950px) {
+  .container {
+    width: calc(100% - 52px);
+
+    padding: 38px 0 36px;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    align-items: start;
+
+    row-gap: 40px;
+    column-gap: 46px;
+  }
+
+  .brandColumn {
+    min-height: 215px;
+  }
+
+  .footerColumn {
+    width: 100%;
+    min-height: 215px;
+
+    padding-left: 40px;
+  }
+
+  .footerColumn:nth-child(3)::before {
+    display: none;
+  }
+}
+
+/* =========================================================
+   CELULARES
+========================================================= */
+
+@media (max-width: 650px) {
+  .container {
+    width: 100%;
+
+    padding:
+      34px
+      clamp(28px, 8vw, 42px)
+      36px;
+
+    grid-template-columns: 1fr;
+
+    row-gap: 38px;
+  }
+
+  .brandColumn {
+    width: 100%;
+    min-height: auto;
+
+    padding: 0;
+
+    justify-self: center;
+  }
+
+  .logoLink {
+    margin-bottom: 8px;
+  }
+
+  .logo {
+    width: 102px;
+    height: 102px;
+  }
+
+  .brandText {
+    gap: 5px;
+  }
+
+  .brandText h2 {
+    font-size: clamp(18px, 5.8vw, 22px);
+    line-height: 1.2;
+  }
+
+  .brandText p {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .footerColumn {
+    width: min(100%, 390px);
+    min-height: auto;
+
+    margin: 0 auto;
+    padding: 0;
+
+    align-items: center;
+
+    text-align: center;
+  }
+
+  .columnDivider::before {
+    display: none;
+  }
+
+  .footerColumn::after {
+    content: "";
+
+    position: absolute;
+    top: -19px;
+    left: 50%;
+
+    width: min(100%, 250px);
+    height: 1px;
+
+    background:
+      linear-gradient(
+        90deg,
+        transparent,
+        rgba(227, 182, 62, 0.62),
+        transparent
+      );
+
+    transform: translateX(-50%);
+  }
+
+  .footerColumn h3 {
+    margin-bottom: 19px;
+
+    font-size: 14px;
+  }
+
+  .quickLinks {
+    align-items: flex-start;
+
+    gap: 12px;
+  }
+
+  .quickLinks a {
+    font-size: 14px;
+  }
+
+  .socialLinks {
+    width: fit-content;
+
+    align-items: flex-start;
+
+    gap: 16px;
+  }
+
+  .socialLinks a {
+    font-size: 14px;
+  }
+
+  .socialIcon {
+    width: 27px;
+    height: 27px;
+
+    flex-basis: 27px;
+  }
+
+  .socialIcon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .contactColumn {
+    width: min(100%, 430px);
+  }
+
+  .contactList {
+    width: 100%;
+
+    align-items: stretch;
+
+    gap: 16px;
+  }
+
+  .contactList a {
+    width: 100%;
+
+    grid-template-columns: 29px minmax(0, 1fr);
+
+    gap: 12px;
+
+    font-size: 13px;
+
+    text-align: left;
+  }
+
+  .contactIcon {
+    width: 29px;
+    height: 29px;
+  }
+
+  .contactIcon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .bottomBarContent {
+    width: 100%;
+
+    min-height: 48px;
+
+    padding:
+      8px
+      clamp(24px, 7vw, 38px);
+  }
+
+  .bottomBarContent p {
+    font-size: 10px;
+    line-height: 1.45;
+  }
+}
+
+/* =========================================================
+   CELULARES PEQUENOS
+========================================================= */
+
+@media (max-width: 390px) {
+  .container {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  .logo {
+    width: 92px;
+    height: 92px;
+  }
+
+  .brandText h2 {
+    font-size: 17px;
+  }
+
+  .brandText p {
+    font-size: 12px;
+  }
+
+  .contactList a {
+    grid-template-columns: 27px minmax(0, 1fr);
+
+    gap: 10px;
+
+    font-size: 12px;
+  }
+
+  .contactIcon {
+    width: 27px;
+    height: 27px;
+  }
+
+  .contactIcon svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* =========================================================
+   ACESSIBILIDADE
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .quickLinks a,
+  .socialLinks a,
+  .contactList a {
+    transition: none;
+  }
+}
