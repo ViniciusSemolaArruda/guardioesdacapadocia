@@ -466,12 +466,32 @@
    TABLET E CELULAR
 ========================================================= */
 
+/* =========================================================
+   TABLET E CELULAR
+========================================================= */
+
 @media (max-width: 900px) {
   .header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    width: 100%;
+
     height: 120px;
     min-height: 120px;
+    max-height: 120px;
+
+    flex: 0 0 120px;
+
+    box-sizing: border-box;
+    overflow: visible;
 
     border-width: 1px;
+
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 
     box-shadow:
       0 8px 24px rgba(38, 0, 3, 0.25),
@@ -484,10 +504,17 @@
     bottom: -2px;
     left: -20px;
 
+    width: auto;
+    height: auto;
+
     background-position: center center;
     background-size: cover;
 
-    transform: scale(1.04);
+    transform: scale(1.04) translateZ(0);
+    transform-origin: center center;
+
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
 
   .headerOverlay {
@@ -512,26 +539,38 @@
     justify-content: center;
 
     width: 100%;
-    height: 100%;
+
+    height: 120px;
+    min-height: 120px;
+    max-height: 120px;
 
     padding: 0 72px;
+
+    box-sizing: border-box;
+    flex: 0 0 120px;
+
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
 
   .mobileLogoArea {
     position: absolute;
     top: 50%;
     left: 50%;
+    z-index: 20;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
 
     text-decoration: none;
 
     transform: translate(-50%, -50%);
+    transform-origin: center center;
   }
 
   .mobileLogo {
@@ -542,7 +581,13 @@
 
     object-fit: contain;
 
+    transform: scale(1.12);
+    transform-origin: center center;
+
     filter: drop-shadow(0 5px 7px rgba(42, 0, 3, 0.35));
+
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
 
   .menuButton {
@@ -572,11 +617,14 @@
 
     cursor: pointer;
 
-    transform: translateY(-50%);
+    transform: translateY(-50%) translateZ(0);
 
     box-shadow:
       0 8px 24px rgba(38, 0, 3, 0.42),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 
     transition:
       transform 180ms ease,
@@ -594,6 +642,7 @@
   .menuButton:active {
     transform: translateY(-50%) scale(0.94);
   }
+}
 
   /* =======================================================
      FUNDO DO MENU ABERTO
@@ -832,7 +881,7 @@
     font-family: Georgia, "Times New Roman", serif;
     font-size: 0.8rem;
   }
-}
+
 
 /* =========================================================
    CELULARES PEQUENOS
@@ -842,22 +891,28 @@
   .header {
     height: 112px;
     min-height: 112px;
-  }
+    max-height: 112px;
 
-  .background {
-    right: -18px;
-    left: -18px;
-
-    transform: scale(1.05);
+    flex: 0 0 112px;
   }
 
   .mobileHeader {
+    height: 112px;
+    min-height: 112px;
+    max-height: 112px;
+
+    flex: 0 0 112px;
+
     padding-inline: 62px;
   }
 
   .mobileLogoArea {
-    width: 90px;
-    height: 90px;
+    width: 96px;
+    height: 96px;
+  }
+
+  .mobileLogo {
+    transform: scale(1.12);
   }
 
   .menuButton {
@@ -865,26 +920,6 @@
 
     width: 43px;
     height: 43px;
-  }
-
-  .mobileMenu {
-    width: 92vw;
-
-    padding: 22px 20px;
-  }
-
-  .mobileMenuLogo {
-    width: 52px;
-    height: 52px;
-  }
-
-  .mobileMenuHeader strong {
-    max-width: 170px;
-    font-size: 0.9rem;
-  }
-
-  .mobileLinks a {
-    padding-block: 17px;
   }
 }
 
