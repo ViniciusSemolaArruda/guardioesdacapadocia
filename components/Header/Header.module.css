@@ -949,3 +949,16 @@
     transition: none;
   }
 }
+
+@media (max-width: 1250px) {
+
+  .header {
+    height: 185px;
+  }
+
+  .logoArea {
+    width: 165px;
+    height: 165px;
+  }
+
+}

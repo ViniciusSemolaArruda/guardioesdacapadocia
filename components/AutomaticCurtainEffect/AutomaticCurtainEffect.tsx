@@ -38,6 +38,7 @@ const DEFAULT_SESSION_KEY =
   "guardioes-automatic-curtain-opened";
 
 const MINIMUM_HERO_HEIGHT = 400;
+const MOBILE_BREAKPOINT = 650;
 
 export default function AutomaticCurtainEffect({
   children,
@@ -76,22 +77,39 @@ export default function AutomaticCurtainEffect({
     useState(0);
 
   /* =======================================================
-     CALCULA A ALTURA DISPONÍVEL DO HERO
+     CALCULA A ALTURA DISPONÍVEL
 
-     Usa apenas:
-     altura da janela - altura do Header.
+     No desktop e tablet, o palco ocupa a altura disponível
+     abaixo do Header.
 
-     Não utiliza a posição do Hero em relação ao scroll,
-     evitando que ele fique gigante ao atualizar a página.
+     No celular, o CSS usa altura automática, acompanhando
+     todo o conteúdo do Hero. Assim, a barra do Safari não
+     provoca cortes nem espaços vazios.
   ======================================================= */
 
   useLayoutEffect(() => {
     let animationFrameId: number | null = null;
-
     let resizeObserver:
       ResizeObserver | null = null;
 
     function calculateAvailableHeight() {
+      /*
+       * No celular, a variável é mantida apenas com um valor
+       * válido para liberar o estado de carregamento.
+       *
+       * A altura real passa a ser definida pelo conteúdo.
+       */
+      if (
+        window.innerWidth <=
+        MOBILE_BREAKPOINT
+      ) {
+        setAvailableHeight(
+          MINIMUM_HERO_HEIGHT,
+        );
+
+        return;
+      }
+
       const header =
         document.querySelector<HTMLElement>(
           "header",
@@ -101,11 +119,6 @@ export default function AutomaticCurtainEffect({
         header?.getBoundingClientRect().height ??
         0;
 
-      /*
-       * visualViewport é mais confiável em celulares,
-       * especialmente quando a barra do navegador aparece
-       * ou desaparece.
-       */
       const viewportHeight =
         window.visualViewport?.height ??
         window.innerHeight;
@@ -119,13 +132,10 @@ export default function AutomaticCurtainEffect({
       );
 
       setAvailableHeight((currentHeight) => {
-        /*
-         * Evita renderizações desnecessárias quando
-         * a diferença é mínima.
-         */
         if (
-          Math.abs(currentHeight - nextHeight) <
-          2
+          Math.abs(
+            currentHeight - nextHeight,
+          ) < 2
         ) {
           return currentHeight;
         }
@@ -144,20 +154,12 @@ export default function AutomaticCurtainEffect({
       animationFrameId =
         window.requestAnimationFrame(() => {
           calculateAvailableHeight();
-
           animationFrameId = null;
         });
     }
 
-    /*
-     * Primeiro cálculo.
-     */
     requestCalculation();
 
-    /*
-     * Segundo cálculo após o navegador terminar
-     * o layout inicial e carregar fontes/imagens.
-     */
     const initialTimeout =
       window.setTimeout(
         requestCalculation,
@@ -193,13 +195,6 @@ export default function AutomaticCurtainEffect({
           requestCalculation,
         );
 
-      /*
-       * Observa somente o Header.
-       *
-       * Não observa o próprio Hero, pois isso poderia
-       * gerar um ciclo:
-       * altura muda → observer dispara → altura muda.
-       */
       resizeObserver.observe(header);
     }
 

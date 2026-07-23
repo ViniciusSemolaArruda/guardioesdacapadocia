@@ -6,12 +6,6 @@
   position: relative;
 
   width: 100%;
-
-  /*
-    A altura é calculada pelo componente:
-
-    altura da janela - altura real do Header
-  */
   height: var(--available-height, 400px);
   min-height: 400px;
 
@@ -78,8 +72,6 @@
     opacity,
     transform;
 }
-
-/* Garante que o Hero interno respeite a altura do palco */
 
 .curtainContent > * {
   width: 100%;
@@ -376,21 +368,94 @@
 
 /* =========================================================
    CELULARES
+
+   O palco passa a acompanhar a altura real do Hero.
+   Nenhum elemento utiliza a altura dinâmica da janela.
 ========================================================= */
 
-@media (max-width: 520px) {
+@media (max-width: 650px) {
   .curtainSection {
-    min-height: 500px;
+    position: relative;
+
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+
+    overflow: hidden;
+
+    background: #170003;
+  }
+
+  .curtainStage {
+    position: relative;
+
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+
+    overflow: hidden;
+    isolation: isolate;
+
+    background: #170003;
   }
 
   .curtainContent {
+    position: relative;
+    inset: auto;
+
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+
+    overflow: visible;
+
     transform:
       scale(1.01)
       translateY(5px);
   }
 
+  .curtainContent > * {
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+  }
+
+  .heroShade {
+    position: absolute;
+    inset: 0;
+  }
+
+  .curtainPanel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+
+    height: auto;
+    min-height: 100%;
+  }
+
+  .curtainArtwork {
+    height: 100%;
+  }
+
   .curtainEdge {
     width: 16px;
+  }
+
+  .centerSeam {
+    top: 0;
+    bottom: 0;
+
+    height: auto;
+  }
+
+  .opening .curtainContent,
+  .finished .curtainContent {
+    transform: none;
   }
 }
 

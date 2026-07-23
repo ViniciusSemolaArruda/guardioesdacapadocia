@@ -1,9 +1,5 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-
-import type { MouseEvent } from "react";
 
 import {
   ChevronRight,
@@ -34,10 +30,7 @@ const quickLinks = [
     label: "Galeria",
     href: "#galeria",
   },
-  {
-    label: "Notícias",
-    href: "#noticias",
-  },
+  
   {
     label: "Contato",
     href: "#contato",
@@ -47,78 +40,18 @@ const quickLinks = [
 const socialLinks = [
   {
     label: "Instagram",
-    href: "https://www.instagram.com/",
+    href: "https://www.instagram.com/g.r.e.s.guardioes_da_capadocia/",
     icon: Instagram,
   },
-  {
-    label: "Facebook",
-    href: "https://www.facebook.com/",
-    icon: Facebook,
-  },
+  
   {
     label: "YouTube",
-    href: "https://www.youtube.com/",
+    href: "https://youtube.com/@guardioesdacapadocia?si=xFXtc4Wfbvu42Hlf",
     icon: Youtube,
   },
 ];
 
 export default function Footer() {
-  function handleNavigation(
-    event: MouseEvent<HTMLAnchorElement>,
-    href: string
-  ) {
-    event.preventDefault();
-
-    const sectionId = href.replace("#", "");
-    const section = document.getElementById(sectionId);
-
-    if (!section) {
-      return;
-    }
-
-    /*
-     * Pega a altura real do Header, que foi salva
-     * pelo Header.tsx na variável CSS.
-     */
-    const rootStyles = window.getComputedStyle(
-      document.documentElement
-    );
-
-    const headerHeightValue = rootStyles
-      .getPropertyValue("--header-height")
-      .trim();
-
-    const headerHeight =
-      Number.parseFloat(headerHeightValue) || 0;
-
-    const sectionPosition =
-      section.getBoundingClientRect().top +
-      window.scrollY;
-
-    /*
-     * No início, sempre volta exatamente para o topo.
-     * Nas outras seções, desconta a altura real do Header.
-     */
-    const destination =
-      sectionId === "inicio"
-        ? 0
-        : sectionPosition - headerHeight;
-
-    window.scrollTo({
-      top: Math.max(destination, 0),
-      behavior: "smooth",
-    });
-
-    /*
-     * Atualiza o endereço sem provocar outro scroll automático.
-     */
-    window.history.replaceState(
-      null,
-      "",
-      href
-    );
-  }
-
   return (
     <footer className={styles.footer}>
       <div
@@ -128,21 +61,12 @@ export default function Footer() {
 
       <div className={styles.mainContent}>
         <div className={styles.container}>
-          {/* =================================================
-              MARCA
-          ================================================== */}
-
+          {/* MARCA */}
           <section className={styles.brandColumn}>
             <Link
               href="#inicio"
               className={styles.logoLink}
               aria-label="Voltar ao início"
-              onClick={(event) =>
-                handleNavigation(
-                  event,
-                  "#inicio"
-                )
-              }
             >
               <Image
                 src="/images/logo.png"
@@ -169,10 +93,7 @@ export default function Footer() {
             </div>
           </section>
 
-          {/* =================================================
-              LINKS RÁPIDOS
-          ================================================== */}
-
+          {/* LINKS RÁPIDOS */}
           <nav
             className={`${styles.footerColumn} ${styles.columnDivider}`}
             aria-label="Links rápidos do rodapé"
@@ -181,20 +102,9 @@ export default function Footer() {
 
             <ul className={styles.quickLinks}>
               {quickLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    onClick={(event) =>
-                      handleNavigation(
-                        event,
-                        link.href
-                      )
-                    }
-                  >
-                    <ChevronRight
-                      aria-hidden="true"
-                    />
-
+                <li key={link.label}>
+                  <Link href={link.href}>
+                    <ChevronRight aria-hidden="true" />
                     <span>{link.label}</span>
                   </Link>
                 </li>
@@ -202,10 +112,7 @@ export default function Footer() {
             </ul>
           </nav>
 
-          {/* =================================================
-              REDES SOCIAIS
-          ================================================== */}
-
+          {/* REDES SOCIAIS */}
           <section
             className={`${styles.footerColumn} ${styles.columnDivider}`}
           >
@@ -223,17 +130,11 @@ export default function Footer() {
                       rel="noopener noreferrer"
                       aria-label={`Acessar ${social.label}`}
                     >
-                      <span
-                        className={
-                          styles.socialIcon
-                        }
-                      >
+                      <span className={styles.socialIcon}>
                         <Icon aria-hidden="true" />
                       </span>
 
-                      <span>
-                        {social.label}
-                      </span>
+                      <span>{social.label}</span>
                     </a>
                   </li>
                 );
@@ -241,32 +142,23 @@ export default function Footer() {
             </ul>
           </section>
 
-          {/* =================================================
-              CONTATO
-          ================================================== */}
-
+          {/* CONTATO */}
           <section
             className={`${styles.footerColumn} ${styles.contactColumn} ${styles.columnDivider}`}
           >
             <h3>Contato</h3>
 
             <address className={styles.contactList}>
-              <a href="tel:+5521999999999">
-                <span
-                  className={styles.contactIcon}
-                >
+              <a href="tel:+5521 97658-6293">
+                <span className={styles.contactIcon}>
                   <Phone aria-hidden="true" />
                 </span>
 
-                <span>
-                  (21) 99999-9999
-                </span>
+                <span>(21) 99999-9999</span>
               </a>
 
               <a href="mailto:guardioesdacapadociaoficial@gmail.com">
-                <span
-                  className={styles.contactIcon}
-                >
+                <span className={styles.contactIcon}>
                   <Mail aria-hidden="true" />
                 </span>
 
@@ -280,9 +172,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span
-                  className={styles.contactIcon}
-                >
+                <span className={styles.contactIcon}>
                   <MapPin aria-hidden="true" />
                 </span>
 
@@ -297,15 +187,11 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* =====================================================
-          BARRA INFERIOR
-      ====================================================== */}
-
       <div className={styles.bottomBar}>
         <div className={styles.bottomBarContent}>
           <p>
-            © 2026 G.R.E.S. Guardiões da Capadócia —
-            Todos os direitos reservados.
+            © 2026 G.R.E.S. Guardiões da Capadócia — Todos os
+            direitos reservados.
           </p>
         </div>
       </div>

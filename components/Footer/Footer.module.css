@@ -688,6 +688,7 @@
   .brandText p {
     font-size: 13px;
     line-height: 1.4;
+    
   }
 
   .footerColumn {
@@ -697,13 +698,12 @@
     margin: 0 auto;
     padding: 0;
 
-    align-items: center;
-
-    text-align: center;
+   
   }
 
   .columnDivider::before {
     display: none;
+    
   }
 
   .footerColumn::after {
@@ -769,6 +769,7 @@
 
   .contactColumn {
     width: min(100%, 430px);
+    
   }
 
   .contactList {
@@ -794,6 +795,7 @@
   .contactIcon {
     width: 29px;
     height: 29px;
+    
   }
 
   .contactIcon svg {
