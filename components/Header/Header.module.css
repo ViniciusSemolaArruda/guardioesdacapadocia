@@ -468,7 +468,8 @@
 
 @media (max-width: 900px) {
   .header {
-    height: 96px;
+    height: 120px;
+    min-height: 120px;
 
     border-width: 1px;
 
@@ -839,7 +840,8 @@
 
 @media (max-width: 480px) {
   .header {
-    height: 86px;
+    height: 112px;
+    min-height: 112px;
   }
 
   .background {
