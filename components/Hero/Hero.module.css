@@ -69,12 +69,12 @@
   background:
     linear-gradient(
       112deg,
-      rgba(74, 0, 7, 0.6) 0%,
-      rgba(126, 0, 12, 0.17) 34%,
-      transparent 49%,
-      rgba(255, 255, 255, 0.03) 58%,
-      rgba(4, 32, 81, 0.17) 73%,
-      rgba(1, 17, 52, 0.53) 100%
+      rgba(30, 0, 3, 0.72) 0%,
+      rgba(70, 0, 7, 0.42) 34%,
+      rgba(0, 0, 0, 0.22) 49%,
+      rgba(255, 255, 255, 0.02) 58%,
+      rgba(2, 18, 55, 0.42) 73%,
+      rgba(0, 9, 35, 0.72) 100%
     );
 }
 
@@ -823,19 +823,26 @@
   border-top: 2px solid #e2b43b;
 
   background:
+    /* camada escura */
+    linear-gradient(
+      rgba(0, 0, 0, 0.18),
+      rgba(0, 0, 0, 0.18)
+    ),
+
+    /* cores da faixa */
     linear-gradient(
       90deg,
-      #7e0610 0%,
-      #ad0b19 24%,
-      #f5efe4 49.7%,
-      #f5efe4 50.3%,
-      #164a99 76%,
-      #082b68 100%
+      #65040c 0%,
+      #8f0713 24%,
+      #e8e0d0 49.7%,
+      #e8e0d0 50.3%,
+      #123f86 76%,
+      #062255 100%
     );
 
   box-shadow:
-    0 -8px 24px
-    rgba(28, 4, 19, 0.17);
+    0 -8px 24px rgba(28, 4, 19, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 .bottomBar::before {
   content: "";
@@ -898,7 +905,7 @@
 }
 
 .bottomItem:nth-child(3) .bottomIcon {
-  color: #b7841c;
+ color: #f0c54a;
 }
 
 .bottomItem div {
@@ -908,7 +915,7 @@
 }
 
 .bottomItem small {
-  color: rgba(255, 255, 255, 0.64);
+  color: rgba(255, 255, 255, 0.72);
 
   font-family:
     Arial,
@@ -922,11 +929,11 @@
 }
 
 .bottomItem:nth-child(3) small {
-  color: rgba(94, 4, 12, 0.6);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .bottomItem strong {
-  color: inherit;
+  color: #ffffff;
 
   font-family:
     Arial,

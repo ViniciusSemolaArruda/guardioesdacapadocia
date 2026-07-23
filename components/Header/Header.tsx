@@ -28,10 +28,7 @@ const navigationLinks = [
     label: "Galeria",
     href: "#galeria",
   },
-  {
-    label: "Notícias",
-    href: "#noticias",
-  },
+  
   {
     label: "Contato",
     href: "#contato",
@@ -208,10 +205,11 @@ export default function Header() {
   }, []);
 
   return (
-    <header
-      ref={headerRef}
-      className={styles.header}
-    >
+    <>
+      <header
+        ref={headerRef}
+        className={styles.header}
+      >
       <div
         className={styles.backgroundFrame}
         aria-hidden="true"
@@ -338,6 +336,8 @@ export default function Header() {
         </button>
       </div>
 
+      </header>
+
       {/* =====================================================
           FUNDO ESCURO DO MENU MOBILE
       ====================================================== */}
@@ -428,6 +428,6 @@ export default function Header() {
           </span>
         </div>
       </nav>
-    </header>
+    </>
   );
 }

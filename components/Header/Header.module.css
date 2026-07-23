@@ -489,9 +489,7 @@
 
     border-width: 1px;
 
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    transform: none;
 
     box-shadow:
       0 8px 24px rgba(38, 0, 3, 0.25),
@@ -549,9 +547,7 @@
     box-sizing: border-box;
     flex: 0 0 120px;
 
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    transform: none;
   }
 
   .mobileLogoArea {
@@ -642,7 +638,6 @@
   .menuButton:active {
     transform: translateY(-50%) scale(0.94);
   }
-}
 
   /* =======================================================
      FUNDO DO MENU ABERTO
@@ -651,18 +646,19 @@
   .backdrop {
     position: fixed;
     inset: 0;
-    z-index: 1000;
+    z-index: 2000;
 
     display: block;
 
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100dvh;
 
     padding: 0;
     border: 0;
 
     visibility: hidden;
     opacity: 0;
+    pointer-events: none;
 
     background: rgba(20, 0, 2, 0.68);
 
@@ -679,6 +675,7 @@
   .backdropVisible {
     visibility: visible;
     opacity: 1;
+    pointer-events: auto;
   }
 
   /* =======================================================
@@ -690,17 +687,25 @@
     top: 0;
     right: 0;
     bottom: 0;
-    z-index: 1002;
+    z-index: 2001;
 
     display: flex;
     flex-direction: column;
 
     width: min(88vw, 400px);
+    height: 100dvh;
+    min-height: 100dvh;
 
-    padding: 26px 24px;
+    padding:
+      max(26px, env(safe-area-inset-top))
+      24px
+      max(26px, env(safe-area-inset-bottom));
 
+    overflow-x: hidden;
     overflow-y: auto;
     overscroll-behavior: contain;
+
+    box-sizing: border-box;
 
     background:
       radial-gradient(
@@ -719,12 +724,20 @@
 
     box-shadow: -28px 0 70px rgba(24, 0, 2, 0.55);
 
+    visibility: hidden;
+    pointer-events: none;
+
     transform: translateX(105%);
 
-    transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition:
+      transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 360ms ease;
   }
 
   .mobileMenuOpen {
+    visibility: visible;
+    pointer-events: auto;
+
     transform: translateX(0);
   }
 
@@ -881,7 +894,7 @@
     font-family: Georgia, "Times New Roman", serif;
     font-size: 0.8rem;
   }
-
+}
 
 /* =========================================================
    CELULARES PEQUENOS
@@ -948,17 +961,4 @@
   .mobileMenuHeader button {
     transition: none;
   }
-}
-
-@media (max-width: 1250px) {
-
-  .header {
-    height: 185px;
-  }
-
-  .logoArea {
-    width: 165px;
-    height: 165px;
-  }
-
 }
