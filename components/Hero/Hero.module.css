@@ -2493,3 +2493,152 @@
     animation: none;
   }
 }
+
+/* =========================================================
+   AJUSTE FINAL — NOTEBOOKS
+
+   Mantém o bloco de texto e o vídeo próximos e centralizados.
+   Esta seção fica no final do arquivo para não ser anulada
+   pelas regras anteriores de largura e altura.
+========================================================= */
+
+@media (min-width: 1101px) and (max-width: 1500px) {
+  .container {
+    width: min(1120px, calc(100% - 56px));
+
+    grid-template-columns:
+      minmax(0, 520px)
+      minmax(430px, 540px);
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 24px;
+  }
+
+  .content {
+    width: 100%;
+    max-width: 520px;
+
+    justify-self: end;
+
+    transform: none;
+  }
+
+  .videoColumn {
+    width: 100%;
+    max-width: 540px;
+
+    justify-self: start;
+  }
+}
+
+/* =========================================================
+   NOTEBOOKS MÉDIOS — 1366PX OU MENOS
+========================================================= */
+
+@media (min-width: 1101px) and (max-width: 1366px) {
+  .container {
+    width: min(1050px, calc(100% - 40px));
+
+    grid-template-columns:
+      minmax(0, 500px)
+      minmax(410px, 500px);
+
+    gap: 18px;
+  }
+
+  .content {
+    max-width: 500px;
+  }
+
+  .videoColumn {
+    max-width: 500px;
+  }
+}
+
+/* =========================================================
+   NOTEBOOKS MENORES — 901PX ATÉ 1100PX
+========================================================= */
+
+@media (min-width: 901px) and (max-width: 1100px) {
+  .container {
+    width: min(920px, calc(100% - 28px));
+
+    grid-template-columns:
+      minmax(0, 430px)
+      minmax(350px, 450px);
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 14px;
+  }
+
+  .content {
+    width: 100%;
+    max-width: 430px;
+
+    justify-self: end;
+
+    transform: none;
+  }
+
+  .videoColumn {
+    width: 100%;
+    max-width: 450px;
+
+    justify-self: start;
+  }
+}
+
+/* =========================================================
+   NOTEBOOKS COM POUCA ALTURA
+
+   Evita que uma tela 1366x768 ou 1280x720 volte a afastar
+   as duas colunas por causa das regras de altura anteriores.
+========================================================= */
+
+@media (min-width: 1101px) and (max-width: 1500px) and (max-height: 820px) {
+  .container {
+    width: min(1080px, calc(100% - 44px));
+
+    grid-template-columns:
+      minmax(0, 500px)
+      minmax(410px, 520px);
+
+    justify-content: center;
+
+    gap: 18px;
+  }
+
+  .content {
+    max-width: 500px;
+    justify-self: end;
+  }
+
+  .videoColumn {
+    max-width: 520px;
+    justify-self: start;
+  }
+}
+
+@media (min-width: 1101px) and (max-width: 1250px) and (max-height: 820px) {
+  .container {
+    width: min(980px, calc(100% - 32px));
+
+    grid-template-columns:
+      minmax(0, 460px)
+      minmax(390px, 480px);
+
+    gap: 14px;
+  }
+
+  .content {
+    max-width: 460px;
+  }
+
+  .videoColumn {
+    max-width: 480px;
+  }
+}
