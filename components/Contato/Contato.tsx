@@ -155,7 +155,7 @@ export default function Contato() {
 
           <div className={styles.contactList}>
             <a
-              href="tel:+5521999999999"
+              href="tel:+5521966746865"
               className={styles.contactItem}
               aria-label="Ligar para a Guardiões da Capadócia"
             >
@@ -163,7 +163,7 @@ export default function Contato() {
                 <Phone aria-hidden="true" />
               </span>
 
-              <span>(21) 99999-9999</span>
+              <span>(21) 96674-6865</span>
             </a>
 
             <a

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+import VLibras from "@/components/VLibras/VLibras";
+
 export const metadata: Metadata = {
   title: "G.R.E.S. Guardiões da Capadócia",
   description:
@@ -14,7 +16,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body>
+        {children}
+
+        {/* Widget oficial do VLibras */}
+        <VLibras />
+      </body>
     </html>
   );
 }

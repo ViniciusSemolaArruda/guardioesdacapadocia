@@ -149,12 +149,12 @@ export default function Footer() {
             <h3>Contato</h3>
 
             <address className={styles.contactList}>
-              <a href="tel:+5521 97658-6293">
+              <a href="tel:+5521966746865">
                 <span className={styles.contactIcon}>
                   <Phone aria-hidden="true" />
                 </span>
 
-                <span>(21) 99999-9999</span>
+                <span>(21) 96674-6865</span>
               </a>
 
               <a href="mailto:guardioesdacapadociaoficial@gmail.com">

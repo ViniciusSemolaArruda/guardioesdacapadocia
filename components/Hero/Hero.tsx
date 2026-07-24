@@ -101,13 +101,13 @@ export default function Hero() {
                 <span
                   className={styles.titleWhite}
                 >
-                  Tradição, garra e paixão
+                  Força, Foco, Fé
                 </span>
 
                 <strong
                   className={styles.titleGold}
                 >
-                  que desfilam no samba!
+                  e Samba no Pé!
                 </strong>
               </h1>
 
