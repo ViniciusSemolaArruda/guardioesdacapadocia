@@ -121,6 +121,7 @@ export default function EventSection() {
 
   return (
     <section
+    
       id="evento"
       className={styles.eventSection}
     >
@@ -237,7 +238,7 @@ export default function EventSection() {
             </div>
 
             <a
-              href="#detalhes-evento"
+              href="/evento"
               className={styles.eventButton}
             >
               <span>
