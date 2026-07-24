@@ -391,11 +391,11 @@
 
 @media (max-width: 1450px) {
   .header {
-    height: 172px;
+    height: 182px; /* antes 172px */
   }
 
   .desktopContent {
-    --desktop-logo-size: 155px;
+    --desktop-logo-size: 170px; /* antes 155px */
 
     width: calc(100% - 56px);
   }
@@ -403,8 +403,6 @@
   .navigationGroup {
     gap: clamp(22px, 2.2vw, 34px);
   }
-
-
 
   .navigationGroup a {
     min-width: clamp(78px, 6.2vw, 104px);
@@ -419,7 +417,7 @@
 
 @media (max-width: 1250px) {
   .header {
-    height: 152px;
+    height: 162px; /* antes 152px */
   }
 
   .background {
@@ -430,7 +428,7 @@
   }
 
   .desktopContent {
-    --desktop-logo-size: 138px;
+    --desktop-logo-size: 152px; /* antes 138px */
 
     width: calc(100% - 30px);
   }
@@ -438,8 +436,6 @@
   .navigationGroup {
     gap: clamp(12px, 1.5vw, 20px);
   }
-
-
 
   .navigationGroup a {
     min-width: clamp(68px, 6vw, 88px);
