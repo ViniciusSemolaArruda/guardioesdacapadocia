@@ -2642,3 +2642,87 @@
     max-width: 480px;
   }
 }
+
+/* =========================================================
+   CORREÇÃO FINAL — NOTEBOOKS E TELAS 1600PX
+
+   Mantém texto e vídeo próximos mesmo em notebooks com
+   resolução 1600x900, 1536x864, 1440x900 e 1366x768.
+   Este bloco precisa permanecer no FINAL do arquivo.
+========================================================= */
+
+@media (min-width: 1201px) and (max-width: 1700px) {
+  .container {
+    width: min(1180px, calc(100% - 48px));
+
+    grid-template-columns:
+      minmax(0, 540px)
+      minmax(0, 570px);
+
+    justify-content: center;
+    align-items: center;
+
+    column-gap: 26px;
+    row-gap: 0;
+  }
+
+  .content {
+    width: 100%;
+    max-width: 540px;
+
+    justify-self: end;
+
+    margin: 0;
+    transform: none;
+  }
+
+  .videoColumn {
+    width: 100%;
+    max-width: 570px;
+
+    justify-self: start;
+
+    margin: 0;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1200px) {
+  .container {
+    width: min(1000px, calc(100% - 28px));
+
+    grid-template-columns:
+      minmax(0, 470px)
+      minmax(360px, 490px);
+
+    justify-content: center;
+    align-items: center;
+
+    column-gap: 16px;
+    row-gap: 0;
+  }
+
+  .content {
+    width: 100%;
+    max-width: 470px;
+
+    justify-self: end;
+
+    margin: 0;
+    transform: none;
+  }
+
+  .videoColumn {
+    width: 100%;
+    max-width: 490px;
+
+    justify-self: start;
+
+    margin: 0;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1700px) and (max-height: 820px) {
+  .container {
+    column-gap: 18px;
+  }
+}
