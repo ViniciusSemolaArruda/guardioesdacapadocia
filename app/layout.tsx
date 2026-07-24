@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import VLibras from "@/components/VLibras/VLibras";
+import VLibrasScript from "@/components/VLibras/VLibrasScript";
 
 export const metadata: Metadata = {
   title: "G.R.E.S. Guardiões da Capadócia",
@@ -19,8 +19,31 @@ export default function RootLayout({
       <body>
         {children}
 
-        {/* Widget oficial do VLibras */}
-        <VLibras />
+        {/* Estrutura oficial do VLibras */}
+        <div
+          {...({ vw: "true" } as Record<
+            string,
+            string
+          >)}
+          className="enabled"
+        >
+          <div
+            {...({
+              "vw-access-button": "true",
+            } as Record<string, string>)}
+            className="active"
+          />
+
+          <div
+            {...({
+              "vw-plugin-wrapper": "true",
+            } as Record<string, string>)}
+          >
+            <div className="vw-plugin-top-wrapper" />
+          </div>
+        </div>
+
+        <VLibrasScript />
       </body>
     </html>
   );
