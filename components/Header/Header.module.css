@@ -391,23 +391,23 @@
 
 @media (max-width: 1450px) {
   .header {
-    height: 182px; /* antes 172px */
+    height: 196px;
   }
 
   .desktopContent {
-    --desktop-logo-size: 170px; /* antes 155px */
+    --desktop-logo-size: 185px;
 
     width: calc(100% - 56px);
   }
 
   .navigationGroup {
-    gap: clamp(22px, 2.2vw, 34px);
+    gap: clamp(24px, 2.4vw, 36px);
   }
 
   .navigationGroup a {
-    min-width: clamp(78px, 6.2vw, 104px);
-    min-height: 40px;
-    font-size: clamp(0.66rem, 0.72vw, 0.76rem);
+    min-width: clamp(82px, 6.3vw, 108px);
+    min-height: 42px;
+    font-size: clamp(0.68rem, 0.74vw, 0.8rem);
   }
 }
 
@@ -417,7 +417,7 @@
 
 @media (max-width: 1250px) {
   .header {
-    height: 162px; /* antes 152px */
+    height: 182px;
   }
 
   .background {
@@ -428,56 +428,25 @@
   }
 
   .desktopContent {
-    --desktop-logo-size: 152px; /* antes 138px */
+    --desktop-logo-size: 170px;
 
     width: calc(100% - 30px);
   }
 
   .navigationGroup {
-    gap: clamp(12px, 1.5vw, 20px);
+    gap: clamp(16px, 1.8vw, 24px);
   }
 
   .navigationGroup a {
-    min-width: clamp(68px, 6vw, 88px);
-    min-height: 38px;
+    min-width: clamp(74px, 6vw, 94px);
+    min-height: 40px;
 
-    padding-inline: 2px;
+    padding-inline: 3px;
 
-    font-size: clamp(0.58rem, 0.62vw, 0.66rem);
+    font-size: clamp(0.62rem, 0.66vw, 0.72rem);
     letter-spacing: 0.025em;
   }
 }
-
-/* =========================================================
-   MONITORES E NOTEBOOKS COM MENOR ALTURA
-========================================================= */
-
-@media (max-width: 1100px) and (min-width: 901px) {
-  .header {
-    height: 140px;
-  }
-
-  .desktopContent {
-    --desktop-logo-size: 126px;
-
-    width: calc(100% - 20px);
-  }
-
-  .navigationGroup {
-    gap: 10px;
-  }
-
-
-
-  .navigationGroup a {
-    min-width: 64px;
-    min-height: 36px;
-    padding: 6px 1px;
-    font-size: 0.56rem;
-    letter-spacing: 0.02em;
-  }
-}
-
 /* =========================================================
    TABLET E CELULAR
 ========================================================= */
