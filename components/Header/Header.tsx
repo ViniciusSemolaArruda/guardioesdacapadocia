@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Menu, X } from "lucide-react";
+import { CalendarDays, Menu, X } from "lucide-react";
 import {
   type MouseEvent,
   useEffect,
@@ -11,7 +11,11 @@ import {
 
 import styles from "./Header.module.css";
 
-const navigationLinks = [
+/*
+ * Escolha aqui quais links aparecem de cada lado da logo.
+ * Para mover um item, basta transferir o objeto entre as duas listas.
+ */
+const leftNavigationLinks = [
   {
     label: "Início",
     href: "#inicio",
@@ -20,19 +24,26 @@ const navigationLinks = [
     label: "A escola",
     href: "#quem-somos",
   },
-  {
-    label: "Eventos",
-    href: "#evento",
-  },
+];
+
+const rightNavigationLinks = [
   {
     label: "Galeria",
     href: "#galeria",
   },
-  
   {
     label: "Contato",
     href: "#contato",
   },
+];
+
+/*
+ * No menu mobile, os links dos dois lados são reunidos
+ * automaticamente em uma única lista.
+ */
+const navigationLinks = [
+  ...leftNavigationLinks,
+  ...rightNavigationLinks,
 ];
 
 export default function Header() {
@@ -40,8 +51,8 @@ export default function Header() {
 
   const headerRef = useRef<HTMLElement>(null);
 
-  const leftLinks = navigationLinks.slice(0, 3);
-  const rightLinks = navigationLinks.slice(3);
+  const leftLinks = leftNavigationLinks;
+  const rightLinks = rightNavigationLinks;
 
   function closeMenu() {
     setMenuOpen(false);
@@ -339,6 +350,30 @@ export default function Header() {
       </header>
 
       {/* =====================================================
+          BOTÃO FLUTUANTE DE DESTAQUE DO EVENTO
+      ====================================================== */}
+
+      <a
+        href="/evento"
+        className={styles.eventFloatingNav}
+        aria-label="Abrir a página do evento"
+      >
+        <span
+          className={styles.eventFloatingIcon}
+          aria-hidden="true"
+        >
+          <CalendarDays size={21} strokeWidth={2.2} />
+        </span>
+
+        <strong>Evento</strong>
+
+        <span
+          className={styles.eventFloatingShine}
+          aria-hidden="true"
+        />
+      </a>
+
+      {/* =====================================================
           FUNDO ESCURO DO MENU MOBILE
       ====================================================== */}
 
@@ -395,6 +430,32 @@ export default function Header() {
             <X size={23} />
           </button>
         </div>
+
+        <a
+          href="/evento"
+          className={styles.mobileEventLink}
+          onClick={closeMenu}
+          aria-label="Abrir a página do evento"
+        >
+          <span
+            className={styles.mobileEventIcon}
+            aria-hidden="true"
+          >
+            <CalendarDays size={21} strokeWidth={2.2} />
+          </span>
+
+          <span className={styles.mobileEventText}>
+            <small>Destaque</small>
+            <strong>Evento</strong>
+          </span>
+
+          <span
+            className={styles.mobileEventArrow}
+            aria-hidden="true"
+          >
+            →
+          </span>
+        </a>
 
         <div className={styles.mobileLinks}>
           {navigationLinks.map(

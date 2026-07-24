@@ -8,7 +8,7 @@
   z-index: 1000;
 
   width: 100%;
-  height: clamp(200px, 11.5vw, 215px);
+  height: clamp(170px, 10vw, 200px);
 
   overflow: visible;
   isolation: isolate;
@@ -105,7 +105,10 @@
   position: relative;
   z-index: 5;
 
-  width: min(1540px, calc(100% - 80px));
+  --desktop-logo-size: clamp(150px, 10.5vw, 185px);
+  --logo-link-distance: 140px;
+
+  width: min(1500px, calc(100% - clamp(48px, 5vw, 96px)));
   height: 100%;
 
   margin: 0 auto;
@@ -115,12 +118,16 @@
   display: grid;
 
   /*
-    Coluna central menor, acompanhando
-    a redução da logo.
+    A coluna central possui a largura visual da logo
+    mais 60px livres em cada lado. Assim, o link mais
+    próximo nunca encosta na logo.
   */
   grid-template-columns:
     minmax(0, 1fr)
-    clamp(205px, 14vw, 250px)
+    calc(
+      var(--desktop-logo-size) +
+      (var(--logo-link-distance) * 2)
+    )
     minmax(0, 1fr);
 
   align-items: center;
@@ -134,25 +141,23 @@
 ========================================================= */
 
 .navigationGroup {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
   align-items: center;
 
   width: 100%;
+  min-width: 0;
 
-  /*
-    Os links ficam na linha central da bandeira,
-    dentro da faixa branca.
-  */
-  transform: translateY(0);
+  gap: clamp(24px, 2.8vw, 52px);
+
+  box-sizing: border-box;
 }
 
 .navigationGroup:first-child {
-  padding-right: clamp(22px, 2.5vw, 48px);
+  justify-content: flex-end;
 }
 
 .navigationGroup:last-child {
-  padding-left: clamp(22px, 2.5vw, 48px);
+  justify-content: flex-start;
 }
 
 /* =========================================================
@@ -166,7 +171,7 @@
   align-items: center;
   justify-content: center;
 
-  min-width: 0;
+  min-width: clamp(86px, 6.4vw, 122px);
   min-height: 44px;
 
   padding: 8px 6px;
@@ -174,7 +179,7 @@
   color: #850914;
 
   font-family: Arial, Helvetica, sans-serif;
-  font-size: clamp(0.82rem, 0.95vw, 1.02rem);
+  font-size: clamp(0.76rem, 0.82vw, 0.98rem);
   font-weight: 800;
   line-height: 1;
   letter-spacing: 0.035em;
@@ -307,8 +312,8 @@
   /*
     Logo menor e proporcional ao novo header.
   */
-  width: clamp(170px, 12vw, 205px);
-  height: clamp(170px, 12vw, 205px);
+  width: var(--desktop-logo-size);
+  height: var(--desktop-logo-size);
 
   text-decoration: none;
 
@@ -361,17 +366,23 @@
 ========================================================= */
 
 @media (min-width: 1700px) {
+  .header {
+    height: 200px;
+  }
+
   .desktopContent {
     width: min(1580px, calc(100% - 120px));
   }
 
-  .navigationGroup:first-child {
-    padding-right: 48px;
+  .desktopContent {
+    --desktop-logo-size: 185px;
   }
 
-  .navigationGroup:last-child {
-    padding-left: 48px;
+  .navigationGroup {
+    gap: 54px;
   }
+
+
 }
 
 /* =========================================================
@@ -380,36 +391,25 @@
 
 @media (max-width: 1450px) {
   .header {
-    height: 215px;
+    height: 172px;
   }
 
   .desktopContent {
+    --desktop-logo-size: 155px;
+
     width: calc(100% - 56px);
   }
 
-  .desktopNavigation {
-    grid-template-columns:
-      minmax(0, 1fr)
-      215px
-      minmax(0, 1fr);
+  .navigationGroup {
+    gap: clamp(22px, 2.2vw, 34px);
   }
 
-  .logoArea {
-    width: 192px;
-    height: 192px;
-  }
 
-  .navigationGroup:first-child {
-    padding-right: 22px;
-  }
-
-  .navigationGroup:last-child {
-    padding-left: 22px;
-  }
 
   .navigationGroup a {
-    min-height: 42px;
-    font-size: 0.7rem;
+    min-width: clamp(78px, 6.2vw, 104px);
+    min-height: 40px;
+    font-size: clamp(0.66rem, 0.72vw, 0.76rem);
   }
 }
 
@@ -419,7 +419,7 @@
 
 @media (max-width: 1250px) {
   .header {
-    height: 185px;
+    height: 152px;
   }
 
   .background {
@@ -430,35 +430,55 @@
   }
 
   .desktopContent {
+    --desktop-logo-size: 138px;
+
     width: calc(100% - 30px);
   }
 
-  .desktopNavigation {
-    grid-template-columns:
-      minmax(0, 1fr)
-      180px
-      minmax(0, 1fr);
+  .navigationGroup {
+    gap: clamp(12px, 1.5vw, 20px);
   }
 
-  .logoArea {
-    width: 165px;
-    height: 165px;
-  }
 
-  .navigationGroup:first-child {
-    padding-right: 10px;
-  }
-
-  .navigationGroup:last-child {
-    padding-left: 10px;
-  }
 
   .navigationGroup a {
-    min-height: 40px;
+    min-width: clamp(68px, 6vw, 88px);
+    min-height: 38px;
 
-    padding-inline: 3px;
+    padding-inline: 2px;
 
-    font-size: 0.64rem;
+    font-size: clamp(0.58rem, 0.62vw, 0.66rem);
+    letter-spacing: 0.025em;
+  }
+}
+
+/* =========================================================
+   MONITORES E NOTEBOOKS COM MENOR ALTURA
+========================================================= */
+
+@media (max-width: 1100px) and (min-width: 901px) {
+  .header {
+    height: 140px;
+  }
+
+  .desktopContent {
+    --desktop-logo-size: 126px;
+
+    width: calc(100% - 20px);
+  }
+
+  .navigationGroup {
+    gap: 10px;
+  }
+
+
+
+  .navigationGroup a {
+    min-width: 64px;
+    min-height: 36px;
+    padding: 6px 1px;
+    font-size: 0.56rem;
+    letter-spacing: 0.02em;
   }
 }
 
@@ -466,10 +486,16 @@
    TABLET E CELULAR
 ========================================================= */
 
-/* =========================================================
-   TABLET E CELULAR
-========================================================= */
 
+@media (max-height: 820px) and (min-width: 901px) {
+  .header {
+    height: min(152px, 18vh);
+  }
+
+  .desktopContent {
+    --desktop-logo-size: min(138px, 16vh);
+  }
+}
 @media (max-width: 900px) {
   .header {
     position: sticky;
@@ -959,6 +985,587 @@
   .mobileMenu,
   .mobileLinks a,
   .mobileMenuHeader button {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   NAVEGAÇÃO FLUTUANTE — EVENTO
+========================================================= */
+
+.eventFloatingNav {
+  position: fixed;
+  top: 54%;
+  left: 0;
+  z-index: 1200;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  width: 76px;
+  min-height: 136px;
+
+  padding: 17px 10px 15px;
+
+  overflow: hidden;
+  isolation: isolate;
+
+  border: 1px solid rgba(241, 207, 102, 0.98);
+  border-left: 0;
+  border-radius: 0 22px 22px 0;
+
+  background:
+    radial-gradient(
+      circle at 64% 16%,
+      rgba(255, 232, 151, 0.22),
+      transparent 34%
+    ),
+    linear-gradient(
+      200deg,
+      #a60d1c 0%,
+      #770611 52%,
+      #430006 100%
+    );
+
+  color: #ffffff;
+  text-decoration: none;
+
+  transform: translateY(-50%) translateX(-6px);
+
+  box-shadow:
+    10px 12px 30px rgba(42, 0, 4, 0.36),
+    0 0 0 1px rgba(113, 4, 14, 0.35),
+    inset -1px 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -10px 20px rgba(35, 0, 3, 0.22);
+
+  cursor: pointer;
+
+  transition:
+    width 240ms ease,
+    transform 240ms ease,
+    box-shadow 240ms ease,
+    background 240ms ease;
+}
+
+.eventFloatingNav::before {
+  content: "";
+
+  position: absolute;
+  inset: 5px;
+  z-index: -1;
+
+  border: 1px solid rgba(241, 207, 102, 0.38);
+  border-left: 0;
+  border-radius: 0 17px 17px 0;
+
+  pointer-events: none;
+}
+
+.eventFloatingNav::after {
+  content: "";
+
+  position: absolute;
+  top: 13px;
+  bottom: 13px;
+  left: 12px;
+
+  width: 2px;
+  opacity: 0.74;
+
+  background: linear-gradient(
+    180deg,
+    transparent,
+    #f2d371 22%,
+    #fff0b6 50%,
+    #f2d371 78%,
+    transparent
+  );
+
+  pointer-events: none;
+}
+
+.eventFloatingIcon {
+  position: relative;
+  z-index: 2;
+
+  display: grid;
+  place-items: center;
+
+  width: 42px;
+  height: 42px;
+
+  margin-bottom: 10px;
+
+  border: 1px solid rgba(255, 237, 174, 0.78);
+  border-radius: 50%;
+
+  background: linear-gradient(
+    145deg,
+    #f2d475,
+    #b97912
+  );
+
+  color: #68050d;
+
+  box-shadow:
+    0 7px 14px rgba(35, 0, 3, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+
+  transition:
+    transform 240ms ease,
+    box-shadow 240ms ease;
+}
+
+.eventFloatingNav strong {
+  position: relative;
+  z-index: 2;
+
+  display: block;
+
+  color: #fff4cb;
+
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.13em;
+  text-align: center;
+  text-shadow: 0 2px 5px rgba(35, 0, 3, 0.46);
+  text-transform: uppercase;
+
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.eventFloatingShine {
+  position: absolute;
+  top: -42%;
+  right: -110%;
+  z-index: 1;
+
+  width: 42%;
+  height: 190%;
+
+  opacity: 0.66;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.72),
+    transparent
+  );
+
+  transform: rotate(-19deg);
+
+  pointer-events: none;
+
+  transition: right 620ms ease;
+}
+
+.eventFloatingNav:hover {
+  width: 82px;
+
+  background:
+    radial-gradient(
+      circle at 64% 16%,
+      rgba(255, 232, 151, 0.3),
+      transparent 36%
+    ),
+    linear-gradient(
+      200deg,
+      #bf1526 0%,
+      #8b0714 52%,
+      #510008 100%
+    );
+
+  transform: translateY(-50%) translateX(0);
+
+  box-shadow:
+    14px 16px 38px rgba(42, 0, 4, 0.44),
+    0 0 20px rgba(217, 174, 63, 0.34),
+    inset -1px 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -10px 20px rgba(35, 0, 3, 0.2);
+}
+
+.eventFloatingNav:hover .eventFloatingIcon {
+  transform: translateY(-2px) scale(1.06);
+
+  box-shadow:
+    0 10px 18px rgba(35, 0, 3, 0.34),
+    0 0 16px rgba(242, 212, 117, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.eventFloatingNav:hover .eventFloatingShine {
+  right: 155%;
+}
+
+.eventFloatingNav:active {
+  transform: translateY(-50%) translateX(0) scale(0.96);
+}
+
+.eventFloatingNav:focus-visible {
+  outline: 3px solid #f1cf66;
+  outline-offset: 4px;
+}
+
+/* =========================================================
+   TABLET E CELULAR
+
+   No mobile o botão fica menor, horizontal e discreto,
+   sem repetir o formato vertical utilizado no desktop.
+========================================================= */
+
+@media (max-width: 900px) {
+  .eventFloatingNav {
+    top: auto;
+    right: auto;
+    bottom: max(18px, env(safe-area-inset-bottom));
+    left: 10px;
+
+    flex-direction: row;
+
+    width: auto;
+    min-width: 108px;
+    min-height: 46px;
+
+    padding: 5px 12px 5px 6px;
+
+    border-left: 1px solid rgba(241, 207, 102, 0.98);
+    border-radius: 999px;
+
+    transform: none;
+
+    box-shadow:
+      0 9px 25px rgba(42, 0, 4, 0.34),
+      0 0 0 1px rgba(113, 4, 14, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  }
+
+  .eventFloatingNav::before {
+    inset: 4px;
+
+    border-left: 1px solid rgba(241, 207, 102, 0.38);
+    border-radius: 999px;
+  }
+
+  .eventFloatingNav::after {
+    display: none;
+  }
+
+  .eventFloatingIcon {
+    width: 34px;
+    height: 34px;
+
+    margin-right: 8px;
+    margin-bottom: 0;
+  }
+
+  .eventFloatingIcon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .eventFloatingNav strong {
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+
+    writing-mode: initial;
+    transform: none;
+  }
+
+  .eventFloatingNav:hover {
+    width: auto;
+    transform: translateY(-2px);
+  }
+
+  .eventFloatingNav:active {
+    transform: scale(0.96);
+  }
+}
+
+@media (max-width: 480px) {
+  .eventFloatingNav {
+    bottom: max(12px, env(safe-area-inset-bottom));
+    left: 8px;
+
+    min-width: 96px;
+    min-height: 42px;
+
+    padding: 4px 10px 4px 5px;
+  }
+
+  .eventFloatingIcon {
+    width: 31px;
+    height: 31px;
+
+    margin-right: 7px;
+  }
+
+  .eventFloatingIcon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .eventFloatingNav strong {
+    font-size: 0.61rem;
+    letter-spacing: 0.08em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eventFloatingNav,
+  .eventFloatingIcon,
+  .eventFloatingShine {
+    transition: none;
+  }
+}
+
+/* =========================================================
+   EVENTO DESTACADO DENTRO DO MENU MOBILE
+========================================================= */
+
+.mobileEventLink {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  /* No celular e tablet, o destaque deixa de ser flutuante. */
+  .eventFloatingNav {
+    display: none;
+  }
+
+  .mobileEventLink {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    min-height: 72px;
+
+    margin-top: 22px;
+    padding: 10px 14px 10px 10px;
+
+    overflow: hidden;
+    box-sizing: border-box;
+
+    border: 1px solid rgba(242, 212, 117, 0.9);
+    border-radius: 17px;
+
+    background:
+      radial-gradient(
+        circle at 12% 16%,
+        rgba(255, 233, 154, 0.25),
+        transparent 34%
+      ),
+      linear-gradient(
+        135deg,
+        #b71121 0%,
+        #820712 52%,
+        #430006 100%
+      );
+
+    color: #ffffff;
+    text-decoration: none;
+
+    box-shadow:
+      0 14px 30px rgba(28, 0, 2, 0.34),
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      border-color 180ms ease;
+  }
+
+  .mobileEventLink::after {
+    content: "";
+
+    position: absolute;
+    top: -70%;
+    left: -36%;
+
+    width: 26%;
+    height: 240%;
+
+    opacity: 0.45;
+
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.72),
+      transparent
+    );
+
+    transform: rotate(20deg);
+    pointer-events: none;
+
+    transition: left 620ms ease;
+  }
+
+  .mobileEventLink:hover {
+    border-color: #f4d978;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+      0 17px 34px rgba(28, 0, 2, 0.4),
+      0 0 18px rgba(217, 174, 63, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  }
+
+  .mobileEventLink:hover::after {
+    left: 120%;
+  }
+
+  .mobileEventLink:active {
+    transform: scale(0.98);
+  }
+
+  .mobileEventLink:focus-visible {
+    outline: 3px solid #f1cf66;
+    outline-offset: 3px;
+  }
+
+  .mobileEventIcon {
+    position: relative;
+    z-index: 1;
+
+    display: grid;
+    place-items: center;
+
+    flex: 0 0 auto;
+
+    width: 48px;
+    height: 48px;
+
+    margin-right: 13px;
+
+    border: 1px solid rgba(255, 244, 203, 0.78);
+    border-radius: 14px;
+
+    background: linear-gradient(
+      145deg,
+      #f5dc82,
+      #bd7b12
+    );
+
+    color: #62030c;
+
+    box-shadow:
+      0 8px 17px rgba(35, 0, 3, 0.32),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  }
+
+  .mobileEventText {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    min-width: 0;
+
+    gap: 3px;
+  }
+
+  .mobileEventText small {
+    color: rgba(255, 236, 170, 0.72);
+
+    font-size: 0.59rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .mobileEventText strong {
+    color: #fff7dc;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+
+    text-shadow: 0 2px 5px rgba(35, 0, 3, 0.38);
+  }
+
+  .mobileEventArrow {
+    position: relative;
+    z-index: 1;
+
+    display: grid;
+    place-items: center;
+
+    flex: 0 0 auto;
+
+    width: 30px;
+    height: 30px;
+
+    margin-left: auto;
+
+    border: 1px solid rgba(255, 244, 203, 0.32);
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.08);
+    color: #f3d670;
+
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobileEventLink {
+    min-height: 66px;
+
+    margin-top: 18px;
+    padding: 8px 12px 8px 8px;
+
+    border-radius: 15px;
+  }
+
+  .mobileEventIcon {
+    width: 43px;
+    height: 43px;
+
+    margin-right: 11px;
+
+    border-radius: 12px;
+  }
+
+  .mobileEventIcon svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .mobileEventText small {
+    font-size: 0.54rem;
+  }
+
+  .mobileEventText strong {
+    font-size: 0.9rem;
+  }
+
+  .mobileEventArrow {
+    width: 27px;
+    height: 27px;
+
+    font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobileEventLink,
+  .mobileEventLink::after {
     transition: none;
   }
 }
