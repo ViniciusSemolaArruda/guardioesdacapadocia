@@ -50,6 +50,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const headerRef = useRef<HTMLElement>(null);
+  const scrollAnimationRef = useRef<number | null>(null);
 
   const leftLinks = leftNavigationLinks;
   const rightLinks = rightNavigationLinks;
@@ -110,8 +111,54 @@ export default function Header() {
   }, []);
 
   /*
-   * Faz a navegação manualmente, descontando a altura atual
-   * do Header para que a seção pare no lugar correto.
+   * Anima a rolagem manualmente.
+   *
+   * Isso evita diferenças entre navegadores, notebooks,
+   * telas com altura menor e configurações do sistema que
+   * podem fazer o scroll nativo pular sem animação.
+   */
+  function animateScrollTo(destination: number) {
+    if (scrollAnimationRef.current !== null) {
+      window.cancelAnimationFrame(scrollAnimationRef.current);
+    }
+
+    const initialPosition = window.scrollY;
+    const distance = destination - initialPosition;
+    const duration = 780;
+    // eslint-disable-next-line react-hooks/purity
+    const initialTime = performance.now();
+
+    function easeInOutCubic(progress: number) {
+      return progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+    }
+
+    function animate(currentTime: number) {
+      const elapsedTime = currentTime - initialTime;
+      const progress = Math.min(elapsedTime / duration, 1);
+      const easedProgress = easeInOutCubic(progress);
+
+      window.scrollTo(
+        0,
+        initialPosition + distance * easedProgress
+      );
+
+      if (progress < 1) {
+        scrollAnimationRef.current =
+          window.requestAnimationFrame(animate);
+      } else {
+        scrollAnimationRef.current = null;
+      }
+    }
+
+    scrollAnimationRef.current =
+      window.requestAnimationFrame(animate);
+  }
+
+  /*
+   * Faz a navegação descontando a altura real do Header.
+   * A posição é calculada novamente após o fechamento do menu.
    */
   function handleNavigation(
     event: MouseEvent<HTMLAnchorElement>,
@@ -128,29 +175,38 @@ export default function Header() {
 
     closeMenu();
 
-    const headerHeight =
-      headerRef.current?.getBoundingClientRect().height ?? 0;
+    window.requestAnimationFrame(() => {
+      const headerHeight =
+        headerRef.current?.getBoundingClientRect().height ?? 0;
 
-    const sectionPosition =
-      section.getBoundingClientRect().top +
-      window.scrollY;
+      const sectionPosition =
+        section.getBoundingClientRect().top +
+        window.scrollY;
 
-    const destination =
-      sectionId === "inicio"
-        ? 0
-        : sectionPosition - headerHeight;
+      const destination =
+        sectionId === "inicio"
+          ? 0
+          : sectionPosition - headerHeight;
 
-    window.scrollTo({
-      top: Math.max(destination, 0),
-      behavior: "smooth",
+      animateScrollTo(Math.max(destination, 0));
+
+      window.history.replaceState(
+        null,
+        "",
+        href
+      );
     });
-
-    window.history.replaceState(
-      null,
-      "",
-      href
-    );
   }
+
+  useEffect(() => {
+    return () => {
+      if (scrollAnimationRef.current !== null) {
+        window.cancelAnimationFrame(
+          scrollAnimationRef.current
+        );
+      }
+    };
+  }, []);
 
   /*
    * Impede a rolagem da página quando o menu mobile

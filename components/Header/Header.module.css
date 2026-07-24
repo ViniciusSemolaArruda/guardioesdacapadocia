@@ -389,25 +389,27 @@
    NOTEBOOKS
 ========================================================= */
 
-@media (max-width: 1450px) {
+@media (max-width: 1450px) and (min-width: 1251px) {
   .header {
-    height: 196px;
+    height: 210px;
   }
 
   .desktopContent {
-    --desktop-logo-size: 185px;
+    --desktop-logo-size: 198px;
+    --logo-link-distance: 60px;
 
     width: calc(100% - 56px);
   }
 
   .navigationGroup {
-    gap: clamp(24px, 2.4vw, 36px);
+    gap: clamp(24px, 2.4vw, 38px);
   }
 
   .navigationGroup a {
     min-width: clamp(82px, 6.3vw, 108px);
-    min-height: 42px;
-    font-size: clamp(0.68rem, 0.74vw, 0.8rem);
+    min-height: 44px;
+
+    font-size: clamp(0.7rem, 0.76vw, 0.84rem);
   }
 }
 
@@ -415,35 +417,36 @@
    NOTEBOOKS MENORES
 ========================================================= */
 
-@media (max-width: 1250px) {
+@media (max-width: 1250px) and (min-width: 901px) {
   .header {
-    height: 182px;
+    height: 195px;
   }
 
   .background {
     right: -20px;
     left: -20px;
 
-    transform: scale(1.022);
+    transform: scale(1.012);
   }
 
   .desktopContent {
-    --desktop-logo-size: 170px;
+    --desktop-logo-size: 182px;
+    --logo-link-distance: 46px;
 
-    width: calc(100% - 30px);
+    width: calc(100% - 28px);
   }
 
   .navigationGroup {
-    gap: clamp(16px, 1.8vw, 24px);
+    gap: clamp(14px, 1.6vw, 22px);
   }
 
   .navigationGroup a {
-    min-width: clamp(74px, 6vw, 94px);
+    min-width: clamp(70px, 6vw, 92px);
     min-height: 40px;
 
-    padding-inline: 3px;
+    padding-inline: 2px;
 
-    font-size: clamp(0.62rem, 0.66vw, 0.72rem);
+    font-size: clamp(0.61rem, 0.68vw, 0.74rem);
     letter-spacing: 0.025em;
   }
 }
@@ -452,13 +455,18 @@
 ========================================================= */
 
 
-@media (max-height: 820px) and (min-width: 901px) {
+/*
+  Somente telas realmente muito baixas recebem redução.
+  Notebooks comuns com 720px, 768px ou 800px de altura
+  mantêm o header e a logo grandes.
+*/
+@media (max-height: 620px) and (min-width: 901px) {
   .header {
-    height: min(152px, 18vh);
+    height: 180px;
   }
 
   .desktopContent {
-    --desktop-logo-size: min(138px, 16vh);
+    --desktop-logo-size: 166px;
   }
 }
 @media (max-width: 900px) {
