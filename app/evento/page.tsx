@@ -68,7 +68,7 @@ export default function EventoPage() {
           <div className={styles.posterColumn}>
             <div className={styles.posterFrame}>
               <Image
-                src="/images/passaporte-evento.png"
+                src="/images/passaporte-evento2.png"
                 alt="Passaporte Todo Mundo no Samba"
                 width={483}
                 height={731}

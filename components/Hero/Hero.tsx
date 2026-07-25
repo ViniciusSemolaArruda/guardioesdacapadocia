@@ -1,7 +1,14 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import {
+  type ChangeEvent,
+  type CSSProperties,
+  type MouseEvent,
+  useRef,
+  useState,
+} from "react";
 import {
   ChevronRight,
   Pause,
@@ -21,6 +28,21 @@ export default function Hero() {
 
   const [isMuted, setIsMuted] =
     useState(true);
+
+  const [currentTime, setCurrentTime] =
+    useState(0);
+
+  const [duration, setDuration] =
+    useState(0);
+
+  const progress =
+    duration > 0
+      ? (currentTime / duration) * 100
+      : 0;
+
+  const progressStyle = {
+    "--video-progress": `${progress}%`,
+  } as CSSProperties;
 
   async function toggleVideo() {
     const video = videoRef.current;
@@ -49,6 +71,92 @@ export default function Hero() {
     video.muted = !video.muted;
 
     setIsMuted(video.muted);
+  }
+
+  function handleLoadedMetadata() {
+    const video = videoRef.current;
+
+    if (!video) return;
+
+    setDuration(
+      Number.isFinite(video.duration)
+        ? video.duration
+        : 0,
+    );
+
+    setCurrentTime(video.currentTime);
+  }
+
+  function handleTimeUpdate() {
+    const video = videoRef.current;
+
+    if (!video) return;
+
+    setCurrentTime(video.currentTime);
+  }
+
+  function handleSeek(
+    event: ChangeEvent<HTMLInputElement>,
+  ) {
+    const video = videoRef.current;
+
+    if (!video || !duration) return;
+
+    const newTime = Number(event.target.value);
+
+    video.currentTime = newTime;
+    setCurrentTime(newTime);
+  }
+
+
+  function handleSchoolNavigation(
+    event: MouseEvent<HTMLAnchorElement>,
+  ) {
+    event.preventDefault();
+
+    const section =
+      document.getElementById("quem-somos");
+
+    if (!section) return;
+
+    const headerHeightValue = getComputedStyle(
+      document.documentElement,
+    ).getPropertyValue("--header-height");
+
+    const headerHeight =
+      Number.parseFloat(headerHeightValue) || 0;
+
+    const sectionPosition =
+      section.getBoundingClientRect().top +
+      window.scrollY;
+
+    const destination =
+      sectionPosition - headerHeight;
+
+    window.scrollTo({
+      top: Math.max(destination, 0),
+      behavior: "smooth",
+    });
+
+    window.history.replaceState(
+      null,
+      "",
+      "/#quem-somos",
+    );
+  }
+
+  function formatTime(time: number) {
+    if (!Number.isFinite(time)) {
+      return "0:00";
+    }
+
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+
+    return `${minutes}:${String(seconds).padStart(
+      2,
+      "0",
+    )}`;
   }
 
   return (
@@ -119,9 +227,12 @@ export default function Hero() {
 
               <div className={styles.actions}>
                 <a
-                  href="#quem-somos"
+                  href="/#quem-somos"
                   className={
                     styles.primaryButton
+                  }
+                  onClick={
+                    handleSchoolNavigation
                   }
                 >
                   <span>Conheça a escola</span>
@@ -178,18 +289,24 @@ export default function Hero() {
                 <video
                   ref={videoRef}
                   className={styles.video}
-                  src="/videos/guardioes.mp4"
-                  poster="/images/logo.png"
+                  src="/images/video2.mp4"
+                  /*poster="/images/logo.png"*/
                   muted={isMuted}
+                  loop
                   playsInline
                   preload="metadata"
+                  onLoadedMetadata={
+                    handleLoadedMetadata
+                  }
+                  onDurationChange={
+                    handleLoadedMetadata
+                  }
+                  onTimeUpdate={handleTimeUpdate}
+                  onSeeked={handleTimeUpdate}
                   onPlay={() =>
                     setIsPlaying(true)
                   }
                   onPause={() =>
-                    setIsPlaying(false)
-                  }
-                  onEnded={() =>
                     setIsPlaying(false)
                   }
                 />
@@ -219,9 +336,7 @@ export default function Hero() {
                       styles.videoHeaderText
                     }
                   >
-                    <small>
-                      Conheça nossa história
-                    </small>
+                    
 
                     <strong>
                       Guardiões da Capadócia
@@ -290,20 +405,34 @@ export default function Hero() {
                     )}
                   </button>
 
-                  <div
+                  <input
+                    type="range"
                     className={
                       styles.videoProgress
                     }
-                  >
-                    <span />
-                  </div>
+                    min={0}
+                    max={duration || 0}
+                    step="0.01"
+                    value={Math.min(
+                      currentTime,
+                      duration || 0,
+                    )}
+                    onChange={handleSeek}
+                    style={progressStyle}
+                    aria-label="Avançar ou voltar no vídeo"
+                    aria-valuetext={`${formatTime(
+                      currentTime,
+                    )} de ${formatTime(duration)}`}
+                    disabled={!duration}
+                  />
 
                   <span
                     className={
                       styles.videoLabel
                     }
                   >
-                    Nossa escola
+                    {formatTime(currentTime)} /{" "}
+                    {formatTime(duration)}
                   </span>
 
                   <button

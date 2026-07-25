@@ -1,6 +1,8 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { CalendarDays, Menu, X } from "lucide-react";
 import {
   type MouseEvent,
@@ -18,22 +20,22 @@ import styles from "./Header.module.css";
 const leftNavigationLinks = [
   {
     label: "Início",
-    href: "#inicio",
+    href: "/#inicio",
   },
   {
-    label: "A escola",
-    href: "#quem-somos",
+    label: "Quem Somos",
+    href: "/#quem-somos",
   },
 ];
 
 const rightNavigationLinks = [
   {
     label: "Galeria",
-    href: "#galeria",
+    href: "/#galeria",
   },
   {
     label: "Contato",
-    href: "#contato",
+    href: "/#contato",
   },
 ];
 
@@ -46,8 +48,11 @@ const navigationLinks = [
   ...rightNavigationLinks,
 ];
 
+const PENDING_SECTION_KEY = "guardioes-pending-section";
+
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const headerRef = useRef<HTMLElement>(null);
 
@@ -109,31 +114,21 @@ export default function Header() {
     };
   }, []);
 
-  /*
-   * Faz a navegação manualmente, descontando a altura atual
-   * do Header para que a seção pare no lugar correto.
-   */
-  function handleNavigation(
-    event: MouseEvent<HTMLAnchorElement>,
-    href: string
+  function scrollToSection(
+    sectionId: string,
+    behavior: ScrollBehavior = "smooth"
   ) {
-    event.preventDefault();
-
-    const sectionId = href.replace("#", "");
     const section = document.getElementById(sectionId);
 
     if (!section) {
-      return;
+      return false;
     }
-
-    closeMenu();
 
     const headerHeight =
       headerRef.current?.getBoundingClientRect().height ?? 0;
 
     const sectionPosition =
-      section.getBoundingClientRect().top +
-      window.scrollY;
+      section.getBoundingClientRect().top + window.scrollY;
 
     const destination =
       sectionId === "inicio"
@@ -142,15 +137,108 @@ export default function Header() {
 
     window.scrollTo({
       top: Math.max(destination, 0),
-      behavior: "smooth",
+      behavior,
     });
 
     window.history.replaceState(
       null,
       "",
-      href
+      `/#${sectionId}`
     );
+
+    return true;
   }
+
+  /*
+   * Na Home, faz o scroll suave normalmente.
+   * Em páginas internas, salva a seção desejada antes de voltar
+   * para a Home. Assim o posicionamento só acontece depois que
+   * a página e suas seções terminarem de carregar.
+   */
+  function handleNavigation(
+    event: MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) {
+    closeMenu();
+
+    const sectionId = href.split("#")[1] || "inicio";
+
+    if (pathname !== "/") {
+      sessionStorage.setItem(
+        PENDING_SECTION_KEY,
+        sectionId
+      );
+
+      return;
+    }
+
+    event.preventDefault();
+
+    if (!scrollToSection(sectionId)) {
+      // eslint-disable-next-line react-hooks/immutability
+      window.location.href = href;
+    }
+  }
+
+  /*
+   * Ao chegar à Home vindo de outra página, espera as seções
+   * existirem no DOM e então aplica o deslocamento exato do Header.
+   */
+  useEffect(() => {
+    if (pathname !== "/") {
+      return;
+    }
+
+    const pendingSection = sessionStorage.getItem(
+      PENDING_SECTION_KEY
+    );
+
+    const hashSection = window.location.hash.replace("#", "");
+    const sectionId = pendingSection || hashSection;
+
+    if (!sectionId) {
+      return;
+    }
+
+    let attempts = 0;
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    function tryToScroll() {
+      attempts += 1;
+
+      const scrolled = scrollToSection(
+        sectionId,
+        attempts === 1 ? "auto" : "smooth"
+      );
+
+      if (scrolled) {
+        sessionStorage.removeItem(PENDING_SECTION_KEY);
+
+        // Corrige novamente após imagens, fontes e componentes
+        // terminarem de alterar a altura da página.
+        [150, 400, 800].forEach((delay) => {
+          setTimeout(() => {
+            scrollToSection(sectionId, "auto");
+          }, delay);
+        });
+
+        return;
+      }
+
+      if (attempts < 20) {
+        timeoutId = setTimeout(tryToScroll, 100);
+      }
+    }
+
+    const frameId = requestAnimationFrame(() => {
+      timeoutId = setTimeout(tryToScroll, 50);
+    });
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      clearTimeout(timeoutId);
+    };
+  }, [pathname]);
 
   /*
    * Impede a rolagem da página quando o menu mobile
@@ -257,13 +345,13 @@ export default function Header() {
 
           <div className={styles.logoColumn}>
             <a
-              href="#inicio"
+              href="/#inicio"
               className={styles.logoArea}
               aria-label="Ir para o início"
               onClick={(event) =>
                 handleNavigation(
                   event,
-                  "#inicio"
+                  "/#inicio"
                 )
               }
             >
@@ -303,13 +391,13 @@ export default function Header() {
 
       <div className={styles.mobileHeader}>
         <a
-          href="#inicio"
+          href="/#inicio"
           className={styles.mobileLogoArea}
           aria-label="Ir para o início"
           onClick={(event) =>
             handleNavigation(
               event,
-              "#inicio"
+              "/#inicio"
             )
           }
         >
