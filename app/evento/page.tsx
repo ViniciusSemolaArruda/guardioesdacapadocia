@@ -186,8 +186,11 @@ export default function EventoPage() {
             </div>
 
             <aside className={styles.passportCard}>
-              <span className={styles.passportLabel}>Passaporte oficial </span>
-            <span className={styles.passportLabel}>Primeiro Lote </span>
+             <span className={styles.passportLabel}>
+  <strong>Passaporte oficial</strong>
+  <br />
+  Primeiro Lote
+</span>
               <strong className={styles.passportPrice}>R$ 29,50</strong>
 
               <ul>
