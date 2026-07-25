@@ -6,7 +6,14 @@ import VLibrasScript from "@/components/VLibras/VLibrasScript";
 export const metadata: Metadata = {
   title: "G.R.E.S. Guardiões da Capadócia",
   description:
-    "Site oficial da G.R.E.S. Guardiões da Capadócia. Tradição, cultura e amor pelo samba.",
+    "Site oficial da G.R.E.S. Guardiões da Capadócia. Força, Foco, Fé e Samba no Pé!",
+
+
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
@@ -21,10 +28,7 @@ export default function RootLayout({
 
         {/* Estrutura oficial do VLibras */}
         <div
-          {...({ vw: "true" } as Record<
-            string,
-            string
-          >)}
+          {...({ vw: "true" } as Record<string, string>)}
           className="enabled"
         >
           <div
