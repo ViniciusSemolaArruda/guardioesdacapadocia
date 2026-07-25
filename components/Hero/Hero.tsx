@@ -1,11 +1,9 @@
-/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
 import Image from "next/image";
 import {
   type ChangeEvent,
   type CSSProperties,
-  type MouseEvent,
   useRef,
   useState,
 } from "react";
@@ -108,43 +106,6 @@ export default function Hero() {
     setCurrentTime(newTime);
   }
 
-
-  function handleSchoolNavigation(
-    event: MouseEvent<HTMLAnchorElement>,
-  ) {
-    event.preventDefault();
-
-    const section =
-      document.getElementById("quem-somos");
-
-    if (!section) return;
-
-    const headerHeightValue = getComputedStyle(
-      document.documentElement,
-    ).getPropertyValue("--header-height");
-
-    const headerHeight =
-      Number.parseFloat(headerHeightValue) || 0;
-
-    const sectionPosition =
-      section.getBoundingClientRect().top +
-      window.scrollY;
-
-    const destination =
-      sectionPosition - headerHeight;
-
-    window.scrollTo({
-      top: Math.max(destination, 0),
-      behavior: "smooth",
-    });
-
-    window.history.replaceState(
-      null,
-      "",
-      "/#quem-somos",
-    );
-  }
-
   function formatTime(time: number) {
     if (!Number.isFinite(time)) {
       return "0:00";
@@ -227,12 +188,9 @@ export default function Hero() {
 
               <div className={styles.actions}>
                 <a
-                  href="/#quem-somos"
+                  href="#quem-somos"
                   className={
                     styles.primaryButton
-                  }
-                  onClick={
-                    handleSchoolNavigation
                   }
                 >
                   <span>Conheça a escola</span>
@@ -292,7 +250,6 @@ export default function Hero() {
                   src="/images/video2.mp4"
                   /*poster="/images/logo.png"*/
                   muted={isMuted}
-                  loop
                   playsInline
                   preload="metadata"
                   onLoadedMetadata={
@@ -309,6 +266,10 @@ export default function Hero() {
                   onPause={() =>
                     setIsPlaying(false)
                   }
+                  onEnded={() => {
+                    setIsPlaying(false);
+                    setCurrentTime(0);
+                  }}
                 />
 
                 <div
@@ -336,7 +297,9 @@ export default function Hero() {
                       styles.videoHeaderText
                     }
                   >
-                    
+                    <small>
+                      Conheça nossa história
+                    </small>
 
                     <strong>
                       Guardiões da Capadócia
@@ -423,7 +386,7 @@ export default function Hero() {
                     aria-valuetext={`${formatTime(
                       currentTime,
                     )} de ${formatTime(duration)}`}
-                    disabled={!duration}
+                    
                   />
 
                   <span
