@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { ChevronRight, Crown } from "lucide-react";
 
 import styles from "./AboutSection.module.css";
@@ -17,6 +18,9 @@ export default function AboutSection() {
       />
 
       <div className={styles.container}>
+        {/* =====================================================
+            CONTEÚDO
+        ====================================================== */}
         <div className={styles.content}>
           <div className={styles.sectionLabel}>
             <span className={styles.labelLine} />
@@ -62,8 +66,8 @@ export default function AboutSection() {
             </p>
           </div>
 
-          <a
-            href="#nossa-historia"
+          <Link
+            href="/Sobre"
             className={styles.historyButton}
           >
             <span>Conheça nossa história</span>
@@ -73,9 +77,12 @@ export default function AboutSection() {
               strokeWidth={2.2}
               aria-hidden="true"
             />
-          </a>
+          </Link>
         </div>
 
+        {/* =====================================================
+            GALERIA
+        ====================================================== */}
         <div className={styles.gallery}>
           <div
             className={`${styles.photoWrapper} ${styles.photoOne}`}
@@ -87,7 +94,6 @@ export default function AboutSection() {
                 fill
                 sizes="(max-width: 700px) 82vw, 36vw"
                 className={styles.photo}
-                priority={false}
               />
             </div>
           </div>
@@ -119,7 +125,6 @@ export default function AboutSection() {
               />
             </div>
           </div>
-
         </div>
       </div>
     </section>
