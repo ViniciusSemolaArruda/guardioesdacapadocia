@@ -1,9 +1,11 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
 import Image from "next/image";
 import {
   type ChangeEvent,
   type CSSProperties,
+  type MouseEvent,
   useRef,
   useState,
 } from "react";
@@ -60,6 +62,44 @@ export default function Hero() {
       );
     }
   }
+
+  function handleSchoolNavigation(
+  event: MouseEvent<HTMLAnchorElement>,
+) {
+  event.preventDefault();
+
+  const section = document.getElementById("quem-somos");
+
+  if (!section) {
+    window.location.href = "/#quem-somos";
+    return;
+  }
+
+  const headerHeightValue = getComputedStyle(
+    document.documentElement,
+  ).getPropertyValue("--header-height");
+
+  const headerHeight =
+    Number.parseFloat(headerHeightValue) || 0;
+
+  const sectionPosition =
+    section.getBoundingClientRect().top +
+    window.scrollY;
+
+  const destination =
+    sectionPosition - headerHeight;
+
+  window.scrollTo({
+    top: Math.max(destination, 0),
+    behavior: "smooth",
+  });
+
+  window.history.replaceState(
+    null,
+    "",
+    "/#quem-somos",
+  );
+}
 
   function toggleMuted() {
     const video = videoRef.current;
@@ -188,19 +228,18 @@ export default function Hero() {
 
               <div className={styles.actions}>
                 <a
-                  href="#quem-somos"
-                  className={
-                    styles.primaryButton
-                  }
-                >
-                  <span>Conheça a escola</span>
+  href="/#quem-somos"
+  className={styles.primaryButton}
+  onClick={handleSchoolNavigation}
+>
+  <span>Conheça a escola</span>
 
-                  <ChevronRight
-                    size={20}
-                    strokeWidth={2.5}
-                    aria-hidden="true"
-                  />
-                </a>
+  <ChevronRight
+    size={20}
+    strokeWidth={2.5}
+    aria-hidden="true"
+  />
+</a>
 
                 <button
                   type="button"
