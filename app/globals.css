@@ -131,13 +131,10 @@ main section[id] {
   z-index: 2147483647 !important;
 }
 
-[vw-plugin-wrapper] {
-  z-index: 2147483647 !important;
-}
-
+[vw-plugin-wrapper],
 .vpw-container,
 .vpw-box,
-.vpw-settings-btn,
-.vpw-controls {
+.vpw-controls,
+.vpw-settings-btn {
   z-index: 2147483647 !important;
 }
