@@ -37,7 +37,8 @@ const DEFAULT_CURTAIN_IMAGE =
 const DEFAULT_SESSION_KEY =
   "guardioes-automatic-curtain-opened";
 
-const MINIMUM_HERO_HEIGHT = 400;
+const MINIMUM_HERO_HEIGHT = 460;
+const MAXIMUM_HERO_HEIGHT = 900;
 const MOBILE_BREAKPOINT = 650;
 
 export default function AutomaticCurtainEffect({
@@ -54,18 +55,27 @@ export default function AutomaticCurtainEffect({
   const sectionRef =
     useRef<HTMLElement | null>(null);
 
+  /*
+   * No navegador, window.setTimeout retorna number.
+   * Isso evita conflito com NodeJS.Timeout.
+   */
   const openingTimeoutRef =
-    useRef<ReturnType<typeof setTimeout> | null>(
-      null,
-    );
+    useRef<number | null>(null);
 
   const finishingTimeoutRef =
-    useRef<ReturnType<typeof setTimeout> | null>(
-      null,
-    );
+    useRef<number | null>(null);
 
-  const [isReady, setIsReady] =
-    useState(false);
+  const resizeTimeoutRef =
+    useRef<number | null>(null);
+
+  const initialCalculationTimeoutRef =
+    useRef<number | null>(null);
+
+  const animationFrameRef =
+    useRef<number | null>(null);
+
+  const animationStartFrameRef =
+    useRef<number | null>(null);
 
   const [isOpening, setIsOpening] =
     useState(false);
@@ -74,31 +84,20 @@ export default function AutomaticCurtainEffect({
     useState(false);
 
   const [availableHeight, setAvailableHeight] =
-    useState(0);
+    useState(MINIMUM_HERO_HEIGHT);
 
   /* =======================================================
-     CALCULA A ALTURA DISPONÍVEL
+     CALCULA A ALTURA DO HERO
 
-     No desktop e tablet, o palco ocupa a altura disponível
-     abaixo do Header.
+     No celular, a altura será controlada pelo conteúdo.
 
-     No celular, o CSS usa altura automática, acompanhando
-     todo o conteúdo do Hero. Assim, a barra do Safari não
-     provoca cortes nem espaços vazios.
+     Em tablets, notebooks e desktops, o Hero ocupa o espaço
+     disponível abaixo do Header, com limite máximo para não
+     ficar excessivamente grande.
   ======================================================= */
 
   useLayoutEffect(() => {
-    let animationFrameId: number | null = null;
-    let resizeObserver:
-      ResizeObserver | null = null;
-
     function calculateAvailableHeight() {
-      /*
-       * No celular, a variável é mantida apenas com um valor
-       * válido para liberar o estado de carregamento.
-       *
-       * A altura real passa a ser definida pelo conteúdo.
-       */
       if (
         window.innerWidth <=
         MOBILE_BREAKPOINT
@@ -120,7 +119,6 @@ export default function AutomaticCurtainEffect({
         0;
 
       const viewportHeight =
-        window.visualViewport?.height ??
         window.innerHeight;
 
       const calculatedHeight =
@@ -128,100 +126,133 @@ export default function AutomaticCurtainEffect({
 
       const nextHeight = Math.max(
         MINIMUM_HERO_HEIGHT,
-        Math.floor(calculatedHeight),
+        Math.min(
+          Math.floor(calculatedHeight),
+          MAXIMUM_HERO_HEIGHT,
+        ),
       );
 
-      setAvailableHeight((currentHeight) => {
-        if (
-          Math.abs(
-            currentHeight - nextHeight,
-          ) < 2
-        ) {
-          return currentHeight;
-        }
+      setAvailableHeight(
+        (currentHeight) => {
+          const heightDifference =
+            Math.abs(
+              currentHeight - nextHeight,
+            );
 
-        return nextHeight;
-      });
+          if (heightDifference < 2) {
+            return currentHeight;
+          }
+
+          return nextHeight;
+        },
+      );
     }
 
     function requestCalculation() {
-      if (animationFrameId !== null) {
+      if (
+        animationFrameRef.current !== null
+      ) {
         window.cancelAnimationFrame(
-          animationFrameId,
+          animationFrameRef.current,
         );
       }
 
-      animationFrameId =
+      animationFrameRef.current =
         window.requestAnimationFrame(() => {
           calculateAvailableHeight();
-          animationFrameId = null;
+
+          animationFrameRef.current = null;
         });
+    }
+
+    function handleResize() {
+      if (
+        resizeTimeoutRef.current !== null
+      ) {
+        window.clearTimeout(
+          resizeTimeoutRef.current,
+        );
+      }
+
+      resizeTimeoutRef.current =
+        window.setTimeout(() => {
+          requestCalculation();
+
+          resizeTimeoutRef.current = null;
+        }, 120);
     }
 
     requestCalculation();
 
-    const initialTimeout =
-      window.setTimeout(
-        requestCalculation,
-        100,
-      );
+    /*
+     * Faz uma segunda medição depois que imagens, fontes
+     * e o Header já tiveram tempo de concluir o layout.
+     */
+    initialCalculationTimeoutRef.current =
+      window.setTimeout(() => {
+        requestCalculation();
+
+        initialCalculationTimeoutRef.current =
+          null;
+      }, 200);
 
     window.addEventListener(
       "resize",
-      requestCalculation,
+      handleResize,
+      {
+        passive: true,
+      },
     );
 
     window.addEventListener(
       "orientationchange",
-      requestCalculation,
+      handleResize,
+      {
+        passive: true,
+      },
     );
-
-    window.visualViewport?.addEventListener(
-      "resize",
-      requestCalculation,
-    );
-
-    const header =
-      document.querySelector<HTMLElement>(
-        "header",
-      );
-
-    if (
-      header &&
-      typeof ResizeObserver !== "undefined"
-    ) {
-      resizeObserver =
-        new ResizeObserver(
-          requestCalculation,
-        );
-
-      resizeObserver.observe(header);
-    }
 
     return () => {
-      window.clearTimeout(initialTimeout);
-
       window.removeEventListener(
         "resize",
-        requestCalculation,
+        handleResize,
       );
 
       window.removeEventListener(
         "orientationchange",
-        requestCalculation,
+        handleResize,
       );
 
-      window.visualViewport?.removeEventListener(
-        "resize",
-        requestCalculation,
-      );
-
-      resizeObserver?.disconnect();
-
-      if (animationFrameId !== null) {
-        window.cancelAnimationFrame(
-          animationFrameId,
+      if (
+        resizeTimeoutRef.current !== null
+      ) {
+        window.clearTimeout(
+          resizeTimeoutRef.current,
         );
+
+        resizeTimeoutRef.current = null;
+      }
+
+      if (
+        initialCalculationTimeoutRef.current !==
+        null
+      ) {
+        window.clearTimeout(
+          initialCalculationTimeoutRef.current,
+        );
+
+        initialCalculationTimeoutRef.current =
+          null;
+      }
+
+      if (
+        animationFrameRef.current !== null
+      ) {
+        window.cancelAnimationFrame(
+          animationFrameRef.current,
+        );
+
+        animationFrameRef.current = null;
       }
     };
   }, []);
@@ -249,25 +280,50 @@ export default function AutomaticCurtainEffect({
       }
     }
 
-    if (alreadyOpened || reducedMotion) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setIsReady(true);
-      setIsOpening(true);
-      setIsFinished(true);
+    /*
+     * O requestAnimationFrame evita chamar setState
+     * diretamente no corpo do useEffect.
+     */
+    if (
+      alreadyOpened ||
+      reducedMotion
+    ) {
+      animationStartFrameRef.current =
+        window.requestAnimationFrame(() => {
+          setIsOpening(true);
+          setIsFinished(true);
 
-      return;
+          animationStartFrameRef.current =
+            null;
+        });
+
+      return () => {
+        if (
+          animationStartFrameRef.current !==
+          null
+        ) {
+          window.cancelAnimationFrame(
+            animationStartFrameRef.current,
+          );
+
+          animationStartFrameRef.current =
+            null;
+        }
+      };
     }
 
-    setIsReady(true);
-
     openingTimeoutRef.current =
-      setTimeout(() => {
+      window.setTimeout(() => {
         setIsOpening(true);
+
+        openingTimeoutRef.current = null;
       }, delay);
 
     finishingTimeoutRef.current =
-      setTimeout(() => {
+      window.setTimeout(() => {
         setIsFinished(true);
+
+        finishingTimeoutRef.current = null;
 
         if (openOncePerSession) {
           try {
@@ -277,28 +333,44 @@ export default function AutomaticCurtainEffect({
             );
           } catch {
             /*
-             * Mantém a animação funcionando caso
-             * o armazenamento esteja bloqueado.
+             * A animação continua funcionando mesmo que
+             * o navegador bloqueie o sessionStorage.
              */
           }
         }
-      }, delay + duration + 200);
+      }, delay + duration + 250);
 
     return () => {
-      if (openingTimeoutRef.current) {
-        clearTimeout(
+      if (
+        openingTimeoutRef.current !== null
+      ) {
+        window.clearTimeout(
           openingTimeoutRef.current,
         );
 
         openingTimeoutRef.current = null;
       }
 
-      if (finishingTimeoutRef.current) {
-        clearTimeout(
+      if (
+        finishingTimeoutRef.current !== null
+      ) {
+        window.clearTimeout(
           finishingTimeoutRef.current,
         );
 
         finishingTimeoutRef.current = null;
+      }
+
+      if (
+        animationStartFrameRef.current !==
+        null
+      ) {
+        window.cancelAnimationFrame(
+          animationStartFrameRef.current,
+        );
+
+        animationStartFrameRef.current =
+          null;
       }
     };
   }, [
@@ -319,11 +391,8 @@ export default function AutomaticCurtainEffect({
     .filter(Boolean)
     .join(" ");
 
-  const stageClassNames = [
+  const stageClassNameFinal = [
     styles.curtainStage,
-    !isReady || availableHeight === 0
-      ? styles.loading
-      : "",
     isOpening ? styles.opening : "",
     isFinished ? styles.finished : "",
     stageClassName,
@@ -354,7 +423,7 @@ export default function AutomaticCurtainEffect({
       className={sectionClassName}
       style={curtainStyle}
     >
-      <div className={stageClassNames}>
+      <div className={stageClassNameFinal}>
         <div className={styles.curtainContent}>
           {children}
         </div>

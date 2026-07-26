@@ -67,7 +67,7 @@ export default function AboutSection() {
           </div>
 
           <Link
-            href="/Sobre"
+            href="/sobre"
             className={styles.historyButton}
           >
             <span>Conheça nossa história</span>

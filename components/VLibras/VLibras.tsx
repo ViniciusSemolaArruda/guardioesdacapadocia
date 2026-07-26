@@ -1,124 +1,246 @@
+/* eslint-disable react-hooks/immutability */
 "use client";
 
-import { useEffect } from "react";
+import Script from "next/script";
+import { usePathname } from "next/navigation";
+import { useCallback, useEffect, useRef } from "react";
 
 declare global {
   interface Window {
     VLibras?: {
       Widget: new (url: string) => unknown;
     };
+
+    __vlibrasInitialized?: boolean;
   }
 }
 
-const SCRIPT_ID = "vlibras-plugin-script";
+const VLibrAS_URL = "https://vlibras.gov.br/app";
 
 export default function VLibras() {
-  useEffect(() => {
-    let cancelled = false;
-    let attempts = 0;
+  const pathname = usePathname();
 
-    function widgetAlreadyCreated() {
-      return Boolean(
-        document.querySelector(
-          ".vpw-container, .vpw-box, .vpw-settings-btn"
-        )
-      );
+  const retryTimerRef =
+    useRef<number | null>(null);
+
+  const routeTimerRef =
+    useRef<number | null>(null);
+
+  const attemptsRef = useRef(0);
+
+  const initializeVLibras = useCallback(() => {
+    if (typeof window === "undefined") {
+      return;
     }
 
-    function initializeWidget() {
-      if (cancelled) return;
-
-      if (widgetAlreadyCreated()) return;
-
-      if (window.VLibras?.Widget) {
-        try {
-          new window.VLibras.Widget(
-            "https://vlibras.gov.br/app"
-          );
-        } catch (error) {
-          console.error(
-            "Erro ao inicializar o VLibras:",
-            error
-          );
-        }
-
-        return;
-      }
-
-      attempts += 1;
-
-      if (attempts <= 40) {
-        window.setTimeout(initializeWidget, 250);
-      }
-    }
-
-    const existingScript = document.getElementById(
-      SCRIPT_ID
-    ) as HTMLScriptElement | null;
-
-    if (existingScript) {
-      initializeWidget();
-
-      existingScript.addEventListener(
-        "load",
-        initializeWidget
+    const container =
+      document.querySelector<HTMLElement>(
+        "#vlibras-root",
       );
 
-      return () => {
-        cancelled = true;
+    const accessButton =
+      document.querySelector<HTMLElement>(
+        "#vlibras-root [vw-access-button]",
+      );
 
-        existingScript.removeEventListener(
-          "load",
-          initializeWidget
-        );
-      };
+    if (!container || !accessButton) {
+      return;
     }
 
-    const script = document.createElement("script");
+    /*
+     * Verifica se o plugin realmente criou sua estrutura.
+     * Não confiamos apenas em uma variável global.
+     */
+    const pluginWasCreated = Boolean(
+      container.querySelector(
+        ".vpw-container, .vpw-box, .vpw-controls",
+      ),
+    );
 
-    script.id = SCRIPT_ID;
-    script.src =
-      "https://vlibras.gov.br/app/vlibras-plugin.js";
-    script.async = true;
+    if (pluginWasCreated) {
+      window.__vlibrasInitialized = true;
 
-    script.onload = () => {
-      initializeWidget();
-    };
+      container.classList.add("enabled");
+      accessButton.classList.add("active");
 
-    script.onerror = () => {
+      return;
+    }
+
+    /*
+     * A variável pode permanecer true mesmo quando os elementos
+     * internos desapareceram durante uma navegação.
+     */
+    window.__vlibrasInitialized = false;
+
+    if (!window.VLibras?.Widget) {
+      attemptsRef.current += 1;
+
+      if (attemptsRef.current <= 50) {
+        retryTimerRef.current =
+          window.setTimeout(() => {
+            initializeVLibras();
+          }, 250);
+      }
+
+      return;
+    }
+
+    try {
+      new window.VLibras.Widget(VLibrAS_URL);
+
+      window.__vlibrasInitialized = true;
+      attemptsRef.current = 0;
+    } catch (error) {
       console.error(
-        "Não foi possível carregar o script do VLibras."
+        "Erro ao inicializar o VLibras:",
+        error,
       );
-    };
 
-    document.body.appendChild(script);
+      attemptsRef.current += 1;
 
-    initializeWidget();
-
-    return () => {
-      cancelled = true;
-    };
+      if (attemptsRef.current <= 10) {
+        retryTimerRef.current =
+          window.setTimeout(() => {
+            initializeVLibras();
+          }, 500);
+      }
+    }
   }, []);
 
-  return (
-    <div
-      {...({ vw: "" } as Record<string, string>)}
-      className="enabled"
-    >
-      <div
-        {...({
-          "vw-access-button": "",
-        } as Record<string, string>)}
-        className="active"
-      />
+  /*
+   * Inicialização inicial do widget.
+   */
+  useEffect(() => {
+    const frameId =
+      window.requestAnimationFrame(() => {
+        initializeVLibras();
+      });
 
+    return () => {
+      window.cancelAnimationFrame(frameId);
+
+      if (retryTimerRef.current !== null) {
+        window.clearTimeout(
+          retryTimerRef.current,
+        );
+
+        retryTimerRef.current = null;
+      }
+    };
+  }, [initializeVLibras]);
+
+  /*
+   * Reconfere o widget sempre que a rota mudar.
+   */
+  useEffect(() => {
+    attemptsRef.current = 0;
+
+    routeTimerRef.current =
+      window.setTimeout(() => {
+        initializeVLibras();
+
+        routeTimerRef.current = null;
+      }, 150);
+
+    return () => {
+      if (routeTimerRef.current !== null) {
+        window.clearTimeout(
+          routeTimerRef.current,
+        );
+
+        routeTimerRef.current = null;
+      }
+    };
+  }, [pathname, initializeVLibras]);
+
+  /*
+   * Reconfere quando a página volta a ficar visível.
+   */
+  useEffect(() => {
+    function handlePageShow() {
+      initializeVLibras();
+    }
+
+    function handleVisibilityChange() {
+      if (
+        document.visibilityState === "visible"
+      ) {
+        initializeVLibras();
+      }
+    }
+
+    window.addEventListener(
+      "pageshow",
+      handlePageShow,
+    );
+
+    window.addEventListener(
+      "focus",
+      handlePageShow,
+    );
+
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "pageshow",
+        handlePageShow,
+      );
+
+      window.removeEventListener(
+        "focus",
+        handlePageShow,
+      );
+
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange,
+      );
+    };
+  }, [initializeVLibras]);
+
+  return (
+    <>
       <div
+        id="vlibras-root"
         {...({
-          "vw-plugin-wrapper": "",
+          vw: "true",
         } as Record<string, string>)}
+        className="enabled"
       >
-        <div className="vw-plugin-top-wrapper" />
+        <div
+          {...({
+            "vw-access-button": "true",
+          } as Record<string, string>)}
+          className="active"
+          aria-label="Abrir o tradutor VLibras"
+        />
+
+        <div
+          {...({
+            "vw-plugin-wrapper": "true",
+          } as Record<string, string>)}
+        >
+          <div className="vw-plugin-top-wrapper" />
+        </div>
       </div>
-    </div>
+
+      <Script
+        id="vlibras-plugin-script"
+        src="https://vlibras.gov.br/app/vlibras-plugin.js"
+        strategy="afterInteractive"
+        onLoad={initializeVLibras}
+        onReady={initializeVLibras}
+        onError={(error) => {
+          console.error(
+            "Não foi possível carregar o script do VLibras:",
+            error,
+          );
+        }}
+      />
+    </>
   );
 }
