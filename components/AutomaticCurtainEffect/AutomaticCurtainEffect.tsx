@@ -3,7 +3,6 @@
 import {
   CSSProperties,
   ReactNode,
-  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -34,7 +33,7 @@ interface AutomaticCurtainEffectProps {
 const DEFAULT_CURTAIN_IMAGE =
   "/images/cortina-fechada1.png";
 
-const DEFAULT_SESSION_KEY =
+const DEFAULT_STORAGE_KEY =
   "guardioes-automatic-curtain-opened";
 
 const MINIMUM_HERO_HEIGHT = 460;
@@ -50,15 +49,8 @@ export default function AutomaticCurtainEffect({
   className = "",
   stageClassName = "",
   openOncePerSession = false,
-  sessionKey = DEFAULT_SESSION_KEY,
+  sessionKey = DEFAULT_STORAGE_KEY,
 }: AutomaticCurtainEffectProps) {
-  const sectionRef =
-    useRef<HTMLElement | null>(null);
-
-  /*
-   * No navegador, window.setTimeout retorna number.
-   * Isso evita conflito com NodeJS.Timeout.
-   */
   const openingTimeoutRef =
     useRef<number | null>(null);
 
@@ -74,8 +66,18 @@ export default function AutomaticCurtainEffect({
   const animationFrameRef =
     useRef<number | null>(null);
 
-  const animationStartFrameRef =
-    useRef<number | null>(null);
+  /*
+   * null:
+   * ainda não verificou o localStorage.
+   *
+   * true:
+   * deve reproduzir a cortina.
+   *
+   * false:
+   * deve mostrar o Hero diretamente.
+   */
+  const [shouldAnimate, setShouldAnimate] =
+    useState<boolean | null>(null);
 
   const [isOpening, setIsOpening] =
     useState(false);
@@ -87,13 +89,144 @@ export default function AutomaticCurtainEffect({
     useState(MINIMUM_HERO_HEIGHT);
 
   /* =======================================================
+     VERIFICA SE A CORTINA JÁ APARECEU
+  ======================================================= */
+
+  useLayoutEffect(() => {
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    /*
+     * Quando openOncePerSession não estiver habilitado,
+     * a animação funciona normalmente em toda montagem.
+     */
+    if (!openOncePerSession) {
+      if (reducedMotion) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setShouldAnimate(false);
+        setIsOpening(true);
+        setIsFinished(true);
+
+        return;
+      }
+
+      setShouldAnimate(true);
+
+      return;
+    }
+
+    let curtainAlreadyOpened = false;
+
+    try {
+      curtainAlreadyOpened =
+        window.localStorage.getItem(sessionKey) ===
+        "true";
+    } catch {
+      curtainAlreadyOpened = false;
+    }
+
+    /*
+     * Se já abriu alguma vez neste navegador,
+     * mostra o Hero diretamente.
+     */
+    if (curtainAlreadyOpened || reducedMotion) {
+      setShouldAnimate(false);
+      setIsOpening(true);
+      setIsFinished(true);
+
+      return;
+    }
+
+    /*
+     * Registra imediatamente.
+     *
+     * Isso precisa acontecer antes dos timeouts.
+     * Assim, mesmo se o usuário atualizar a página,
+     * sair ou navegar antes da animação terminar,
+     * a cortina não aparecerá novamente.
+     */
+    try {
+      window.localStorage.setItem(
+        sessionKey,
+        "true",
+      );
+    } catch {
+      /*
+       * Se o navegador bloquear o localStorage,
+       * a animação ainda continua funcionando.
+       */
+    }
+
+    setShouldAnimate(true);
+  }, [
+    openOncePerSession,
+    sessionKey,
+  ]);
+
+  /* =======================================================
+     ABERTURA AUTOMÁTICA
+  ======================================================= */
+
+  useLayoutEffect(() => {
+    /*
+     * Aguarda a verificação do localStorage.
+     */
+    if (shouldAnimate === null) {
+      return;
+    }
+
+    /*
+     * Se não deve animar, o Hero já foi colocado
+     * diretamente no estado final.
+     */
+    if (!shouldAnimate) {
+      return;
+    }
+
+    openingTimeoutRef.current =
+      window.setTimeout(() => {
+        setIsOpening(true);
+
+        openingTimeoutRef.current = null;
+      }, delay);
+
+    finishingTimeoutRef.current =
+      window.setTimeout(() => {
+        setIsFinished(true);
+
+        finishingTimeoutRef.current = null;
+      }, delay + duration + 250);
+
+    return () => {
+      if (
+        openingTimeoutRef.current !== null
+      ) {
+        window.clearTimeout(
+          openingTimeoutRef.current,
+        );
+
+        openingTimeoutRef.current = null;
+      }
+
+      if (
+        finishingTimeoutRef.current !== null
+      ) {
+        window.clearTimeout(
+          finishingTimeoutRef.current,
+        );
+
+        finishingTimeoutRef.current = null;
+      }
+    };
+  }, [
+    shouldAnimate,
+    delay,
+    duration,
+  ]);
+
+  /* =======================================================
      CALCULA A ALTURA DO HERO
-
-     No celular, a altura será controlada pelo conteúdo.
-
-     Em tablets, notebooks e desktops, o Hero ocupa o espaço
-     disponível abaixo do Header, com limite máximo para não
-     ficar excessivamente grande.
   ======================================================= */
 
   useLayoutEffect(() => {
@@ -184,10 +317,6 @@ export default function AutomaticCurtainEffect({
 
     requestCalculation();
 
-    /*
-     * Faz uma segunda medição depois que imagens, fontes
-     * e o Header já tiveram tempo de concluir o layout.
-     */
     initialCalculationTimeoutRef.current =
       window.setTimeout(() => {
         requestCalculation();
@@ -258,134 +387,14 @@ export default function AutomaticCurtainEffect({
   }, []);
 
   /* =======================================================
-     ABERTURA AUTOMÁTICA
-  ======================================================= */
-
-  useEffect(() => {
-    const reducedMotion =
-      window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-
-    let alreadyOpened = false;
-
-    if (openOncePerSession) {
-      try {
-        alreadyOpened =
-          window.sessionStorage.getItem(
-            sessionKey,
-          ) === "true";
-      } catch {
-        alreadyOpened = false;
-      }
-    }
-
-    /*
-     * O requestAnimationFrame evita chamar setState
-     * diretamente no corpo do useEffect.
-     */
-    if (
-      alreadyOpened ||
-      reducedMotion
-    ) {
-      animationStartFrameRef.current =
-        window.requestAnimationFrame(() => {
-          setIsOpening(true);
-          setIsFinished(true);
-
-          animationStartFrameRef.current =
-            null;
-        });
-
-      return () => {
-        if (
-          animationStartFrameRef.current !==
-          null
-        ) {
-          window.cancelAnimationFrame(
-            animationStartFrameRef.current,
-          );
-
-          animationStartFrameRef.current =
-            null;
-        }
-      };
-    }
-
-    openingTimeoutRef.current =
-      window.setTimeout(() => {
-        setIsOpening(true);
-
-        openingTimeoutRef.current = null;
-      }, delay);
-
-    finishingTimeoutRef.current =
-      window.setTimeout(() => {
-        setIsFinished(true);
-
-        finishingTimeoutRef.current = null;
-
-        if (openOncePerSession) {
-          try {
-            window.sessionStorage.setItem(
-              sessionKey,
-              "true",
-            );
-          } catch {
-            /*
-             * A animação continua funcionando mesmo que
-             * o navegador bloqueie o sessionStorage.
-             */
-          }
-        }
-      }, delay + duration + 250);
-
-    return () => {
-      if (
-        openingTimeoutRef.current !== null
-      ) {
-        window.clearTimeout(
-          openingTimeoutRef.current,
-        );
-
-        openingTimeoutRef.current = null;
-      }
-
-      if (
-        finishingTimeoutRef.current !== null
-      ) {
-        window.clearTimeout(
-          finishingTimeoutRef.current,
-        );
-
-        finishingTimeoutRef.current = null;
-      }
-
-      if (
-        animationStartFrameRef.current !==
-        null
-      ) {
-        window.cancelAnimationFrame(
-          animationStartFrameRef.current,
-        );
-
-        animationStartFrameRef.current =
-          null;
-      }
-    };
-  }, [
-    delay,
-    duration,
-    openOncePerSession,
-    sessionKey,
-  ]);
-
-  /* =======================================================
      CLASSES
   ======================================================= */
 
   const sectionClassName = [
     styles.curtainSection,
+    shouldAnimate === null
+      ? styles.loading
+      : "",
     className,
   ]
     .filter(Boolean)
@@ -418,7 +427,6 @@ export default function AutomaticCurtainEffect({
 
   return (
     <section
-      ref={sectionRef}
       id={id}
       className={sectionClassName}
       style={curtainStyle}
@@ -428,41 +436,49 @@ export default function AutomaticCurtainEffect({
           {children}
         </div>
 
-        <div
-          className={styles.heroShade}
-          aria-hidden="true"
-        />
+        {shouldAnimate && !isFinished && (
+          <>
+            <div
+              className={styles.heroShade}
+              aria-hidden="true"
+            />
 
-        <div
-          className={`${styles.curtainPanel} ${styles.curtainLeft}`}
-          aria-hidden="true"
-        >
-          <div
-            className={styles.curtainArtwork}
-          />
+            <div
+              className={`${styles.curtainPanel} ${styles.curtainLeft}`}
+              aria-hidden="true"
+            >
+              <div
+                className={
+                  styles.curtainArtwork
+                }
+              />
 
-          <div
-            className={styles.curtainEdge}
-          />
-        </div>
+              <div
+                className={styles.curtainEdge}
+              />
+            </div>
 
-        <div
-          className={`${styles.curtainPanel} ${styles.curtainRight}`}
-          aria-hidden="true"
-        >
-          <div
-            className={styles.curtainArtwork}
-          />
+            <div
+              className={`${styles.curtainPanel} ${styles.curtainRight}`}
+              aria-hidden="true"
+            >
+              <div
+                className={
+                  styles.curtainArtwork
+                }
+              />
 
-          <div
-            className={styles.curtainEdge}
-          />
-        </div>
+              <div
+                className={styles.curtainEdge}
+              />
+            </div>
 
-        <div
-          className={styles.centerSeam}
-          aria-hidden="true"
-        />
+            <div
+              className={styles.centerSeam}
+              aria-hidden="true"
+            />
+          </>
+        )}
       </div>
     </section>
   );
