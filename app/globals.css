@@ -123,51 +123,21 @@ main section[id] {
    VLIBRAS
 ========================================================= */
 
-#vlibras-root {
-  position: fixed !important;
-  right: 0 !important;
-  bottom: 0 !important;
-
-  width: auto !important;
-  height: auto !important;
-
-  overflow: visible !important;
-
-  z-index: 2147483647 !important;
-
-  visibility: visible !important;
-  opacity: 1 !important;
-
-  pointer-events: none;
-}
-
-#vlibras-root [vw-access-button] {
-  position: fixed !important;
-  right: 16px !important;
-  bottom: 16px !important;
-
-  z-index: 2147483647 !important;
-
-  visibility: visible !important;
-  opacity: 1 !important;
-
-  pointer-events: auto !important;
-}
-
-#vlibras-root [vw-plugin-wrapper] {
-  z-index: 2147483647 !important;
-  pointer-events: auto !important;
-}
-
-#vlibras-root .vpw-container,
-#vlibras-root .vpw-box,
-#vlibras-root .vpw-settings-btn {
+[vw].enabled {
   z-index: 2147483647 !important;
 }
 
-@media (max-width: 650px) {
-  #vlibras-root [vw-access-button] {
-    right: 10px !important;
-    bottom: 18px !important;
-  }
+[vw-access-button].active {
+  z-index: 2147483647 !important;
+}
+
+[vw-plugin-wrapper] {
+  z-index: 2147483647 !important;
+}
+
+.vpw-container,
+.vpw-box,
+.vpw-settings-btn,
+.vpw-controls {
+  z-index: 2147483647 !important;
 }

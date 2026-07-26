@@ -2,7 +2,10 @@
 "use client";
 
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import {
+  usePathname,
+  useRouter,
+} from "next/navigation";
 import { CalendarDays, Menu, X } from "lucide-react";
 import {
   type MouseEvent,
@@ -53,6 +56,7 @@ const PENDING_SECTION_KEY = "guardioes-pending-section";
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   const headerRef = useRef<HTMLElement>(null);
 
@@ -141,10 +145,12 @@ export default function Header() {
     });
 
     window.history.replaceState(
-      null,
-      "",
-      `/#${sectionId}`
-    );
+  null,
+  "",
+  sectionId === "inicio"
+    ? "/"
+    : `/#${sectionId}`,
+);
 
     return true;
   }
@@ -163,14 +169,22 @@ export default function Header() {
 
     const sectionId = href.split("#")[1] || "inicio";
 
-    if (pathname !== "/") {
-      sessionStorage.setItem(
-        PENDING_SECTION_KEY,
-        sectionId
-      );
+   if (pathname !== "/") {
+  event.preventDefault();
 
-      return;
-    }
+  sessionStorage.setItem(
+    PENDING_SECTION_KEY,
+    sectionId,
+  );
+
+  router.push(
+    sectionId === "inicio"
+      ? "/"
+      : `/#${sectionId}`,
+  );
+
+  return;
+}
 
     event.preventDefault();
 
