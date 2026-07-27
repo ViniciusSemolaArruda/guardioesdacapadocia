@@ -292,9 +292,9 @@ export default function Footer() {
               </h2>
 
               <p>
-                Tradição que inspira,
+                Força, Foco, Fé
                 <br />
-                paixão que nos move.
+                e Samba no Pé!
               </p>
             </div>
           </section>

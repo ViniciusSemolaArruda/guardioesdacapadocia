@@ -130,7 +130,7 @@ export default function EventoPage() {
 
             <div className={styles.heroActions}>
               <a
-                href={SYMPLA_URL}
+                href={"https://www.sympla.com.br/evento/passaporte-todo-mundo-no-samba-g-r-e-s-guardioes-da-capadocia/3517324?algoliaID=220fd97b3bd3333b1b7f05cbd66b263f"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.primaryButton}
@@ -202,7 +202,7 @@ export default function EventoPage() {
               </ul>
 
               <a
-                href={SYMPLA_URL}
+                href={"https://www.sympla.com.br/evento/passaporte-todo-mundo-no-samba-g-r-e-s-guardioes-da-capadocia/3517324?algoliaID=220fd97b3bd3333b1b7f05cbd66b263f"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.passportButton}
@@ -301,7 +301,7 @@ export default function EventoPage() {
           </p>
 
           <a
-            href={SYMPLA_URL}
+            href={"https://www.sympla.com.br/evento/passaporte-todo-mundo-no-samba-g-r-e-s-guardioes-da-capadocia/3517324?algoliaID=220fd97b3bd3333b1b7f05cbd66b263f"}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.finalCtaButton}

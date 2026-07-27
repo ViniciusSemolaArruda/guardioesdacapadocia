@@ -89,141 +89,109 @@ export default function AutomaticCurtainEffect({
     useState(MINIMUM_HERO_HEIGHT);
 
   /* =======================================================
-     VERIFICA SE A CORTINA JÁ APARECEU
-  ======================================================= */
+   VERIFICA SE A CORTINA JÁ APARECEU
+======================================================= */
 
-  useLayoutEffect(() => {
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+useLayoutEffect(() => {
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
 
-    /*
-     * Quando openOncePerSession não estiver habilitado,
-     * a animação funciona normalmente em toda montagem.
-     */
-    if (!openOncePerSession) {
-      if (reducedMotion) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setShouldAnimate(false);
-        setIsOpening(true);
-        setIsFinished(true);
+  if (reducedMotion) {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setShouldAnimate(false);
+    setIsOpening(true);
+    setIsFinished(true);
+    return;
+  }
 
-        return;
-      }
-
-      setShouldAnimate(true);
-
-      return;
-    }
-
-    let curtainAlreadyOpened = false;
-
-    try {
-      curtainAlreadyOpened =
-        window.localStorage.getItem(sessionKey) ===
-        "true";
-    } catch {
-      curtainAlreadyOpened = false;
-    }
-
-    /*
-     * Se já abriu alguma vez neste navegador,
-     * mostra o Hero diretamente.
-     */
-    if (curtainAlreadyOpened || reducedMotion) {
-      setShouldAnimate(false);
-      setIsOpening(true);
-      setIsFinished(true);
-
-      return;
-    }
-
-    /*
-     * Registra imediatamente.
-     *
-     * Isso precisa acontecer antes dos timeouts.
-     * Assim, mesmo se o usuário atualizar a página,
-     * sair ou navegar antes da animação terminar,
-     * a cortina não aparecerá novamente.
-     */
-    try {
-      window.localStorage.setItem(
-        sessionKey,
-        "true",
-      );
-    } catch {
-      /*
-       * Se o navegador bloquear o localStorage,
-       * a animação ainda continua funcionando.
-       */
-    }
-
+  /*
+    Quando estiver desativado, anima sempre que
+    o componente for montado.
+  */
+  if (!openOncePerSession) {
     setShouldAnimate(true);
-  }, [
-    openOncePerSession,
-    sessionKey,
-  ]);
+    return;
+  }
 
-  /* =======================================================
-     ABERTURA AUTOMÁTICA
-  ======================================================= */
+  let curtainAlreadyOpened = false;
 
-  useLayoutEffect(() => {
+  try {
+    curtainAlreadyOpened =
+      window.sessionStorage.getItem(sessionKey) === "true";
+  } catch {
+    curtainAlreadyOpened = false;
+  }
+
+  if (curtainAlreadyOpened) {
+    setShouldAnimate(false);
+    setIsOpening(true);
+    setIsFinished(true);
+    return;
+  }
+
+  /*
+    Não salva aqui.
+
+    O React Strict Mode pode montar o componente duas vezes
+    no desenvolvimento. Se salvarmos imediatamente, a segunda
+    montagem entenderá que a cortina já apareceu.
+  */
+  setShouldAnimate(true);
+}, [openOncePerSession, sessionKey]);
+
+/* =======================================================
+   ABERTURA AUTOMÁTICA
+======================================================= */
+
+useLayoutEffect(() => {
+  if (shouldAnimate === null || !shouldAnimate) {
+    return;
+  }
+
+  openingTimeoutRef.current = window.setTimeout(() => {
+    setIsOpening(true);
+    openingTimeoutRef.current = null;
+  }, delay);
+
+  finishingTimeoutRef.current = window.setTimeout(() => {
+    setIsFinished(true);
+
     /*
-     * Aguarda a verificação do localStorage.
-     */
-    if (shouldAnimate === null) {
-      return;
+      Só registra depois que a animação realmente terminou.
+    */
+    if (openOncePerSession) {
+      try {
+        window.sessionStorage.setItem(
+          sessionKey,
+          "true",
+        );
+      } catch {
+        // A animação continua mesmo com storage bloqueado.
+      }
     }
 
-    /*
-     * Se não deve animar, o Hero já foi colocado
-     * diretamente no estado final.
-     */
-    if (!shouldAnimate) {
-      return;
+    finishingTimeoutRef.current = null;
+  }, delay + duration + 250);
+
+  return () => {
+    if (openingTimeoutRef.current !== null) {
+      window.clearTimeout(openingTimeoutRef.current);
+      openingTimeoutRef.current = null;
     }
 
-    openingTimeoutRef.current =
-      window.setTimeout(() => {
-        setIsOpening(true);
-
-        openingTimeoutRef.current = null;
-      }, delay);
-
-    finishingTimeoutRef.current =
-      window.setTimeout(() => {
-        setIsFinished(true);
-
-        finishingTimeoutRef.current = null;
-      }, delay + duration + 250);
-
-    return () => {
-      if (
-        openingTimeoutRef.current !== null
-      ) {
-        window.clearTimeout(
-          openingTimeoutRef.current,
-        );
-
-        openingTimeoutRef.current = null;
-      }
-
-      if (
-        finishingTimeoutRef.current !== null
-      ) {
-        window.clearTimeout(
-          finishingTimeoutRef.current,
-        );
-
-        finishingTimeoutRef.current = null;
-      }
-    };
-  }, [
-    shouldAnimate,
-    delay,
-    duration,
-  ]);
+    if (finishingTimeoutRef.current !== null) {
+      window.clearTimeout(finishingTimeoutRef.current);
+      finishingTimeoutRef.current = null;
+    }
+  };
+}, [
+  shouldAnimate,
+  delay,
+  duration,
+  openOncePerSession,
+  sessionKey,
+]);
 
   /* =======================================================
      CALCULA A ALTURA DO HERO

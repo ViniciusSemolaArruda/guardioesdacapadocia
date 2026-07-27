@@ -66,7 +66,7 @@ export default function AboutSection() {
             </p>
           </div>
 
-          <Link
+          {/* <Link
             href="/sobre"
             className={styles.historyButton}
           >
@@ -77,7 +77,7 @@ export default function AboutSection() {
               strokeWidth={2.2}
               aria-hidden="true"
             />
-          </Link>
+          </Link>*/}
         </div>
 
         {/* =====================================================
