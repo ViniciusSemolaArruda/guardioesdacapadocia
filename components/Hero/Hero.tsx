@@ -9,16 +9,21 @@ import {
   useRef,
   useState,
 } from "react";
+
 import {
   ChevronRight,
   Pause,
   Play,
+  Ticket,
   Volume2,
   VolumeX,
 } from "lucide-react";
 
 import AutomaticCurtainEffect from "@/components/AutomaticCurtainEffect/AutomaticCurtainEffect";
 import styles from "./Hero.module.css";
+
+const TICKET_URL =
+  "https://www.sympla.com.br/evento/passaporte-todo-mundo-no-samba-g-r-e-s-guardioes-da-capadocia/3517324?algoliaID=220fd97b3bd3333b1b7f05cbd66b263f";
 
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -64,42 +69,45 @@ export default function Hero() {
   }
 
   function handleSchoolNavigation(
-  event: MouseEvent<HTMLAnchorElement>,
-) {
-  event.preventDefault();
+    event: MouseEvent<HTMLAnchorElement>,
+  ) {
+    event.preventDefault();
 
-  const section = document.getElementById("quem-somos");
+    const section =
+      document.getElementById("quem-somos");
 
-  if (!section) {
-    window.location.href = "/#quem-somos";
-    return;
+    if (!section) {
+      window.location.href = "/#quem-somos";
+      return;
+    }
+
+    const headerHeightValue =
+      getComputedStyle(
+        document.documentElement,
+      ).getPropertyValue("--header-height");
+
+    const headerHeight =
+      Number.parseFloat(headerHeightValue) ||
+      0;
+
+    const sectionPosition =
+      section.getBoundingClientRect().top +
+      window.scrollY;
+
+    const destination =
+      sectionPosition - headerHeight;
+
+    window.scrollTo({
+      top: Math.max(destination, 0),
+      behavior: "smooth",
+    });
+
+    window.history.replaceState(
+      null,
+      "",
+      "/#quem-somos",
+    );
   }
-
-  const headerHeightValue = getComputedStyle(
-    document.documentElement,
-  ).getPropertyValue("--header-height");
-
-  const headerHeight =
-    Number.parseFloat(headerHeightValue) || 0;
-
-  const sectionPosition =
-    section.getBoundingClientRect().top +
-    window.scrollY;
-
-  const destination =
-    sectionPosition - headerHeight;
-
-  window.scrollTo({
-    top: Math.max(destination, 0),
-    behavior: "smooth",
-  });
-
-  window.history.replaceState(
-    null,
-    "",
-    "/#quem-somos",
-  );
-}
 
   function toggleMuted() {
     const video = videoRef.current;
@@ -107,7 +115,6 @@ export default function Hero() {
     if (!video) return;
 
     video.muted = !video.muted;
-
     setIsMuted(video.muted);
   }
 
@@ -140,7 +147,9 @@ export default function Hero() {
 
     if (!video || !duration) return;
 
-    const newTime = Number(event.target.value);
+    const newTime = Number(
+      event.target.value,
+    );
 
     video.currentTime = newTime;
     setCurrentTime(newTime);
@@ -154,10 +163,9 @@ export default function Hero() {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
 
-    return `${minutes}:${String(seconds).padStart(
-      2,
-      "0",
-    )}`;
+    return `${minutes}:${String(
+      seconds,
+    ).padStart(2, "0")}`;
   }
 
   return (
@@ -167,7 +175,6 @@ export default function Hero() {
       curtainImage="/images/cortina-fechada1.png"
       duration={2200}
       delay={450}
-      
     >
       <section className={styles.hero}>
         {/* =================================================
@@ -175,19 +182,27 @@ export default function Hero() {
         ================================================= */}
 
         <div
-          className={styles.backgroundDecorations}
+          className={
+            styles.backgroundDecorations
+          }
           aria-hidden="true"
         >
           <div className={styles.lightTop} />
 
-          <div className={styles.lightBottom} />
-
           <div
-            className={styles.decorativeCircle}
+            className={styles.lightBottom}
           />
 
           <div
-            className={styles.decorativeLines}
+            className={
+              styles.decorativeCircle
+            }
+          />
+
+          <div
+            className={
+              styles.decorativeLines
+            }
           />
         </div>
 
@@ -203,12 +218,15 @@ export default function Hero() {
 
             <div className={styles.content}>
               <span className={styles.eyebrow}>
-                G.R.E.S. Guardiões da Capadócia
+                G.R.E.S. Guardiões da
+                Capadócia
               </span>
 
               <h1 className={styles.title}>
                 <span
-                  className={styles.titleWhite}
+                  className={
+                    styles.titleWhite
+                  }
                 >
                   Força, Foco, Fé
                 </span>
@@ -220,7 +238,9 @@ export default function Hero() {
                 </strong>
               </h1>
 
-              <p className={styles.description}>
+              <p
+                className={styles.description}
+              >
                 Guardiões da Capadócia,
                 honrando nossa história e
                 escrevendo nosso futuro.
@@ -228,18 +248,24 @@ export default function Hero() {
 
               <div className={styles.actions}>
                 <a
-  href="/#quem-somos"
-  className={styles.primaryButton}
-  onClick={handleSchoolNavigation}
->
-  <span>Conheça a escola</span>
+                  href="/#quem-somos"
+                  className={
+                    styles.primaryButton
+                  }
+                  onClick={
+                    handleSchoolNavigation
+                  }
+                >
+                  <span>
+                    Conheça a escola
+                  </span>
 
-  <ChevronRight
-    size={20}
-    strokeWidth={2.5}
-    aria-hidden="true"
-  />
-</a>
+                  <ChevronRight
+                    size={20}
+                    strokeWidth={2.5}
+                    aria-hidden="true"
+                  />
+                </a>
 
                 <button
                   type="button"
@@ -271,197 +297,286 @@ export default function Hero() {
             </div>
 
             {/* =============================================
-                VÍDEO
+                VÍDEO E BOTÃO DO INGRESSO
             ============================================= */}
 
-            <div className={styles.videoColumn}>
+            <div
+              className={styles.videoColumn}
+            >
               <div
-                className={
-                  styles.videoBackFrame
-                }
-                aria-hidden="true"
-              />
-
-              <div className={styles.videoFrame}>
-                <video
-                  ref={videoRef}
-                  className={styles.video}
-                  src="/images/video2.mp4"
-                  /*poster="/images/logo.png"*/
-                  muted={isMuted}
-                  playsInline
-                  preload="metadata"
-                  onLoadedMetadata={
-                    handleLoadedMetadata
-                  }
-                  onDurationChange={
-                    handleLoadedMetadata
-                  }
-                  onTimeUpdate={handleTimeUpdate}
-                  onSeeked={handleTimeUpdate}
-                  onPlay={() =>
-                    setIsPlaying(true)
-                  }
-                  onPause={() =>
-                    setIsPlaying(false)
-                  }
-                  onEnded={() => {
-                    setIsPlaying(false);
-                    setCurrentTime(0);
-                  }}
-                />
-
+                className={styles.videoVisual}
+              >
                 <div
-                  className={styles.videoShade}
+                  className={
+                    styles.videoBackFrame
+                  }
                   aria-hidden="true"
                 />
 
-                {/* =========================================
-                    CABEÇALHO DO VÍDEO
-                ========================================= */}
-
                 <div
-                  className={styles.videoHeader}
+                  className={
+                    styles.videoFrame
+                  }
                 >
-                  <Image
-                    src="/images/logo.png"
-                    alt=""
-                    width={52}
-                    height={52}
-                    className={styles.videoLogo}
+                  <video
+                    ref={videoRef}
+                    className={styles.video}
+                    src="/images/video2.mp4"
+                    muted={isMuted}
+                    playsInline
+                    preload="metadata"
+                    onLoadedMetadata={
+                      handleLoadedMetadata
+                    }
+                    onDurationChange={
+                      handleLoadedMetadata
+                    }
+                    onTimeUpdate={
+                      handleTimeUpdate
+                    }
+                    onSeeked={
+                      handleTimeUpdate
+                    }
+                    onPlay={() =>
+                      setIsPlaying(true)
+                    }
+                    onPause={() =>
+                      setIsPlaying(false)
+                    }
+                    onEnded={() => {
+                      setIsPlaying(false);
+                      setCurrentTime(0);
+                    }}
                   />
 
                   <div
                     className={
-                      styles.videoHeaderText
+                      styles.videoShade
+                    }
+                    aria-hidden="true"
+                  />
+
+                  {/* =========================================
+                      CABEÇALHO DO VÍDEO
+                  ========================================= */}
+
+                  <div
+                    className={
+                      styles.videoHeader
                     }
                   >
-                    <small>
-                      Conheça nossa história
-                    </small>
+                    <Image
+                      src="/images/logo.png"
+                      alt=""
+                      width={52}
+                      height={52}
+                      className={
+                        styles.videoLogo
+                      }
+                    />
 
-                    <strong>
-                      Guardiões da Capadócia
-                    </strong>
+                    <div
+                      className={
+                        styles.videoHeaderText
+                      }
+                    >
+                      <small>
+                        Todo Mundo no Samba
+                      </small>
+
+                      <strong>
+                        Guardiões da Capadócia
+                      </strong>
+                    </div>
+                  </div>
+
+                  {/* =========================================
+                      BOTÃO CENTRAL
+                  ========================================= */}
+
+                  {!isPlaying && (
+                    <button
+                      type="button"
+                      className={
+                        styles.centerPlayButton
+                      }
+                      onClick={toggleVideo}
+                      aria-label="Reproduzir vídeo da Guardiões da Capadócia"
+                    >
+                      <span
+                        className={
+                          styles.playPulse
+                        }
+                      />
+
+                      <Play
+                        size={32}
+                        fill="currentColor"
+                        aria-hidden="true"
+                      />
+                    </button>
+                  )}
+
+                  {/* =========================================
+                      CONTROLES DO VÍDEO
+                  ========================================= */}
+
+                  <div
+                    className={
+                      styles.videoControls
+                    }
+                  >
+                    <button
+                      type="button"
+                      className={
+                        styles.controlButton
+                      }
+                      onClick={toggleVideo}
+                      aria-label={
+                        isPlaying
+                          ? "Pausar vídeo"
+                          : "Reproduzir vídeo"
+                      }
+                    >
+                      {isPlaying ? (
+                        <Pause
+                          size={17}
+                          fill="currentColor"
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <Play
+                          size={17}
+                          fill="currentColor"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </button>
+
+                    <input
+                      type="range"
+                      className={
+                        styles.videoProgress
+                      }
+                      min={0}
+                      max={duration || 0}
+                      step="0.01"
+                      value={Math.min(
+                        currentTime,
+                        duration || 0,
+                      )}
+                      onChange={handleSeek}
+                      style={progressStyle}
+                      aria-label="Avançar ou voltar no vídeo"
+                      aria-valuetext={`${formatTime(
+                        currentTime,
+                      )} de ${formatTime(
+                        duration,
+                      )}`}
+                    />
+
+                    <span
+                      className={
+                        styles.videoLabel
+                      }
+                    >
+                      {formatTime(
+                        currentTime,
+                      )}{" "}
+                      / {formatTime(duration)}
+                    </span>
+
+                    <button
+                      type="button"
+                      className={
+                        styles.controlButton
+                      }
+                      onClick={toggleMuted}
+                      aria-label={
+                        isMuted
+                          ? "Ativar som"
+                          : "Desativar som"
+                      }
+                    >
+                      {isMuted ? (
+                        <VolumeX
+                          size={18}
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <Volume2
+                          size={18}
+                          aria-hidden="true"
+                        />
+                      )}
+                    </button>
                   </div>
                 </div>
+              </div>
 
-                {/* =========================================
-                    BOTÃO CENTRAL
-                ========================================= */}
+              {/* =============================================
+                  BOTÃO DO SYMPLA
+              ============================================= */}
 
-                {!isPlaying && (
-                  <button
-                    type="button"
+              <div
+                className={
+                  styles.ticketButtonWrapper
+                }
+              >
+                <span
+                  className={
+                    styles.ticketConnector
+                  }
+                  aria-hidden="true"
+                />
+
+                <a
+                  href={TICKET_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={
+                    styles.ticketButton
+                  }
+                  aria-label="Adquirir o Passaporte Todo Mundo no Samba pelo Sympla"
+                >
+                  <span
                     className={
-                      styles.centerPlayButton
+                      styles.ticketIcon
                     }
-                    onClick={toggleVideo}
-                    aria-label="Reproduzir vídeo da Guardiões da Capadócia"
                   >
-                    <span
-                      className={styles.playPulse}
-                    />
-
-                    <Play
-                      size={32}
-                      fill="currentColor"
+                    <Ticket
+                      size={25}
+                      strokeWidth={2}
                       aria-hidden="true"
                     />
-                  </button>
-                )}
-
-                {/* =========================================
-                    CONTROLES DO VÍDEO
-                ========================================= */}
-
-                <div
-                  className={
-                    styles.videoControls
-                  }
-                >
-                  <button
-                    type="button"
-                    className={
-                      styles.controlButton
-                    }
-                    onClick={toggleVideo}
-                    aria-label={
-                      isPlaying
-                        ? "Pausar vídeo"
-                        : "Reproduzir vídeo"
-                    }
-                  >
-                    {isPlaying ? (
-                      <Pause
-                        size={17}
-                        fill="currentColor"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <Play
-                        size={17}
-                        fill="currentColor"
-                        aria-hidden="true"
-                      />
-                    )}
-                  </button>
-
-                  <input
-                    type="range"
-                    className={
-                      styles.videoProgress
-                    }
-                    min={0}
-                    max={duration || 0}
-                    step="0.01"
-                    value={Math.min(
-                      currentTime,
-                      duration || 0,
-                    )}
-                    onChange={handleSeek}
-                    style={progressStyle}
-                    aria-label="Avançar ou voltar no vídeo"
-                    aria-valuetext={`${formatTime(
-                      currentTime,
-                    )} de ${formatTime(duration)}`}
-                    
-                  />
+                  </span>
 
                   <span
                     className={
-                      styles.videoLabel
+                      styles.ticketButtonText
                     }
                   >
-                    {formatTime(currentTime)} /{" "}
-                    {formatTime(duration)}
+                    <small>
+                      Garanta sua participação
+                    </small>
+
+                    <strong>
+                      Adquira seu ingresso
+                    </strong>
                   </span>
 
-                  <button
-                    type="button"
+                  <span
                     className={
-                      styles.controlButton
-                    }
-                    onClick={toggleMuted}
-                    aria-label={
-                      isMuted
-                        ? "Ativar som"
-                        : "Desativar som"
+                      styles.ticketArrow
                     }
                   >
-                    {isMuted ? (
-                      <VolumeX
-                        size={18}
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <Volume2
-                        size={18}
-                        aria-hidden="true"
-                      />
-                    )}
-                  </button>
-                </div>
+                    <ChevronRight
+                      size={23}
+                      strokeWidth={2.5}
+                      aria-hidden="true"
+                    />
+                  </span>
+                </a>
               </div>
             </div>
           </div>
@@ -477,8 +592,12 @@ export default function Hero() {
               styles.bottomBarContent
             }
           >
-            <div className={styles.bottomItem}>
-              <span className={styles.bottomIcon}>
+            <div
+              className={styles.bottomItem}
+            >
+              <span
+                className={styles.bottomIcon}
+              >
                 ✦
               </span>
 
@@ -492,11 +611,17 @@ export default function Hero() {
             </div>
 
             <div
-              className={styles.bottomDivider}
+              className={
+                styles.bottomDivider
+              }
             />
 
-            <div className={styles.bottomItem}>
-              <span className={styles.bottomIcon}>
+            <div
+              className={styles.bottomItem}
+            >
+              <span
+                className={styles.bottomIcon}
+              >
                 ♬
               </span>
 
@@ -510,11 +635,16 @@ export default function Hero() {
             </div>
 
             <div
-              className={styles.bottomDivider}
+              className={
+                styles.bottomDivider
+              }
             />
 
-            <div className={styles.bottomItem}>
-              <span className={styles.bottomIcon}>
+            <div
+              className={styles.bottomItem}>
+              <span
+                className={styles.bottomIcon}
+              >
                 ★
               </span>
 
