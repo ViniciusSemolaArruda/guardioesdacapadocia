@@ -7,131 +7,97 @@ declare global {
     VLibras?: {
       Widget: new (url: string) => unknown;
     };
-
-    __vlibrasWidgetInitialized?: boolean;
   }
 }
 
 const SCRIPT_ID = "vlibras-plugin-script";
+
 const SCRIPT_URL =
   "https://vlibras.gov.br/app/vlibras-plugin.js";
-const WIDGET_URL =
+
+const APP_URL =
   "https://vlibras.gov.br/app";
 
 export default function VLibras() {
   useEffect(() => {
     let cancelled = false;
-    let retryId: number | null = null;
     let attempts = 0;
+    let timer: number | undefined;
 
-    function widgetExists() {
-      return Boolean(
+    const MAX_ATTEMPTS = 100;
+    const RETRY_DELAY = 200;
+
+    function hasRenderedWidget() {
+      const accessButton =
+        document.querySelector<HTMLElement>(
+          "[vw-access-button]",
+        );
+
+      const pluginWrapper =
+        document.querySelector<HTMLElement>(
+          "[vw-plugin-wrapper]",
+        );
+
+      const internalWidget =
         document.querySelector(
           ".vpw-container, .vpw-box",
-        ),
+        );
+
+      return Boolean(
+        accessButton &&
+          pluginWrapper &&
+          internalWidget,
       );
     }
 
-    function scheduleRetry() {
-      if (cancelled) return;
+    function initialize() {
+      if (cancelled) {
+        return;
+      }
 
       attempts += 1;
 
-      if (attempts > 80) {
-        console.error(
-          "O VLibras não ficou disponível após várias tentativas.",
-        );
-
+      if (hasRenderedWidget()) {
         return;
       }
 
-      retryId = window.setTimeout(
-        initializeWidget,
-        250,
-      );
-    }
+      if (window.VLibras?.Widget) {
+        try {
+          new window.VLibras.Widget(APP_URL);
 
-    function initializeWidget() {
-      if (cancelled) return;
+          console.log(
+            "VLibras inicializado corretamente.",
+          );
 
-      const root =
-        document.querySelector<HTMLElement>(
-          "#vlibras-root",
-        );
-
-      const button =
-        document.querySelector<HTMLElement>(
-          "#vlibras-root [vw-access-button]",
-        );
-
-      if (!root || !button) {
-        scheduleRetry();
-        return;
-      }
-
-      /*
-       * Caso o plugin já tenha criado a interface,
-       * não inicializa novamente.
-       */
-      if (widgetExists()) {
-        window.__vlibrasWidgetInitialized = true;
-        return;
-      }
-
-      /*
-       * O script ainda não terminou de carregar.
-       */
-      if (!window.VLibras?.Widget) {
-        scheduleRetry();
-        return;
-      }
-
-      /*
-       * Essa variável só serve como proteção adicional.
-       * A verificação principal é a presença real do widget.
-       */
-      if (window.__vlibrasWidgetInitialized) {
-        return;
-      }
-
-      try {
-        new window.VLibras.Widget(WIDGET_URL);
-
-        window.__vlibrasWidgetInitialized = true;
-        attempts = 0;
-      } catch (error) {
-        console.error(
-          "Erro ao inicializar o VLibras:",
-          error,
-        );
-
-        window.__vlibrasWidgetInitialized = false;
-
-        scheduleRetry();
-      }
-    }
-
-    function loadScript() {
-      const existingScript =
-        document.getElementById(
-          SCRIPT_ID,
-        ) as HTMLScriptElement | null;
-
-      if (existingScript) {
-        if (window.VLibras?.Widget) {
-          initializeWidget();
           return;
+        } catch (error) {
+          console.error(
+            "Erro ao inicializar o VLibras:",
+            error,
+          );
         }
-
-        existingScript.addEventListener(
-          "load",
-          initializeWidget,
-        );
-
-        scheduleRetry();
-        return;
       }
 
+      if (attempts < MAX_ATTEMPTS) {
+        timer = window.setTimeout(
+          initialize,
+          RETRY_DELAY,
+        );
+      } else {
+        console.error(
+          "O VLibras não foi carregado após várias tentativas.",
+        );
+      }
+    }
+
+    const existingScript =
+      document.getElementById(
+        SCRIPT_ID,
+      ) as HTMLScriptElement | null;
+
+    if (existingScript) {
+      initialize();
+    } else {
       const script =
         document.createElement("script");
 
@@ -139,74 +105,43 @@ export default function VLibras() {
       script.src = SCRIPT_URL;
       script.async = true;
 
-      script.addEventListener(
-        "load",
-        initializeWidget,
-      );
+      script.onload = initialize;
 
-      script.addEventListener(
-        "error",
-        () => {
-          console.error(
-            "Não foi possível carregar o script do VLibras.",
-          );
-        },
-      );
+      script.onerror = () => {
+        console.error(
+          "Não foi possível carregar o script do VLibras.",
+        );
+      };
 
       document.body.appendChild(script);
-
-      scheduleRetry();
     }
-
-    /*
-     * Aguarda a primeira pintura do navegador para garantir
-     * que a estrutura [vw] já esteja presente no DOM.
-     */
-    const frameId =
-      window.requestAnimationFrame(() => {
-        loadScript();
-      });
 
     return () => {
       cancelled = true;
 
-      window.cancelAnimationFrame(frameId);
-
-      if (retryId !== null) {
-        window.clearTimeout(retryId);
+      if (timer) {
+        window.clearTimeout(timer);
       }
-
-      const script =
-        document.getElementById(
-          SCRIPT_ID,
-        ) as HTMLScriptElement | null;
-
-      script?.removeEventListener(
-        "load",
-        initializeWidget,
-      );
     };
   }, []);
 
   return (
     <div
-      id="vlibras-root"
       {...({
-        vw: "true",
+        vw: "",
       } as Record<string, string>)}
       className="enabled"
     >
       <div
         {...({
-          "vw-access-button": "true",
+          "vw-access-button": "",
         } as Record<string, string>)}
         className="active"
-        aria-label="Abrir o tradutor VLibras"
       />
 
       <div
         {...({
-          "vw-plugin-wrapper": "true",
+          "vw-plugin-wrapper": "",
         } as Record<string, string>)}
       >
         <div className="vw-plugin-top-wrapper" />

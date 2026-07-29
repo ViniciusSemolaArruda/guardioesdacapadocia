@@ -3,13 +3,13 @@ import type {
   Viewport,
 } from "next";
 
-import Script from "next/script";
-
 import "./globals.css";
+
+import VLibras from "@/components/VLibras/VLibras";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
-  "https://guardioesdacapadocia.vercel.app/";
+  "https://guardioesdacapadocia.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -115,150 +115,19 @@ export const viewport: Viewport = {
   themeColor: "#8c0713",
 };
 
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
+
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<RootLayoutProps>) {
   return (
     <html lang="pt-BR">
       <body>
         {children}
 
-        {/* ===============================================
-            ESTRUTURA DO VLIBRAS
-        =============================================== */}
-
-        <div
-          {...({
-            vw: "",
-          } as Record<string, string>)}
-          className="enabled"
-        >
-          <div
-            {...({
-              "vw-access-button": "",
-            } as Record<string, string>)}
-            className="active"
-          />
-
-          <div
-            {...({
-              "vw-plugin-wrapper": "",
-            } as Record<string, string>)}
-          >
-            <div className="vw-plugin-top-wrapper" />
-          </div>
-        </div>
-
-        {/* ===============================================
-            SCRIPT OFICIAL DO VLIBRAS
-        =============================================== */}
-
-        <Script
-          id="vlibras-plugin-script"
-          src="https://vlibras.gov.br/app/vlibras-plugin.js"
-          strategy="afterInteractive"
-        />
-
-        {/* ===============================================
-            INICIALIZAÇÃO DO VLIBRAS
-        =============================================== */}
-
-        <Script
-          id="vlibras-initialization"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function () {
-                var attempts = 0;
-                var maximumAttempts = 60;
-                var retryDelay = 300;
-
-                function widgetExists() {
-                  return Boolean(
-                    document.querySelector(
-                      ".vpw-container, .vpw-box, .vpw-controls"
-                    )
-                  );
-                }
-
-                function initializeVLibras() {
-                  attempts += 1;
-
-                  if (widgetExists()) {
-                    console.log(
-                      "VLibras já está inicializado."
-                    );
-
-                    return;
-                  }
-
-                  if (
-                    window.VLibras &&
-                    window.VLibras.Widget
-                  ) {
-                    try {
-                      new window.VLibras.Widget(
-                        "https://vlibras.gov.br/app"
-                      );
-
-                      console.log(
-                        "VLibras inicializado corretamente."
-                      );
-
-                      return;
-                    } catch (error) {
-                      console.error(
-                        "Erro ao inicializar o VLibras:",
-                        error
-                      );
-                    }
-                  }
-
-                  if (attempts < maximumAttempts) {
-                    window.setTimeout(
-                      initializeVLibras,
-                      retryDelay
-                    );
-
-                    return;
-                  }
-
-                  console.error(
-                    "O script do VLibras não ficou disponível."
-                  );
-                }
-
-                /*
-                 * Aguarda a página estar completamente carregada.
-                 */
-                if (
-                  document.readyState === "complete"
-                ) {
-                  initializeVLibras();
-                } else {
-                  window.addEventListener(
-                    "load",
-                    initializeVLibras,
-                    {
-                      once: true
-                    }
-                  );
-                }
-
-                /*
-                 * Verificação adicional caso o script externo
-                 * demore para responder.
-                 */
-                window.setTimeout(
-                  initializeVLibras,
-                  500
-                );
-              })();
-            `,
-          }}
-        />
+        <VLibras />
       </body>
     </html>
   );
