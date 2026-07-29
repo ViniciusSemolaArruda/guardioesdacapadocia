@@ -8,95 +8,110 @@ declare global {
       Widget: new (url: string) => unknown;
     };
 
-    __vlibrasInitialized?: boolean;
+    __vlibrasWidgetInitialized?: boolean;
   }
 }
 
 const SCRIPT_ID = "vlibras-plugin-script";
-
 const SCRIPT_URL =
   "https://vlibras.gov.br/app/vlibras-plugin.js";
-
 const WIDGET_URL =
   "https://vlibras.gov.br/app";
 
 export default function VLibras() {
   useEffect(() => {
     let cancelled = false;
-    let retryTimeout: number | null = null;
+    let retryId: number | null = null;
     let attempts = 0;
-
-    const MAX_ATTEMPTS = 30;
-
-    function clearRetry() {
-      if (retryTimeout !== null) {
-        window.clearTimeout(retryTimeout);
-        retryTimeout = null;
-      }
-    }
 
     function widgetExists() {
       return Boolean(
         document.querySelector(
-          ".vpw-container, .vpw-box, .vpw-controls",
+          ".vpw-container, .vpw-box",
         ),
       );
     }
 
+    function scheduleRetry() {
+      if (cancelled) return;
+
+      attempts += 1;
+
+      if (attempts > 80) {
+        console.error(
+          "O VLibras não ficou disponível após várias tentativas.",
+        );
+
+        return;
+      }
+
+      retryId = window.setTimeout(
+        initializeWidget,
+        250,
+      );
+    }
+
     function initializeWidget() {
-      if (cancelled) {
+      if (cancelled) return;
+
+      const root =
+        document.querySelector<HTMLElement>(
+          "#vlibras-root",
+        );
+
+      const button =
+        document.querySelector<HTMLElement>(
+          "#vlibras-root [vw-access-button]",
+        );
+
+      if (!root || !button) {
+        scheduleRetry();
         return;
       }
 
+      /*
+       * Caso o plugin já tenha criado a interface,
+       * não inicializa novamente.
+       */
       if (widgetExists()) {
-        window.__vlibrasInitialized = true;
+        window.__vlibrasWidgetInitialized = true;
         return;
       }
 
+      /*
+       * O script ainda não terminou de carregar.
+       */
       if (!window.VLibras?.Widget) {
-        attempts += 1;
-
-        if (attempts <= MAX_ATTEMPTS) {
-          clearRetry();
-
-          retryTimeout = window.setTimeout(
-            initializeWidget,
-            300,
-          );
-        }
-
+        scheduleRetry();
         return;
       }
 
-      if (
-        window.__vlibrasInitialized &&
-        widgetExists()
-      ) {
+      /*
+       * Essa variável só serve como proteção adicional.
+       * A verificação principal é a presença real do widget.
+       */
+      if (window.__vlibrasWidgetInitialized) {
         return;
       }
 
       try {
-        new window.VLibras.Widget(
-          WIDGET_URL,
-        );
+        new window.VLibras.Widget(WIDGET_URL);
 
-        window.__vlibrasInitialized = true;
+        window.__vlibrasWidgetInitialized = true;
         attempts = 0;
-
-        console.log(
-          "VLibras inicializado com sucesso.",
-        );
       } catch (error) {
-        window.__vlibrasInitialized = false;
-
         console.error(
           "Erro ao inicializar o VLibras:",
           error,
         );
+
+        window.__vlibrasWidgetInitialized = false;
+
+        scheduleRetry();
       }
     }
 
-    function createScript() {
+    function loadScript() {
       const existingScript =
         document.getElementById(
           SCRIPT_ID,
@@ -111,9 +126,9 @@ export default function VLibras() {
         existingScript.addEventListener(
           "load",
           initializeWidget,
-          { once: true },
         );
 
+        scheduleRetry();
         return;
       }
 
@@ -123,78 +138,75 @@ export default function VLibras() {
       script.id = SCRIPT_ID;
       script.src = SCRIPT_URL;
       script.async = true;
-      script.defer = true;
 
-      script.onload = () => {
-        console.log(
-          "Script do VLibras carregado.",
-        );
+      script.addEventListener(
+        "load",
+        initializeWidget,
+      );
 
-        initializeWidget();
-      };
-
-      script.onerror = () => {
-        console.error(
-          "Falha ao carregar o script do VLibras.",
-        );
-      };
+      script.addEventListener(
+        "error",
+        () => {
+          console.error(
+            "Não foi possível carregar o script do VLibras.",
+          );
+        },
+      );
 
       document.body.appendChild(script);
+
+      scheduleRetry();
     }
 
+    /*
+     * Aguarda a primeira pintura do navegador para garantir
+     * que a estrutura [vw] já esteja presente no DOM.
+     */
     const frameId =
       window.requestAnimationFrame(() => {
-        createScript();
+        loadScript();
       });
-
-    function handlePageShow() {
-      if (widgetExists()) {
-        return;
-      }
-
-      window.__vlibrasInitialized = false;
-      attempts = 0;
-
-      createScript();
-    }
-
-    window.addEventListener(
-      "pageshow",
-      handlePageShow,
-    );
 
     return () => {
       cancelled = true;
 
-      clearRetry();
-
       window.cancelAnimationFrame(frameId);
 
-      window.removeEventListener(
-        "pageshow",
-        handlePageShow,
+      if (retryId !== null) {
+        window.clearTimeout(retryId);
+      }
+
+      const script =
+        document.getElementById(
+          SCRIPT_ID,
+        ) as HTMLScriptElement | null;
+
+      script?.removeEventListener(
+        "load",
+        initializeWidget,
       );
     };
   }, []);
 
   return (
     <div
-      data-vlibras-root="true"
+      id="vlibras-root"
       {...({
-        vw: "",
+        vw: "true",
       } as Record<string, string>)}
       className="enabled"
     >
       <div
         {...({
-          "vw-access-button": "",
+          "vw-access-button": "true",
         } as Record<string, string>)}
         className="active"
+        aria-label="Abrir o tradutor VLibras"
       />
 
       <div
         {...({
-          "vw-plugin-wrapper": "",
+          "vw-plugin-wrapper": "true",
         } as Record<string, string>)}
       >
         <div className="vw-plugin-top-wrapper" />
