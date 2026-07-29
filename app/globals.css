@@ -123,18 +123,13 @@ main section[id] {
    VLIBRAS
 ========================================================= */
 
-[vw].enabled {
-  z-index: 2147483647 !important;
-}
-
-[vw-access-button].active {
-  z-index: 2147483647 !important;
-}
-
+[vw].enabled,
+[vw-access-button],
 [vw-plugin-wrapper],
 .vpw-container,
 .vpw-box,
 .vpw-controls,
-.vpw-settings-btn {
+.vpw-settings-btn,
+.vpw-plugin-wrapper {
   z-index: 2147483647 !important;
 }

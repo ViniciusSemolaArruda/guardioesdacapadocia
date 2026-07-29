@@ -1,7 +1,11 @@
-import type { Metadata, Viewport } from "next";
-import "./globals.css";
+import type {
+  Metadata,
+  Viewport,
+} from "next";
 
-import VLibras from "@/components/VLibras/VLibras";
+import Script from "next/script";
+
+import "./globals.css";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -11,14 +15,17 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
 
   title: {
-    default: "G.R.E.S. Guardiões da Capadócia",
-    template: "%s | Guardiões da Capadócia",
+    default:
+      "G.R.E.S. Guardiões da Capadócia",
+    template:
+      "%s | Guardiões da Capadócia",
   },
 
   description:
     "Site oficial da G.R.E.S. Guardiões da Capadócia. Força, Foco, Fé e Samba no Pé!",
 
-  applicationName: "Guardiões da Capadócia",
+  applicationName:
+    "Guardiões da Capadócia",
 
   manifest: "/manifest.webmanifest",
 
@@ -55,10 +62,16 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_BR",
     url: SITE_URL,
-    siteName: "G.R.E.S. Guardiões da Capadócia",
-    title: "G.R.E.S. Guardiões da Capadócia",
+
+    siteName:
+      "G.R.E.S. Guardiões da Capadócia",
+
+    title:
+      "G.R.E.S. Guardiões da Capadócia",
+
     description:
       "Força, Foco, Fé e Samba no Pé! Conheça a história da G.R.E.S. Guardiões da Capadócia.",
+
     images: [
       {
         url: "/compartilhamento.jpg",
@@ -71,16 +84,23 @@ export const metadata: Metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "G.R.E.S. Guardiões da Capadócia",
+
+    title:
+      "G.R.E.S. Guardiões da Capadócia",
+
     description:
       "Força, Foco, Fé e Samba no Pé! Conheça a história da G.R.E.S. Guardiões da Capadócia.",
-    images: ["/compartilhamento.jpg"],
+
+    images: [
+      "/compartilhamento.jpg",
+    ],
   },
 
   appleWebApp: {
     capable: true,
     title: "Guardiões",
-    statusBarStyle: "black-translucent",
+    statusBarStyle:
+      "black-translucent",
   },
 
   formatDetection: {
@@ -105,7 +125,140 @@ export default function RootLayout({
       <body>
         {children}
 
-        <VLibras />
+        {/* ===============================================
+            ESTRUTURA DO VLIBRAS
+        =============================================== */}
+
+        <div
+          {...({
+            vw: "",
+          } as Record<string, string>)}
+          className="enabled"
+        >
+          <div
+            {...({
+              "vw-access-button": "",
+            } as Record<string, string>)}
+            className="active"
+          />
+
+          <div
+            {...({
+              "vw-plugin-wrapper": "",
+            } as Record<string, string>)}
+          >
+            <div className="vw-plugin-top-wrapper" />
+          </div>
+        </div>
+
+        {/* ===============================================
+            SCRIPT OFICIAL DO VLIBRAS
+        =============================================== */}
+
+        <Script
+          id="vlibras-plugin-script"
+          src="https://vlibras.gov.br/app/vlibras-plugin.js"
+          strategy="afterInteractive"
+        />
+
+        {/* ===============================================
+            INICIALIZAÇÃO DO VLIBRAS
+        =============================================== */}
+
+        <Script
+          id="vlibras-initialization"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function () {
+                var attempts = 0;
+                var maximumAttempts = 60;
+                var retryDelay = 300;
+
+                function widgetExists() {
+                  return Boolean(
+                    document.querySelector(
+                      ".vpw-container, .vpw-box, .vpw-controls"
+                    )
+                  );
+                }
+
+                function initializeVLibras() {
+                  attempts += 1;
+
+                  if (widgetExists()) {
+                    console.log(
+                      "VLibras já está inicializado."
+                    );
+
+                    return;
+                  }
+
+                  if (
+                    window.VLibras &&
+                    window.VLibras.Widget
+                  ) {
+                    try {
+                      new window.VLibras.Widget(
+                        "https://vlibras.gov.br/app"
+                      );
+
+                      console.log(
+                        "VLibras inicializado corretamente."
+                      );
+
+                      return;
+                    } catch (error) {
+                      console.error(
+                        "Erro ao inicializar o VLibras:",
+                        error
+                      );
+                    }
+                  }
+
+                  if (attempts < maximumAttempts) {
+                    window.setTimeout(
+                      initializeVLibras,
+                      retryDelay
+                    );
+
+                    return;
+                  }
+
+                  console.error(
+                    "O script do VLibras não ficou disponível."
+                  );
+                }
+
+                /*
+                 * Aguarda a página estar completamente carregada.
+                 */
+                if (
+                  document.readyState === "complete"
+                ) {
+                  initializeVLibras();
+                } else {
+                  window.addEventListener(
+                    "load",
+                    initializeVLibras,
+                    {
+                      once: true
+                    }
+                  );
+                }
+
+                /*
+                 * Verificação adicional caso o script externo
+                 * demore para responder.
+                 */
+                window.setTimeout(
+                  initializeVLibras,
+                  500
+                );
+              })();
+            `,
+          }}
+        />
       </body>
     </html>
   );
