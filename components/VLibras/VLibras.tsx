@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 declare global {
   interface Window {
@@ -10,60 +10,69 @@ declare global {
   }
 }
 
-const SCRIPT_ID = "vlibras-plugin-script";
-
-const SCRIPT_URL =
-  "https://vlibras.gov.br/app/vlibras-plugin.js";
-
-const APP_URL =
+const VLIBRAS_APP_URL =
   "https://vlibras.gov.br/app";
 
+const MAX_ATTEMPTS = 200;
+const RETRY_DELAY = 100;
+
 export default function VLibras() {
+  const initializedRef = useRef(false);
+
   useEffect(() => {
     let cancelled = false;
     let attempts = 0;
     let timer: number | undefined;
 
-    const MAX_ATTEMPTS = 100;
-    const RETRY_DELAY = 200;
+    function widgetWasRendered() {
+      return Boolean(
+        document.querySelector(
+          [
+            ".vpw-container",
+            ".vpw-box",
+            ".vpw-controls",
+          ].join(", "),
+        ),
+      );
+    }
 
-    function hasRenderedWidget() {
+    function maintainOfficialClasses() {
+      const container =
+        document.querySelector<HTMLElement>(
+          "[vw]",
+        );
+
       const accessButton =
         document.querySelector<HTMLElement>(
           "[vw-access-button]",
         );
 
-      const pluginWrapper =
-        document.querySelector<HTMLElement>(
-          "[vw-plugin-wrapper]",
-        );
-
-      const internalWidget =
-        document.querySelector(
-          ".vpw-container, .vpw-box",
-        );
-
-      return Boolean(
-        accessButton &&
-          pluginWrapper &&
-          internalWidget,
-      );
+      container?.classList.add("enabled");
+      accessButton?.classList.add("active");
     }
 
-    function initialize() {
+    function initializeVLibras() {
       if (cancelled) {
         return;
       }
 
-      attempts += 1;
+      maintainOfficialClasses();
 
-      if (hasRenderedWidget()) {
+      if (widgetWasRendered()) {
+        initializedRef.current = true;
         return;
       }
 
-      if (window.VLibras?.Widget) {
+      if (
+        !initializedRef.current &&
+        window.VLibras?.Widget
+      ) {
         try {
-          new window.VLibras.Widget(APP_URL);
+          new window.VLibras.Widget(
+            VLIBRAS_APP_URL,
+          );
+
+          initializedRef.current = true;
 
           console.log(
             "VLibras inicializado corretamente.",
@@ -71,6 +80,8 @@ export default function VLibras() {
 
           return;
         } catch (error) {
+          initializedRef.current = false;
+
           console.error(
             "Erro ao inicializar o VLibras:",
             error,
@@ -78,48 +89,36 @@ export default function VLibras() {
         }
       }
 
+      attempts += 1;
+
       if (attempts < MAX_ATTEMPTS) {
         timer = window.setTimeout(
-          initialize,
+          initializeVLibras,
           RETRY_DELAY,
         );
-      } else {
-        console.error(
-          "O VLibras não foi carregado após várias tentativas.",
-        );
+
+        return;
       }
+
+      console.error(
+        "O VLibras não conseguiu ser inicializado.",
+      );
     }
 
-    const existingScript =
-      document.getElementById(
-        SCRIPT_ID,
-      ) as HTMLScriptElement | null;
-
-    if (existingScript) {
-      initialize();
-    } else {
-      const script =
-        document.createElement("script");
-
-      script.id = SCRIPT_ID;
-      script.src = SCRIPT_URL;
-      script.async = true;
-
-      script.onload = initialize;
-
-      script.onerror = () => {
-        console.error(
-          "Não foi possível carregar o script do VLibras.",
-        );
-      };
-
-      document.body.appendChild(script);
-    }
+    /*
+     * Aguarda o React terminar de montar a estrutura
+     * antes de tentar inicializar o widget.
+     */
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        initializeVLibras();
+      });
+    });
 
     return () => {
       cancelled = true;
 
-      if (timer) {
+      if (timer !== undefined) {
         window.clearTimeout(timer);
       }
     };

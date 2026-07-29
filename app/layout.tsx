@@ -3,6 +3,8 @@ import type {
   Viewport,
 } from "next";
 
+import Script from "next/script";
+
 import "./globals.css";
 
 import VLibras from "@/components/VLibras/VLibras";
@@ -128,6 +130,12 @@ export default function RootLayout({
         {children}
 
         <VLibras />
+
+        <Script
+          id="vlibras-official-script"
+          src="https://vlibras.gov.br/app/vlibras-plugin.js"
+          strategy="beforeInteractive"
+        />
       </body>
     </html>
   );
