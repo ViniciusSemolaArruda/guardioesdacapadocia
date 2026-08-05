@@ -9,6 +9,10 @@
   --header-height: 0px;
 }
 
+/* =========================================================
+   CONFIGURAÇÕES GERAIS
+========================================================= */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -108,7 +112,47 @@ main section[id] {
 }
 
 /* =========================================================
-   RESPONSIVO
+   VLIBRAS — CENTRO DA LATERAL DIREITA
+========================================================= */
+
+html body div[vw].enabled {
+  position: fixed !important;
+
+  top: 50% !important;
+  right: 16px !important;
+  bottom: auto !important;
+  left: auto !important;
+
+  margin: 0 !important;
+
+  transform: translateY(-50%) !important;
+
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  z-index: 2147483647 !important;
+}
+
+html body div[vw].enabled [vw-access-button] {
+  position: absolute !important;
+
+  top: 0 !important;
+  right: 0 !important;
+  bottom: auto !important;
+  left: auto !important;
+
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  width: 40px !important;
+  height: 40px !important;
+
+  z-index: 2147483647 !important;
+}
+
+/* =========================================================
+   RESPONSIVO — TABLETS
 ========================================================= */
 
 @media (max-width: 900px) {
@@ -118,15 +162,12 @@ main section[id] {
   }
 }
 
-
 /* =========================================================
-   VLIBRAS
+   RESPONSIVO — CELULARES
 ========================================================= */
 
-div[vw] {
-  z-index: 999999 !important;
-}
-
-div[vw] [vw-access-button] {
-  z-index: 1000000 !important;
+@media (max-width: 650px) {
+  html body div[vw].enabled {
+    right: 10px !important;
+  }
 }
