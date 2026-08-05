@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import {
+  useEffect,
+  useSyncExternalStore,
+} from "react";
 
 declare global {
   interface Window {
@@ -8,43 +11,56 @@ declare global {
       Widget: new (url: string) => unknown;
     };
 
-    __vlibrasInitialized?: boolean;
+    __guardioesVlibrasInitialized?: boolean;
   }
 }
 
-const VLIBRAS_SCRIPT_ID =
-  "vlibras-official-script";
+const SCRIPT_ID = "vlibras-official-script";
 
-const VLIBRAS_SCRIPT_URL =
+const SCRIPT_URL =
   "https://vlibras.gov.br/app/vlibras-plugin.js";
 
-const VLIBRAS_APP_URL =
+const APP_URL =
   "https://vlibras.gov.br/app";
 
+/*
+ * No servidor retorna false.
+ * Depois que a hidratação termina no navegador,
+ * retorna true.
+ */
+function subscribe() {
+  return () => {};
+}
+
+function getClientSnapshot() {
+  return true;
+}
+
+function getServerSnapshot() {
+  return false;
+}
+
 export default function VLibras() {
+  const hydrated = useSyncExternalStore(
+    subscribe,
+    getClientSnapshot,
+    getServerSnapshot,
+  );
+
   useEffect(() => {
-    let cancelled = false;
-    let interval: number | null = null;
-
-    function maintainOfficialClasses() {
-      const container =
-        document.querySelector<HTMLElement>(
-          "[vw]",
-        );
-
-      const accessButton =
-        document.querySelector<HTMLElement>(
-          "[vw-access-button]",
-        );
-
-      container?.classList.add("enabled");
-      accessButton?.classList.add("active");
+    if (!hydrated) {
+      return;
     }
 
-    function initializeWidget() {
+    let cancelled = false;
+
+    function initialize() {
+      if (cancelled) {
+        return;
+      }
+
       if (
-        cancelled ||
-        window.__vlibrasInitialized
+        window.__guardioesVlibrasInitialized
       ) {
         return;
       }
@@ -53,113 +69,119 @@ export default function VLibras() {
         return;
       }
 
-      maintainOfficialClasses();
-
-      try {
-        new window.VLibras.Widget(
-          VLIBRAS_APP_URL,
-        );
-
-        window.__vlibrasInitialized = true;
-
-        console.log(
-          "VLibras inicializado corretamente.",
-        );
-      } catch (error) {
-        window.__vlibrasInitialized = false;
-
-        console.error(
-          "Erro ao inicializar o VLibras:",
-          error,
-        );
-      }
-    }
-
-    function handleScriptLoad() {
+      /*
+       * Neste momento o React já terminou
+       * completamente a hidratação.
+       */
       window.requestAnimationFrame(() => {
         window.requestAnimationFrame(() => {
-          initializeWidget();
+          if (cancelled) {
+            return;
+          }
+
+          if (
+            window
+              .__guardioesVlibrasInitialized
+          ) {
+            return;
+          }
+
+          try {
+            new window.VLibras!.Widget(
+              APP_URL,
+            );
+
+            window.__guardioesVlibrasInitialized =
+              true;
+
+            console.log(
+              "VLibras inicializado com sucesso.",
+            );
+          } catch (error) {
+            window.__guardioesVlibrasInitialized =
+              false;
+
+            console.error(
+              "Erro ao inicializar VLibras:",
+              error,
+            );
+          }
         });
       });
     }
 
-    maintainOfficialClasses();
-
+    /*
+     * Verifica se o script já existe.
+     */
     let script =
       document.getElementById(
-        VLIBRAS_SCRIPT_ID,
+        SCRIPT_ID,
       ) as HTMLScriptElement | null;
 
-    if (!script) {
+    /*
+     * Script já carregado.
+     */
+    if (window.VLibras?.Widget) {
+      initialize();
+    } else if (!script) {
+      /*
+       * Carrega somente depois da hidratação.
+       */
       script =
         document.createElement("script");
 
-      script.id = VLIBRAS_SCRIPT_ID;
-      script.src = VLIBRAS_SCRIPT_URL;
+      script.id = SCRIPT_ID;
+      script.src = SCRIPT_URL;
       script.async = true;
 
       script.addEventListener(
         "load",
-        handleScriptLoad,
+        initialize,
       );
 
       script.addEventListener(
         "error",
         () => {
           console.error(
-            "Não foi possível baixar o script oficial do VLibras.",
+            "Falha ao carregar o script oficial do VLibras.",
           );
         },
       );
 
       document.body.appendChild(script);
     } else {
+      /*
+       * O script existe, mas ainda está
+       * terminando de carregar.
+       */
       script.addEventListener(
         "load",
-        handleScriptLoad,
+        initialize,
       );
     }
-
-    /*
-     * Cobre carregamento vindo do cache e pequenas
-     * diferenças de tempo entre o React e o script.
-     */
-    interval = window.setInterval(() => {
-      maintainOfficialClasses();
-
-      if (
-        window.VLibras?.Widget &&
-        !window.__vlibrasInitialized
-      ) {
-        initializeWidget();
-      }
-
-      if (window.__vlibrasInitialized) {
-        if (interval !== null) {
-          window.clearInterval(interval);
-          interval = null;
-        }
-      }
-    }, 250);
-
-    /*
-     * Se o script já estiver no cache e disponível.
-     */
-    initializeWidget();
 
     return () => {
       cancelled = true;
 
       script?.removeEventListener(
         "load",
-        handleScriptLoad,
+        initialize,
       );
-
-      if (interval !== null) {
-        window.clearInterval(interval);
-      }
     };
-  }, []);
+  }, [hydrated]);
+
+  /*
+   * MUITO IMPORTANTE:
+   *
+   * No servidor e durante a hidratação
+   * não renderizamos absolutamente nada.
+   *
+   * Assim o VLibras não consegue modificar
+   * o DOM antes do React terminar.
+   */
+  if (!hydrated) {
+    return null;
+  }
 
   return (
     <div
@@ -173,7 +195,6 @@ export default function VLibras() {
           "vw-access-button": "",
         } as Record<string, string>)}
         className="active"
-        aria-label="Abrir tradutor de Libras"
       />
 
       <div

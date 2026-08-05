@@ -3,11 +3,9 @@ import type {
   Viewport,
 } from "next";
 
-
+import Script from "next/script";
 
 import "./globals.css";
-
-import VLibras from "@/components/VLibras/VLibras";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -129,9 +127,32 @@ export default function RootLayout({
       <body>
         {children}
 
-        <VLibras />
+        {/*
+          Configuração do VLibras Web 7.2.0.
 
-        
+          Define /vlibras como origem dos arquivos
+          antes do carregamento do plugin.
+        */}
+        <Script
+          id="vlibras-local-config"
+          strategy="beforeInteractive"
+        >
+          {`
+            window.VLibrasWidget = {
+              path: "/vlibras"
+            };
+          `}
+        </Script>
+
+        {/*
+          VLibras Web 7.2.0 compilado localmente.
+          O próprio plugin cria o botão e o widget.
+        */}
+        <Script
+          id="vlibras-local-script"
+          src="/vlibras/vlibras-plugin.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
