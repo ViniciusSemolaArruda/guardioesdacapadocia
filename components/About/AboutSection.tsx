@@ -89,7 +89,7 @@ export default function AboutSection() {
           >
             <div className={styles.photoFrame}>
               <Image
-                src="/images/foto1.png"
+                src="/images/foto5.jpeg"
                 alt="Integrantes da Guardiões da Capadócia em apresentação"
                 fill
                 sizes="(max-width: 700px) 82vw, 36vw"
@@ -103,7 +103,7 @@ export default function AboutSection() {
           >
             <div className={styles.photoFrame}>
               <Image
-                src="/images/foto2.png"
+                src="/images/foto4.jpeg"
                 alt="Componentes da Guardiões da Capadócia reunidos"
                 fill
                 sizes="(max-width: 700px) 66vw, 25vw"
@@ -117,7 +117,7 @@ export default function AboutSection() {
           >
             <div className={styles.photoFrame}>
               <Image
-                src="/images/foto3.png"
+                src="/images/foto1.png"
                 alt="Bateria e comunidade da Guardiões da Capadócia"
                 fill
                 sizes="(max-width: 700px) 66vw, 25vw"

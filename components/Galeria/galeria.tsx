@@ -48,12 +48,12 @@ interface GalleryImage {
 const galleryImages: GalleryImage[] = [
   {
     id: 1,
-    src: "/images/foto1.png",
+    src: "/images/foto4.jpeg",
     alt: "Apresentação da Guardiões da Capadócia",
   },
   {
     id: 2,
-    src: "/images/foto2.png",
+    src: "/images/foto5.jpeg",
     alt: "Evento da Guardiões da Capadócia",
   },
   {
@@ -71,31 +71,7 @@ const galleryImages: GalleryImage[] = [
     src: "/images/foto2.png",
     alt: "Desfile da Guardiões da Capadócia",
   },
-  {
-    id: 6,
-    src: "/images/foto3.png",
-    alt: "Desfile da Guardiões da Capadócia",
-  },
-  {
-    id: 7,
-    src: "/images/foto1.png",
-    alt: "Desfile da Guardiões da Capadócia",
-  },
-  {
-    id: 8,
-    src: "/images/foto2.png",
-    alt: "Desfile da Guardiões da Capadócia",
-  },
-  {
-    id: 9,
-    src: "/images/foto3.png",
-    alt: "Desfile da Guardiões da Capadócia",
-  },
-  {
-    id: 10,
-    src: "/images/foto2.png",
-    alt: "Desfile da Guardiões da Capadócia",
-  },
+  
 
   
 ];

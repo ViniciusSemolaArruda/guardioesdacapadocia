@@ -3,8 +3,8 @@
 
 import Image from "next/image";
 import {
-  type ChangeEvent,
   type CSSProperties,
+  type FormEvent,
   type MouseEvent,
   useRef,
   useState,
@@ -114,8 +114,10 @@ export default function Hero() {
 
     if (!video) return;
 
-    video.muted = !video.muted;
-    setIsMuted(video.muted);
+    const nextMutedState = !video.muted;
+
+    video.muted = nextMutedState;
+    setIsMuted(nextMutedState);
   }
 
   function handleLoadedMetadata() {
@@ -138,18 +140,28 @@ export default function Hero() {
     if (!video) return;
 
     setCurrentTime(video.currentTime);
+
+    if (
+      Number.isFinite(video.duration) &&
+      video.duration > 0 &&
+      video.duration !== duration
+    ) {
+      setDuration(video.duration);
+    }
   }
 
   function handleSeek(
-    event: ChangeEvent<HTMLInputElement>,
+    event: FormEvent<HTMLInputElement>,
   ) {
     const video = videoRef.current;
 
-    if (!video || !duration) return;
+    if (!video) return;
 
     const newTime = Number(
-      event.target.value,
+      event.currentTarget.value,
     );
+
+    if (!Number.isFinite(newTime)) return;
 
     video.currentTime = newTime;
     setCurrentTime(newTime);
@@ -344,6 +356,12 @@ export default function Hero() {
                       setIsPlaying(false)
                     }
                     onEnded={() => {
+                      const video = videoRef.current;
+
+                      if (video) {
+                        video.currentTime = 0;
+                      }
+
                       setIsPlaying(false);
                       setCurrentTime(0);
                     }}
@@ -466,6 +484,7 @@ export default function Hero() {
                         duration || 0,
                       )}
                       onChange={handleSeek}
+                      onInput={handleSeek}
                       style={progressStyle}
                       aria-label="Avançar ou voltar no vídeo"
                       aria-valuetext={`${formatTime(

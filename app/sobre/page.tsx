@@ -344,7 +344,7 @@ export default function Sobre() {
 
               <div className={styles.historyDetailImage}>
                 <Image
-                  src="/images/foto1.png"
+                  src="/images/foto4.png"
                   alt="Apresentação da Guardiões da Capadócia"
                   fill
                   sizes="(max-width: 900px) 45vw, 20vw"
