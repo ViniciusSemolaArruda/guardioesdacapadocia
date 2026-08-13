@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 import {
   type MouseEvent,
@@ -70,6 +71,27 @@ const socialLinks = [
     icon: Youtube,
   },
 ];
+
+const footerColumnsAnimation = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.16,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const footerColumnAnimation = {
+  hidden: {
+    opacity: 0,
+    y: 45,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+  },
+};
 
 /* =========================================================
    COMPONENTE
@@ -257,12 +279,28 @@ export default function Footer() {
       />
 
       <div className={styles.mainContent}>
-        <div className={styles.container}>
+        <motion.div
+          className={styles.container}
+          variants={footerColumnsAnimation}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{
+            once: true,
+            amount: 0.15,
+          }}
+        >
           {/* =================================================
               MARCA
           ================================================== */}
 
-          <section className={styles.brandColumn}>
+          <motion.section
+            className={styles.brandColumn}
+            variants={footerColumnAnimation}
+            transition={{
+              duration: 0.75,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
             <Link
               href="/#inicio"
               className={styles.logoLink}
@@ -297,15 +335,20 @@ export default function Footer() {
                 e Samba no Pé!
               </p>
             </div>
-          </section>
+          </motion.section>
 
           {/* =================================================
               LINKS RÁPIDOS
           ================================================== */}
 
-          <nav
+          <motion.nav
             className={`${styles.footerColumn} ${styles.columnDivider}`}
             aria-label="Links rápidos do rodapé"
+            variants={footerColumnAnimation}
+            transition={{
+              duration: 0.75,
+              ease: [0.22, 1, 0.36, 1],
+            }}
           >
             <h3>Links rápidos</h3>
 
@@ -340,14 +383,19 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </nav>
+          </motion.nav>
 
           {/* =================================================
               REDES SOCIAIS
           ================================================== */}
 
-          <section
+          <motion.section
             className={`${styles.footerColumn} ${styles.columnDivider}`}
+            variants={footerColumnAnimation}
+            transition={{
+              duration: 0.75,
+              ease: [0.22, 1, 0.36, 1],
+            }}
           >
             <h3>Redes sociais</h3>
 
@@ -377,14 +425,19 @@ export default function Footer() {
                 );
               })}
             </ul>
-          </section>
+          </motion.section>
 
           {/* =================================================
               CONTATO
           ================================================== */}
 
-          <section
+          <motion.section
             className={`${styles.footerColumn} ${styles.contactColumn} ${styles.columnDivider}`}
+            variants={footerColumnAnimation}
+            transition={{
+              duration: 0.75,
+              ease: [0.22, 1, 0.36, 1],
+            }}
           >
             <h3>Contato</h3>
 
@@ -429,22 +482,41 @@ export default function Footer() {
                 </span>
               </a>
             </address>
-          </section>
-        </div>
+          </motion.section>
+        </motion.div>
       </div>
 
       {/* =====================================================
           BARRA INFERIOR
       ====================================================== */}
 
-      <div className={styles.bottomBar}>
+      <motion.div
+        className={styles.bottomBar}
+        initial={{
+          opacity: 0,
+          y: 20,
+        }}
+        whileInView={{
+          opacity: 1,
+          y: 0,
+        }}
+        viewport={{
+          once: true,
+          amount: 0.8,
+        }}
+        transition={{
+          duration: 0.6,
+          delay: 0.35,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+      >
         <div className={styles.bottomBarContent}>
           <p>
             © 2026 G.R.E.S. Guardiões da Capadócia —
             Todos os direitos reservados.
           </p>
         </div>
-      </div>
+      </motion.div>
     </footer>
   );
 }

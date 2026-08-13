@@ -5,6 +5,7 @@ import {
   MapPin,
   Ticket,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import {
   useEffect,
   useMemo,
@@ -28,6 +29,50 @@ const INITIAL_COUNTDOWN: Countdown = {
   hours: 0,
   minutes: 0,
   seconds: 0,
+};
+
+const infoContainerAnimation = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const infoItemAnimation = {
+  hidden: {
+    opacity: 0,
+    x: -50,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+  },
+};
+
+const countdownContainerAnimation = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const countdownCardAnimation = {
+  hidden: {
+    opacity: 0,
+    y: 35,
+    scale: 0.9,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+  },
 };
 
 function getCountdown(): Countdown {
@@ -121,7 +166,6 @@ export default function EventSection() {
 
   return (
     <section
-    
       id="evento"
       className={styles.eventSection}
     >
@@ -131,13 +175,50 @@ export default function EventSection() {
       />
 
       <div className={styles.container}>
-        <header className={styles.header}>
-          <div
+        {/* CABEÇALHO */}
+        <motion.header
+          className={styles.header}
+          initial={{
+            opacity: 0,
+            y: -40,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.4,
+          }}
+          transition={{
+            duration: 0.75,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+        >
+          <motion.div
             className={styles.crown}
             aria-hidden="true"
+            initial={{
+              opacity: 0,
+              scale: 0.5,
+              rotate: -15,
+            }}
+            whileInView={{
+              opacity: 1,
+              scale: 1,
+              rotate: 0,
+            }}
+            viewport={{
+              once: true,
+            }}
+            transition={{
+              duration: 0.65,
+              delay: 0.15,
+              ease: [0.22, 1, 0.36, 1],
+            }}
           >
             ♛
-          </div>
+          </motion.div>
 
           <div className={styles.eyebrow}>
             <span />
@@ -162,11 +243,28 @@ export default function EventSection() {
               ✦
             </small>
           </h2>
-        </header>
+        </motion.header>
 
         <div className={styles.mainContent}>
-          <div className={styles.eventInfo}>
-            <article className={styles.infoItem}>
+          {/* INFORMAÇÕES DO EVENTO */}
+          <motion.div
+            className={styles.eventInfo}
+            variants={infoContainerAnimation}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{
+              once: true,
+              amount: 0.25,
+            }}
+          >
+            <motion.article
+              className={styles.infoItem}
+              variants={infoItemAnimation}
+              transition={{
+                duration: 0.7,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
               <CalendarDays
                 aria-hidden="true"
               />
@@ -180,9 +278,16 @@ export default function EventSection() {
                   Sábado • A partir das 08h
                 </span>
               </div>
-            </article>
+            </motion.article>
 
-            <article className={styles.infoItem}>
+            <motion.article
+              className={styles.infoItem}
+              variants={infoItemAnimation}
+              transition={{
+                duration: 0.7,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
               <MapPin aria-hidden="true" />
 
               <div>
@@ -194,9 +299,16 @@ export default function EventSection() {
                   Bairro Tanque • RJ
                 </span>
               </div>
-            </article>
+            </motion.article>
 
-            <article className={styles.infoItem}>
+            <motion.article
+              className={styles.infoItem}
+              variants={infoItemAnimation}
+              transition={{
+                duration: 0.7,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
               <Ticket aria-hidden="true" />
 
               <div>
@@ -208,21 +320,55 @@ export default function EventSection() {
                   E venha fazer parte desta festa!
                 </span>
               </div>
-            </article>
-          </div>
+            </motion.article>
+          </motion.div>
 
-          <div className={styles.countdownBlock}>
-            <div
+          {/* CONTAGEM REGRESSIVA */}
+          <motion.div
+            className={styles.countdownBlock}
+            initial={{
+              opacity: 0,
+              x: 60,
+            }}
+            whileInView={{
+              opacity: 1,
+              x: 0,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.25,
+            }}
+            transition={{
+              duration: 0.8,
+              delay: 0.15,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
+            <motion.div
               className={styles.countdown}
               aria-label="Contagem regressiva para o Festival Todo Mundo no Samba"
               aria-live="polite"
+              variants={countdownContainerAnimation}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{
+                once: true,
+                amount: 0.3,
+              }}
             >
               {countdownItems.map((item) => (
-                <div
+                <motion.div
                   key={item.label}
                   className={
                     styles.countdownCard
                   }
+                  variants={
+                    countdownCardAnimation
+                  }
+                  transition={{
+                    duration: 0.55,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
                 >
                   <strong>
                     {isMounted
@@ -233,13 +379,35 @@ export default function EventSection() {
                   <span>
                     {item.label}
                   </span>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
 
-            <a
+            <motion.a
               href="/evento"
               className={styles.eventButton}
+              initial={{
+                opacity: 0,
+                y: 25,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+              }}
+              viewport={{
+                once: true,
+              }}
+              transition={{
+                duration: 0.6,
+                delay: 0.65,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              whileHover={{
+                scale: 1.03,
+              }}
+              whileTap={{
+                scale: 0.97,
+              }}
             >
               <span>
                 Saiba mais sobre o evento
@@ -248,8 +416,8 @@ export default function EventSection() {
               <strong aria-hidden="true">
                 ›
               </strong>
-            </a>
-          </div>
+            </motion.a>
+          </motion.div>
         </div>
       </div>
     </section>

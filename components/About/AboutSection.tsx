@@ -1,10 +1,44 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { ChevronRight, Crown } from "lucide-react";
+import { Crown } from "lucide-react";
+import { motion } from "framer-motion";
 
 import styles from "./AboutSection.module.css";
+
+const textAnimation = {
+  hidden: {
+    opacity: 0,
+    x: -60,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+  },
+};
+
+const galleryAnimation = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.15,
+    },
+  },
+};
+
+const photoAnimation = {
+  hidden: {
+    opacity: 0,
+    x: 60,
+    scale: 0.94,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    scale: 1,
+  },
+};
 
 export default function AboutSection() {
   return (
@@ -18,10 +52,21 @@ export default function AboutSection() {
       />
 
       <div className={styles.container}>
-        {/* =====================================================
-            CONTEÚDO
-        ====================================================== */}
-        <div className={styles.content}>
+        {/* CONTEÚDO */}
+        <motion.div
+          className={styles.content}
+          variants={textAnimation}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{
+            once: true,
+            amount: 0.25,
+          }}
+          transition={{
+            duration: 0.8,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+        >
           <div className={styles.sectionLabel}>
             <span className={styles.labelLine} />
 
@@ -65,27 +110,26 @@ export default function AboutSection() {
               como expressão da alma.
             </p>
           </div>
+        </motion.div>
 
-          {/* <Link
-            href="/sobre"
-            className={styles.historyButton}
-          >
-            <span>Conheça nossa história</span>
-
-            <ChevronRight
-              size={19}
-              strokeWidth={2.2}
-              aria-hidden="true"
-            />
-          </Link>*/}
-        </div>
-
-        {/* =====================================================
-            GALERIA
-        ====================================================== */}
-        <div className={styles.gallery}>
-          <div
+        {/* GALERIA */}
+        <motion.div
+          className={styles.gallery}
+          variants={galleryAnimation}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{
+            once: true,
+            amount: 0.2,
+          }}
+        >
+          <motion.div
             className={`${styles.photoWrapper} ${styles.photoOne}`}
+            variants={photoAnimation}
+            transition={{
+              duration: 0.75,
+              ease: [0.22, 1, 0.36, 1],
+            }}
           >
             <div className={styles.photoFrame}>
               <Image
@@ -96,10 +140,15 @@ export default function AboutSection() {
                 className={styles.photo}
               />
             </div>
-          </div>
+          </motion.div>
 
-          <div
+          <motion.div
             className={`${styles.photoWrapper} ${styles.photoTwo}`}
+            variants={photoAnimation}
+            transition={{
+              duration: 0.75,
+              ease: [0.22, 1, 0.36, 1],
+            }}
           >
             <div className={styles.photoFrame}>
               <Image
@@ -110,10 +159,15 @@ export default function AboutSection() {
                 className={styles.photo}
               />
             </div>
-          </div>
+          </motion.div>
 
-          <div
+          <motion.div
             className={`${styles.photoWrapper} ${styles.photoThree}`}
+            variants={photoAnimation}
+            transition={{
+              duration: 0.75,
+              ease: [0.22, 1, 0.36, 1],
+            }}
           >
             <div className={styles.photoFrame}>
               <Image
@@ -124,8 +178,8 @@ export default function AboutSection() {
                 className={styles.photo}
               />
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

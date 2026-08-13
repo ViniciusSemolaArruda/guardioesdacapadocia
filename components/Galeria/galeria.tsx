@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
@@ -346,7 +347,25 @@ export default function Galeria() {
         />
 
         <div className={styles.container}>
-          <header className={styles.header}>
+          <motion.header
+            className={styles.header}
+            initial={{
+              opacity: 0,
+              y: -40,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.4,
+            }}
+            transition={{
+              duration: 0.75,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
             <div
               className={styles.sectionIcon}
               aria-hidden="true"
@@ -363,10 +382,29 @@ export default function Galeria() {
 
               <span />
             </div>
-          </header>
+          </motion.header>
 
-          <div
+          <motion.div
             className={styles.galleryArea}
+            initial={{
+              opacity: 0,
+              y: 60,
+              scale: 0.96,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+              scale: 1,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.2,
+            }}
+            transition={{
+              duration: 0.9,
+              delay: 0.15,
+              ease: [0.22, 1, 0.36, 1],
+            }}
             onMouseEnter={() =>
               setIsPaused(true)
             }
@@ -516,10 +554,27 @@ export default function Galeria() {
                 <ChevronRight />
               </button>
             )}
-          </div>
+          </motion.div>
 
-          <div
+          <motion.div
             className={styles.galleryFooter}
+            initial={{
+              opacity: 0,
+              y: 25,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.5,
+            }}
+            transition={{
+              duration: 0.6,
+              delay: 0.55,
+              ease: [0.22, 1, 0.36, 1],
+            }}
           >
             {totalImages > 1 && (
               <div
@@ -570,7 +625,7 @@ export default function Galeria() {
                 ).padStart(2, "0")}
               </small>
             </p>
-          </div>
+          </motion.div>
         </div>
       </section>
 

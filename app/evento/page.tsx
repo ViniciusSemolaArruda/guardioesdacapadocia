@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 import {
   CalendarDays,
   Clock3,
@@ -16,7 +17,8 @@ import styles from "./Evento.module.css";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 
-const SYMPLA_URL = "https://www.sympla.com.br/SEU-LINK-AQUI";
+const SYMPLA_URL =
+  "https://www.sympla.com.br/evento/passaporte-todo-mundo-no-samba-g-r-e-s-guardioes-da-capadocia/3517324?algoliaID=220fd97b3bd3333b1b7f05cbd66b263f";
 const MAPS_URL =
   "https://www.google.com/maps/search/?api=1&query=Av.+Nelson+Cardoso,+82,+Tanque,+Rio+de+Janeiro";
 
@@ -56,16 +58,54 @@ const schedule = [
   },
 ];
 
+const sectionAnimation = {
+  initial: {
+    opacity: 0,
+    y: 55,
+  },
+  whileInView: {
+    opacity: 1,
+    y: 0,
+  },
+  viewport: {
+    once: true,
+    amount: 0.12,
+  },
+  transition: {
+    duration: 0.85,
+    ease: [0.22, 1, 0.36, 1] as [
+      number,
+      number,
+      number,
+      number,
+    ],
+  },
+};
+
 export default function EventoPage() {
   return (
     <>
     <Header />
     <main className={styles.page}>
-      <section className={styles.hero}>
+      <motion.section
+        className={styles.hero}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+      >
         <div className={styles.heroGlow} aria-hidden="true" />
 
         <div className={styles.heroContainer}>
-          <div className={styles.posterColumn}>
+            <motion.div
+              className={styles.posterColumn}
+              initial={{ opacity: 0, x: -60, scale: 0.96 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              transition={{
+                duration: 0.9,
+                delay: 0.1,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
             <div className={styles.posterFrame}>
               <Image
                 src="/images/passaporte-evento2.png"
@@ -76,9 +116,18 @@ export default function EventoPage() {
                 className={styles.poster}
               />
             </div>
-          </div>
+            </motion.div>
 
-          <div className={styles.heroContent}>
+          <motion.div
+            className={styles.heroContent}
+            initial={{ opacity: 0, x: 60 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{
+              duration: 0.9,
+              delay: 0.2,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
             <span className={styles.eyebrow}>
               <Music2 size={18} aria-hidden="true" />
               Festival Todo Mundo no Samba
@@ -130,7 +179,7 @@ export default function EventoPage() {
 
             <div className={styles.heroActions}>
               <a
-                href={"https://www.sympla.com.br/evento/passaporte-todo-mundo-no-samba-g-r-e-s-guardioes-da-capadocia/3517324?algoliaID=220fd97b3bd3333b1b7f05cbd66b263f"}
+                href={SYMPLA_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.primaryButton}
@@ -149,11 +198,14 @@ export default function EventoPage() {
                 <MapPin size={18} aria-hidden="true" />
               </a>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className={styles.aboutSection}>
+      <motion.section
+        className={styles.aboutSection}
+        {...sectionAnimation}
+      >
         <div className={styles.sectionContainer}>
           <div className={styles.sectionHeading}>
             <span>Sobre o festival</span>
@@ -202,7 +254,7 @@ export default function EventoPage() {
               </ul>
 
               <a
-                href={"https://www.sympla.com.br/evento/passaporte-todo-mundo-no-samba-g-r-e-s-guardioes-da-capadocia/3517324?algoliaID=220fd97b3bd3333b1b7f05cbd66b263f"}
+                href={SYMPLA_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.passportButton}
@@ -212,9 +264,12 @@ export default function EventoPage() {
             </aside>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className={styles.scheduleSection}>
+      <motion.section
+        className={styles.scheduleSection}
+        {...sectionAnimation}
+      >
         <div className={styles.sectionContainer}>
           <div className={styles.sectionHeadingCenter}>
             <span>Programação gastronômica</span>
@@ -240,11 +295,14 @@ export default function EventoPage() {
             })}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       
 
-      <section className={styles.guestsSection}>
+      <motion.section
+        className={styles.guestsSection}
+        {...sectionAnimation}
+      >
         <div className={styles.sectionContainer}>
           <div className={styles.sectionHeadingCenter}>
             <span>Participações especiais</span>
@@ -283,11 +341,14 @@ export default function EventoPage() {
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       
 
-      <section className={styles.finalCta}>
+      <motion.section
+        className={styles.finalCta}
+        {...sectionAnimation}
+      >
         <div className={styles.finalCtaGlow} aria-hidden="true" />
 
         <div className={styles.finalCtaContent}>
@@ -301,7 +362,7 @@ export default function EventoPage() {
           </p>
 
           <a
-            href={"https://www.sympla.com.br/evento/passaporte-todo-mundo-no-samba-g-r-e-s-guardioes-da-capadocia/3517324?algoliaID=220fd97b3bd3333b1b7f05cbd66b263f"}
+            href={SYMPLA_URL}
             target="_blank"
             rel="noopener noreferrer"
             className={styles.finalCtaButton}
@@ -310,9 +371,12 @@ export default function EventoPage() {
             <Ticket size={20} aria-hidden="true" />
           </a>
         </div>
-      </section>
+      </motion.section>
 
-      <section className={styles.locationSection}>
+      <motion.section
+        className={styles.locationSection}
+        {...sectionAnimation}
+      >
   <div className={styles.sectionContainer}>
     <div className={styles.sectionHeadingCenter}>
       <span>Como chegar</span>
@@ -354,7 +418,7 @@ export default function EventoPage() {
       </div>
     </div>
   </div>
-</section>
+</motion.section>
     </main>
     <Footer />
     </>

@@ -8,10 +8,20 @@ import {
   Phone,
   Send,
 } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { motion } from "framer-motion";
+import {
+  type ChangeEvent,
+  type FormEvent,
+  useState,
+} from "react";
+
 import styles from "./Contato.module.css";
 
-type FormStatus = "idle" | "sending" | "success" | "error";
+type FormStatus =
+  | "idle"
+  | "sending"
+  | "success"
+  | "error";
 
 interface ContactFormData {
   nome: string;
@@ -27,17 +37,61 @@ const initialFormData: ContactFormData = {
   mensagem: "",
 };
 
+const contactListAnimation = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.14,
+      delayChildren: 0.25,
+    },
+  },
+};
+
+const contactItemAnimation = {
+  hidden: {
+    opacity: 0,
+    x: -35,
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+  },
+};
+
+const formAnimation = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const formItemAnimation = {
+  hidden: {
+    opacity: 0,
+    y: 30,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+  },
+};
+
 export default function Contato() {
   const [formData, setFormData] =
-    useState<ContactFormData>(initialFormData);
+    useState<ContactFormData>(
+      initialFormData,
+    );
 
   const [status, setStatus] =
     useState<FormStatus>("idle");
 
   function handleChange(
-    event:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>,
+    event: ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement
+    >,
   ) {
     const { name, value } = event.target;
 
@@ -65,15 +119,21 @@ export default function Contato() {
     try {
       const submissionData = new FormData();
 
-      submissionData.append("Nome", formData.nome);
+      submissionData.append(
+        "Nome",
+        formData.nome,
+      );
+
       submissionData.append(
         "E-mail do visitante",
         formData.email,
       );
+
       submissionData.append(
         "Assunto",
         formData.assunto,
       );
+
       submissionData.append(
         "Mensagem",
         formData.mensagem,
@@ -134,13 +194,70 @@ export default function Contato() {
       />
 
       <div className={styles.container}>
-        <div className={styles.contactInformation}>
-          <header className={styles.header}>
-            <div className={styles.ornament}>
+        {/* INFORMAÇÕES DE CONTATO */}
+        <motion.div
+          className={styles.contactInformation}
+          initial={{
+            opacity: 0,
+            x: -60,
+          }}
+          whileInView={{
+            opacity: 1,
+            x: 0,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.2,
+          }}
+          transition={{
+            duration: 0.8,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+        >
+          <motion.header
+            className={styles.header}
+            initial={{
+              opacity: 0,
+              y: -30,
+            }}
+            whileInView={{
+              opacity: 1,
+              y: 0,
+            }}
+            viewport={{
+              once: true,
+              amount: 0.4,
+            }}
+            transition={{
+              duration: 0.7,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
+            <motion.div
+              className={styles.ornament}
+              initial={{
+                opacity: 0,
+                scale: 0.7,
+              }}
+              whileInView={{
+                opacity: 1,
+                scale: 1,
+              }}
+              viewport={{
+                once: true,
+              }}
+              transition={{
+                duration: 0.6,
+                delay: 0.15,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
               <span />
+
               <Crown aria-hidden="true" />
+
               <span />
-            </div>
+            </motion.div>
 
             <h2 className={styles.title}>
               Fale conosco
@@ -148,46 +265,100 @@ export default function Contato() {
 
             <p className={styles.subtitle}>
               Entre em contato conosco e faça parte
-              <br className={styles.desktopBreak} />
+              <br
+                className={
+                  styles.desktopBreak
+                }
+              />
               dessa grande família!
             </p>
-          </header>
+          </motion.header>
 
-          <div className={styles.contactList}>
-            <a
+          <motion.div
+            className={styles.contactList}
+            variants={contactListAnimation}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{
+              once: true,
+              amount: 0.25,
+            }}
+          >
+            <motion.a
               href="tel:+5521993527840"
               className={styles.contactItem}
               aria-label="Ligar para a Guardiões da Capadócia"
+              variants={contactItemAnimation}
+              transition={{
+                duration: 0.65,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              whileHover={{
+                x: 6,
+              }}
+              whileTap={{
+                scale: 0.98,
+              }}
             >
-              <span className={styles.iconWrapper}>
+              <span
+                className={styles.iconWrapper}
+              >
                 <Phone aria-hidden="true" />
               </span>
 
-              <span>(21) 99352-7840</span>
-            </a>
+              <span>
+                (21) 99352-7840
+              </span>
+            </motion.a>
 
-            <a
+            <motion.a
               href="mailto:guardioesdacapadociaoficial@gmail.com"
               className={styles.contactItem}
               aria-label="Enviar e-mail para a Guardiões da Capadócia"
+              variants={contactItemAnimation}
+              transition={{
+                duration: 0.65,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              whileHover={{
+                x: 6,
+              }}
+              whileTap={{
+                scale: 0.98,
+              }}
             >
-              <span className={styles.iconWrapper}>
+              <span
+                className={styles.iconWrapper}
+              >
                 <Mail aria-hidden="true" />
               </span>
 
               <span>
                 guardioesdacapadociaoficial@gmail.com
               </span>
-            </a>
+            </motion.a>
 
-            <a
+            <motion.a
               href="https://www.google.com/maps/search/?api=1&query=Av.+Nelson+Cardoso,+82,+Tanque,+Rio+de+Janeiro,+RJ"
               target="_blank"
               rel="noopener noreferrer"
               className={styles.contactItem}
               aria-label="Abrir endereço no mapa"
+              variants={contactItemAnimation}
+              transition={{
+                duration: 0.65,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              whileHover={{
+                x: 6,
+              }}
+              whileTap={{
+                scale: 0.98,
+              }}
             >
-              <span className={styles.iconWrapper}>
+              <span
+                className={styles.iconWrapper}
+              >
                 <MapPin aria-hidden="true" />
               </span>
 
@@ -196,20 +367,56 @@ export default function Contato() {
                 <br />
                 Bairro Tanque – Rio de Janeiro / RJ
               </span>
-            </a>
-          </div>
-        </div>
+            </motion.a>
+          </motion.div>
+        </motion.div>
 
-        <div
+        {/* LINHA DIVISÓRIA */}
+        <motion.div
           className={styles.divider}
           aria-hidden="true"
+          initial={{
+            opacity: 0,
+            scaleY: 0,
+          }}
+          whileInView={{
+            opacity: 1,
+            scaleY: 1,
+          }}
+          viewport={{
+            once: true,
+            amount: 0.3,
+          }}
+          transition={{
+            duration: 0.8,
+            delay: 0.25,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          style={{
+            transformOrigin: "top",
+          }}
         />
 
-        <form
+        {/* FORMULÁRIO */}
+        <motion.form
           className={styles.form}
           onSubmit={handleSubmit}
+          variants={formAnimation}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{
+            once: true,
+            amount: 0.15,
+          }}
         >
-          <div className={styles.field}>
+          <motion.div
+            className={styles.field}
+            variants={formItemAnimation}
+            transition={{
+              duration: 0.65,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
             <label htmlFor="contact-name">
               Seu nome
             </label>
@@ -224,9 +431,16 @@ export default function Contato() {
               autoComplete="name"
               required
             />
-          </div>
+          </motion.div>
 
-          <div className={styles.field}>
+          <motion.div
+            className={styles.field}
+            variants={formItemAnimation}
+            transition={{
+              duration: 0.65,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
             <label htmlFor="contact-email">
               Seu e-mail
             </label>
@@ -241,9 +455,16 @@ export default function Contato() {
               autoComplete="email"
               required
             />
-          </div>
+          </motion.div>
 
-          <div className={styles.field}>
+          <motion.div
+            className={styles.field}
+            variants={formItemAnimation}
+            transition={{
+              duration: 0.65,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
             <label htmlFor="contact-subject">
               Assunto
             </label>
@@ -257,10 +478,15 @@ export default function Contato() {
               placeholder="Assunto"
               required
             />
-          </div>
+          </motion.div>
 
-          <div
+          <motion.div
             className={`${styles.field} ${styles.messageField}`}
+            variants={formItemAnimation}
+            transition={{
+              duration: 0.65,
+              ease: [0.22, 1, 0.36, 1],
+            }}
           >
             <label htmlFor="contact-message">
               Mensagem
@@ -275,13 +501,37 @@ export default function Contato() {
               rows={6}
               required
             />
-          </div>
+          </motion.div>
 
-          <div className={styles.formFooter}>
-            <button
+          <motion.div
+            className={styles.formFooter}
+            variants={formItemAnimation}
+            transition={{
+              duration: 0.65,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
+            <motion.button
               type="submit"
               className={styles.submitButton}
               disabled={status === "sending"}
+              whileHover={
+                status !== "sending"
+                  ? {
+                      scale: 1.03,
+                    }
+                  : undefined
+              }
+              whileTap={
+                status !== "sending"
+                  ? {
+                      scale: 0.97,
+                    }
+                  : undefined
+              }
+              transition={{
+                duration: 0.2,
+              }}
             >
               <span>
                 {status === "sending"
@@ -291,36 +541,60 @@ export default function Contato() {
 
               {status === "sending" ? (
                 <LoaderCircle
-                  className={styles.loadingIcon}
+                  className={
+                    styles.loadingIcon
+                  }
                   aria-hidden="true"
                 />
               ) : (
                 <Send aria-hidden="true" />
               )}
-            </button>
+            </motion.button>
 
             <div
               className={styles.statusArea}
               aria-live="polite"
             >
               {status === "success" && (
-                <p
+                <motion.p
                   className={`${styles.statusMessage} ${styles.successMessage}`}
+                  initial={{
+                    opacity: 0,
+                    y: 8,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  transition={{
+                    duration: 0.35,
+                  }}
                 >
                   Mensagem enviada com sucesso!
-                </p>
+                </motion.p>
               )}
 
               {status === "error" && (
-                <p
+                <motion.p
                   className={`${styles.statusMessage} ${styles.errorMessage}`}
+                  initial={{
+                    opacity: 0,
+                    y: 8,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  transition={{
+                    duration: 0.35,
+                  }}
                 >
                   Não foi possível enviar. Tente novamente.
-                </p>
+                </motion.p>
               )}
             </div>
-          </div>
-        </form>
+          </motion.div>
+        </motion.form>
       </div>
     </section>
   );
