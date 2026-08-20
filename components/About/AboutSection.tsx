@@ -133,7 +133,7 @@ export default function AboutSection() {
           >
             <div className={styles.photoFrame}>
               <Image
-                src="/images/foto5.jpeg"
+                src="/images/foto5.png"
                 alt="Integrantes da Guardiões da Capadócia em apresentação"
                 fill
                 sizes="(max-width: 700px) 82vw, 36vw"

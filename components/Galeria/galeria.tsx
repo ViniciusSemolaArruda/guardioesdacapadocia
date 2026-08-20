@@ -49,12 +49,12 @@ interface GalleryImage {
 const galleryImages: GalleryImage[] = [
   {
     id: 1,
-    src: "/images/foto4.jpeg",
+    src: "/images/foto4.png",
     alt: "Apresentação da Guardiões da Capadócia",
   },
   {
     id: 2,
-    src: "/images/foto5.jpeg",
+    src: "/images/foto5.png",
     alt: "Evento da Guardiões da Capadócia",
   },
   {

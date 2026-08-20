@@ -1,10 +1,30 @@
 .motionSection {
   --gold: #e6bb50;
   --light-gold: #ffe8a7;
+  --progress: 0;
+  --progress-percent: 0%;
+  --reveal: 0;
+  --dance: 0;
+  --exit: 0;
+  --camera-arc: 0;
+  --flag-sway: 0;
+  --bg-x: 0%;
+  --bg-y: 0%;
+  --bg-scale: 1.1;
+  --bg-saturation: 0.86;
+  --photo-opacity: 0;
+  --reveal-radius: 9%;
+  --photo-x: 0%;
+  --photo-y: 0%;
+  --photo-scale: 1.075;
+  --photo-rotate: 0deg;
+  --flag-opacity: 0;
+  --flag-rotate: 0deg;
+  --visible: 1;
   position: relative;
   width: 100%;
-  height: 300svh;
-  background: #090b10;
+  height: 420svh;
+  background: #080a0f;
 }
 
 .stickyStage {
@@ -14,51 +34,98 @@
   width: 100%;
   height: 100svh;
   overflow: hidden;
-  background: #090b10;
+  background: #080a0f;
   color: #fff;
 }
 
-.canvas {
+.backgroundPlate,
+.couplePhoto,
+.flagAccent {
   position: absolute;
-  z-index: 0;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  opacity: 0;
-  transition: opacity 500ms ease;
+  inset: -4%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  will-change: transform, opacity, filter, clip-path;
 }
 
-.canvasReady { opacity: 1; }
+.backgroundPlate {
+  z-index: 0;
+  background-image: url("/images/motion-bg.png");
+  filter: saturate(var(--bg-saturation)) brightness(0.86);
+  transform:
+    translate3d(var(--bg-x), var(--bg-y), 0)
+    scale(var(--bg-scale));
+}
+
+.couplePhoto {
+  z-index: 1;
+  background-image: url("/images/motion.png");
+  opacity: var(--photo-opacity);
+  clip-path: circle(var(--reveal-radius) at 53% 58%);
+  filter: saturate(1.04) brightness(1);
+  transform:
+    translate3d(var(--photo-x), var(--photo-y), 0)
+    scale(var(--photo-scale))
+    rotate(var(--photo-rotate));
+}
+
+/* A duplicate cropped from the original photo gives the flag an independent sway. */
+.flagAccent {
+  z-index: 2;
+  background-image: url("/images/motion.png");
+  opacity: var(--flag-opacity);
+  clip-path: polygon(7% 4%, 31% 2%, 43% 51%, 7% 53%);
+  transform-origin: 39% 48%;
+  transform:
+    translate3d(var(--photo-x), var(--photo-y), 0)
+    scale(var(--photo-scale))
+    rotate(var(--flag-rotate));
+  filter: saturate(1.12) brightness(1.04);
+}
 
 .lightOverlay {
   position: absolute;
-  z-index: 1;
+  z-index: 3;
   inset: 0;
   pointer-events: none;
+  opacity: var(--visible);
   background:
-    linear-gradient(90deg, rgba(4, 5, 9, 0.54) 0%, rgba(4, 5, 9, 0.2) 32%, transparent 58%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.05), transparent 68%, rgba(0, 0, 0, 0.24));
+    radial-gradient(circle at 52% 35%, transparent 16%, rgba(3, 5, 10, 0.12) 64%),
+    linear-gradient(90deg, rgba(3, 4, 8, 0.62), rgba(3, 4, 8, 0.08) 48%, rgba(3, 4, 8, 0.2)),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.06), transparent 55%, rgba(0, 0, 0, 0.32));
+}
+
+.filmGrain {
+  position: absolute;
+  z-index: 4;
+  inset: -50%;
+  pointer-events: none;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+  animation: grain 0.24s steps(2) infinite;
 }
 
 .scene {
   position: absolute;
-  z-index: 3;
+  z-index: 5;
   top: 50%;
   left: clamp(24px, 7vw, 112px);
-  width: min(680px, calc(100% - 48px));
+  width: min(720px, calc(100% - 48px));
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(calc(-46% + 26px));
-  transition: opacity 360ms ease, transform 520ms cubic-bezier(0.2, 0.75, 0.2, 1), visibility 360ms;
-  will-change: opacity, transform;
+  transform: translate3d(0, calc(-46% + 30px), 0);
+  transition:
+    opacity 360ms ease,
+    transform 600ms cubic-bezier(0.2, 0.75, 0.2, 1),
+    visibility 360ms;
 }
 
 .sceneActive {
-  opacity: 1;
+  opacity: var(--visible);
   visibility: visible;
-  transform: translateY(-46%);
+  transform: translate3d(0, -46%, 0);
 }
 
 .eyebrow {
@@ -86,11 +153,11 @@
   margin: 0;
   color: #fff;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(48px, 5.4vw, 90px);
+  font-size: clamp(46px, 5.2vw, 88px);
   font-weight: 500;
-  line-height: 0.94;
-  letter-spacing: -0.055em;
-  text-shadow: 0 4px 22px rgba(0, 0, 0, 0.84);
+  line-height: 0.95;
+  letter-spacing: -0.052em;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.86);
 }
 
 .scene h1 strong,
@@ -108,10 +175,6 @@
   font: 400 clamp(15px, 1.15vw, 19px) / 1.55 Arial, sans-serif;
   text-shadow: 0 2px 10px #000;
 }
-
-.sceneOne,
-.sceneTwo,
-.sceneThree { }
 
 .actions {
   margin-top: 32px;
@@ -147,11 +210,14 @@
   backdrop-filter: blur(9px);
 }
 
-.actions a:hover { transform: translateY(-3px); filter: brightness(1.08); }
+.actions a:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.08);
+}
 
 .progress {
   position: absolute;
-  z-index: 4;
+  z-index: 6;
   top: 50%;
   right: clamp(20px, 4vw, 66px);
   display: flex;
@@ -172,14 +238,14 @@
 .progress i {
   position: absolute;
   inset: 0 0 auto;
-  height: var(--motion-percent);
+  height: var(--progress-percent);
   background: linear-gradient(var(--light-gold), #c4871d);
   box-shadow: 0 0 14px rgba(230, 187, 80, 0.7);
 }
 
 .progress small,
 .skipButton {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.82);
   font: 700 9px / 1 Arial, sans-serif;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -188,7 +254,7 @@
 
 .skipButton {
   position: absolute;
-  z-index: 5;
+  z-index: 7;
   right: clamp(20px, 4vw, 66px);
   bottom: 27px;
   padding: 9px 0;
@@ -200,30 +266,35 @@
   cursor: pointer;
 }
 
-.loader,
-.error {
-  position: absolute;
-  z-index: 8;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
+@keyframes grain {
+  0% { transform: translate3d(-2%, 1%, 0); }
+  50% { transform: translate3d(2%, -2%, 0); }
+  100% { transform: translate3d(1%, 2%, 0); }
 }
 
-.loader { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.loader span { width: 36px; height: 36px; border: 2px solid rgba(255,255,255,.28); border-top-color: var(--gold); border-radius: 50%; animation: spin .8s linear infinite; }
-.loader strong { font: 700 11px/1.4 Arial,sans-serif; letter-spacing: .12em; text-transform: uppercase; }
-.loader small { color: var(--light-gold); font: 700 11px/1 Arial,sans-serif; }
-.error { width: min(560px,calc(100% - 40px)); padding: 15px; border: 1px solid var(--gold); background: rgba(75,5,12,.92); font: 700 12px/1.5 Arial,sans-serif; }
-@keyframes spin { to { transform: rotate(360deg); } }
-
 @media (max-width: 700px) {
-  .motionSection { height: 280svh; }
-  .lightOverlay { background: linear-gradient(180deg,rgba(0,0,0,.04),transparent 42%,rgba(3,4,8,.64) 76%,rgba(3,4,8,.82)); }
-  .scene { top: auto; right: 22px; bottom: 86px; left: 22px; width: auto; }
-  .scene h1,.scene h2 { font-size: clamp(39px,12vw,58px); line-height: .96; }
-  .scene { transform: translateY(22px); }
-  .sceneActive { transform: translateY(0); }
+  .motionSection { height: 360svh; }
+  .backgroundPlate,
+  .couplePhoto,
+  .flagAccent {
+    inset: -2% -42%;
+    background-position: 54% center;
+  }
+  .flagAccent { display: none; }
+  .lightOverlay {
+    background: linear-gradient(180deg, rgba(0,0,0,.05), transparent 36%, rgba(3,4,8,.72) 72%, rgba(3,4,8,.9));
+  }
+  .scene {
+    top: auto;
+    right: 22px;
+    bottom: 86px;
+    left: 22px;
+    width: auto;
+    transform: translate3d(0, 22px, 0);
+  }
+  .sceneActive { transform: translate3d(0, 0, 0); }
+  .scene h1,
+  .scene h2 { font-size: clamp(38px, 11vw, 56px); line-height: 0.97; }
   .eyebrow { margin-bottom: 13px; font-size: 9px; }
   .eyebrow::before { width: 25px; }
   .scene p { margin-top: 15px; font-size: 14px; }
@@ -236,6 +307,16 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .loader span { animation: none; }
+  .motionSection { height: 140svh; }
+  .backgroundPlate { opacity: 0; }
+  .couplePhoto {
+    opacity: 1;
+    clip-path: none;
+    transform: none;
+  }
+  .flagAccent,
+  .filmGrain,
+  .progress { display: none; }
+  .scene { transition: none; }
   .actions a { transition: none; }
 }
